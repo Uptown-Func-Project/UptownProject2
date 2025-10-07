@@ -27,7 +27,7 @@ public class Main extends ApplicationAdapter {
     Sprite bucketSprite; // Declare a new Sprite variable
     Vector2 touchPos;
     Array<Sprite> dropSprites;
-
+    float dropTimer;
 
 
     @Override
@@ -42,7 +42,7 @@ public class Main extends ApplicationAdapter {
         bucketSprite.setSize(1, 1); // Define the size of the sprite
         touchPos = new Vector2();
         dropSprites = new Array<>();
-        createDroplet();
+
     }
 
     @Override
@@ -86,6 +86,24 @@ public class Main extends ApplicationAdapter {
 
         // Clamp x to values between 0 and worldWidth
         bucketSprite.setX(MathUtils.clamp(bucketSprite.getX(), 0, worldWidth-bucketWidth));
+
+        float delta = Gdx.graphics.getDeltaTime(); // retrieve the current delta
+
+        for (int i = dropSprites.size - 1; i >= 0; i--) {
+            Sprite dropSprite = dropSprites.get(i); // Get the sprite from the list
+            float dropWidth = dropSprite.getWidth();
+            float dropHeight = dropSprite.getHeight();
+
+            dropSprite.translateY(-2f * delta);
+
+            // if the top of the drop goes below the bottom of the view, remove it
+            if (dropSprite.getY() < -dropHeight) dropSprites.removeIndex(i);
+        }
+        dropTimer += delta; // Adds the current delta to the timer
+        if (dropTimer > 1f) { // Check if it has been more than a second
+            dropTimer = 0; // Reset the timer
+            createDroplet(); // Create the droplet
+        }
     }
 
     private void draw() {
@@ -98,22 +116,23 @@ public class Main extends ApplicationAdapter {
         batch.draw(backgroundTexture, 0, 0, worldWidth, worldHeight); // draw the background
         //batch.draw(bucketTexture, 0, 0, 1, 1); // draw the bucket with width/height of 1 meter
         bucketSprite.draw(batch);
+        for (Sprite dropSprite : dropSprites) {
+            dropSprite.draw(batch);
+        }
         batch.end();
     }
 
     private void createDroplet() {
-        // create local variables for convenience
         float dropWidth = 1;
         float dropHeight = 1;
         float worldWidth = viewport.getWorldWidth();
         float worldHeight = viewport.getWorldHeight();
 
-        // create the drop sprite
         Sprite dropSprite = new Sprite(dropTexture);
         dropSprite.setSize(dropWidth, dropHeight);
-        dropSprite.setX(0);
+        dropSprite.setX(MathUtils.random(0f, worldWidth - dropWidth)); // Randomize the drop's x position
         dropSprite.setY(worldHeight);
-        dropSprites.add(dropSprite); // Add it to the list
+        dropSprites.add(dropSprite);
     }
 
     @Override
