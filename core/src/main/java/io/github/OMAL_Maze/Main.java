@@ -14,12 +14,9 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
-import java.util.Vector;
-
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends ApplicationAdapter {
     private SpriteBatch batch;
-    private Texture image;
     FitViewport viewport;
     Texture backgroundTexture;
     Texture bucketTexture;
@@ -34,7 +31,6 @@ public class Main extends ApplicationAdapter {
     public void create() {
         batch = new SpriteBatch();
         viewport = new FitViewport(8, 5);
-        //image = new Texture("libgdx.png");
         backgroundTexture = new Texture("background.png");
         bucketTexture = new Texture("bucket.png");
         dropTexture = new Texture("drop.png");
@@ -47,9 +43,6 @@ public class Main extends ApplicationAdapter {
 
     @Override
     public void render() {
-        //batch.begin();
-        //batch.draw(image, 140, 210);
-        //batch.end();
         input();
         logic();
         draw();
