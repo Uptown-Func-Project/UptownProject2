@@ -2,7 +2,6 @@ package io.github.OMAL_Maze;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -20,7 +19,6 @@ public class Main extends ApplicationAdapter {
     FitViewport viewport;
     Texture backgroundTexture;
     Texture playerTexture;
-    Texture dropTexture;
     Sprite playerSprite; // Declare a new Sprite variable
     Vector2 touchPos;
     Texture wallTexture;
@@ -87,6 +85,7 @@ public class Main extends ApplicationAdapter {
 
         // Clamp x to values between 0 and worldWidth
         playerSprite.setX(MathUtils.clamp(playerSprite.getX(), 0, worldWidth-playerWidth));
+        playerSprite.setY(MathUtils.clamp(playerSprite.getY(),0,worldHeight-playerHeight));
         wallSprite.setX(playerSprite.getX()+20);
         wallSprite.setY(playerSprite.getY());
         //float delta = Gdx.graphics.getDeltaTime(); // retrieve the current delta
