@@ -4,11 +4,9 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
 public class Movement {
-    private float x;
-    private float y;
-    private float speed = 200f;
-    private float accelerate = 400f;
-    private float friction = 4000f;
+    private final float speed = 200f;
+    private final float accelerate = 400f;
+    private final float friction = 4000f;
     float Xspeed = 0;
     float Yspeed = 0;
     public void update(float delta, Sprite playerSprite) {
