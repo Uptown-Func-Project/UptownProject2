@@ -26,6 +26,7 @@ public class Main extends ApplicationAdapter {
     Texture wallTexture;
     Sprite wallSprite;
     Array<Sprite> wallSprites;
+    Movement movement;
 
 
     @Override
@@ -40,7 +41,8 @@ public class Main extends ApplicationAdapter {
         wallTexture = new Texture("wallMaybe.png");
         wallSprite = new Sprite(wallTexture);
         wallSprite.setSize(2,20);
-        touchPos = new Vector2();
+        //touchPos = new Vector2();
+        movement = new Movement();
         //dropSprites = new Array<>();
 
     }
@@ -53,25 +55,27 @@ public class Main extends ApplicationAdapter {
     }
 
     private void input() {
-        float speed = 40f;
+        //float speed = 40f;
         float delta = Gdx.graphics.getDeltaTime(); // retrieve the current delta
+        movement.update(delta,playerSprite);
+        /*
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            playerSprite.translateX(speed * delta);
+            playerSprite.translateX(speed * delta * 0.75f);
         }
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            playerSprite.translateX(-speed * delta);
+            playerSprite.translateX(-speed * delta * 0.75f);
         }
         if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            playerSprite.translateY(speed * delta);
+            playerSprite.translateY(speed * delta * 0.5f);
         }
         if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            playerSprite.translateY(-speed * delta);
-        }
-        if (Gdx.input.isTouched()) {
+            playerSprite.translateY(-speed * delta * 0.5f);
+        }*/
+        /*if (Gdx.input.isTouched()) {
             touchPos.set(Gdx.input.getX(), Gdx.input.getY()); // Get where the touch happened on screen
             viewport.unproject(touchPos); // Convert the units to the world units of the viewport
             playerSprite.setCenterX(touchPos.x); // Change the horizontally centered position of the bucket
-        }
+        }*/
     }
 
     private void logic() {
