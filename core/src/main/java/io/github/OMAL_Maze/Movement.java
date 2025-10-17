@@ -2,6 +2,8 @@ package io.github.OMAL_Maze;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Array;
 
 public class Movement {
     private final float speed = 200f;
@@ -10,6 +12,12 @@ public class Movement {
     float Xspeed = 0;
     float Yspeed = 0;
     public void update(float delta, Sprite playerSprite) {
+
+    }
+    public void update(float delta, Entity entity) {
+        Main instance = Main.getInstance();
+        Array<Entity> entities = instance.entities;
+        Sprite playerSprite = entity.sprite;
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
             Xspeed += accelerate * delta;
             //if (Xspeed < 0) Xspeed = 0;
@@ -35,11 +43,47 @@ public class Movement {
         if (!Gdx.input.isKeyPressed(Input.Keys.UP) && !Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
             Yspeed *= Math.max(0, 1 - friction * delta / speed);
         }
-        if (Xspeed>speed) Xspeed=speed;
+        if (Xspeed>speed) Xspeed = speed;
         if (Yspeed>speed) Yspeed = speed;
         if (Xspeed<-speed) Xspeed = -speed;
         if (Yspeed<-speed) Yspeed = -speed;
-        playerSprite.translate(Xspeed * delta, Yspeed * delta);
 
+        float moveX = Xspeed * delta;
+        float moveY = Yspeed * delta;
+
+        playerSprite.translateX(moveX);
+        Rectangle playerBounds = playerSprite.getBoundingRectangle();
+
+        boolean collisionX = false;
+        for (Entity possibleEntity : entities) {
+            if (possibleEntity==entity) continue;
+            if (possibleEntity.Overlaps(playerBounds)) {
+                collisionX = true;
+                break;
+            }
+        }
+
+        if (collisionX) {
+            playerSprite.translateX(-moveX);
+            Xspeed = 0;
+        }
+
+        playerSprite.translateY(moveY);
+        playerBounds = playerSprite.getBoundingRectangle();
+
+        boolean collisionY = false;
+        for (Entity possibleEntity : entities) {
+            if (possibleEntity==entity) continue;
+            if (possibleEntity.Overlaps(playerBounds)) {
+                collisionY = true;
+                break;
+            }
+        }
+
+        if (collisionY) {
+            playerSprite.translateY(-moveY);
+            Yspeed = 0;
+        }
+        entity.logic();
     }
 }

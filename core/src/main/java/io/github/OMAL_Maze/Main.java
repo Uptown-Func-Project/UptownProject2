@@ -22,13 +22,22 @@ public class Main extends ApplicationAdapter {
     Sprite playerSprite; // Declare a new Sprite variable
     Vector2 touchPos;
     Texture wallTexture;
-    Sprite wallSprite;
+    Character wall;
     Array<Sprite> wallSprites;
     Movement movement;
+    Player player;
+    Array<Entity> entities;
+    private static Main instance;
 
-
+    public Main() {
+        instance = this;
+    }
+    public static Main getInstance() {
+        return instance;
+    }
     @Override
     public void create() {
+        entities = new Array<>();
         batch = new SpriteBatch();
         viewport = new FitViewport(400, 400);
         backgroundTexture = new Texture("maze_background.png");
@@ -37,12 +46,13 @@ public class Main extends ApplicationAdapter {
         playerSprite = new Sprite(playerTexture); // Initialize the sprite based on the texture
         playerSprite.setSize(15, 15); // Define the size of the sprite
         wallTexture = new Texture("wallMaybe.png");
-        wallSprite = new Sprite(wallTexture);
-        wallSprite.setSize(2,20);
+        wall = new Character(50,50,10,10,wallTexture);
         //touchPos = new Vector2();
         movement = new Movement();
         //dropSprites = new Array<>();
-
+        player = new Player(0,0,15,15,playerTexture);
+        entities.add(player);
+        entities.add(wall);
     }
 
     @Override
@@ -55,55 +65,17 @@ public class Main extends ApplicationAdapter {
     private void input() {
         //float speed = 40f;
         float delta = Gdx.graphics.getDeltaTime(); // retrieve the current delta
-        movement.update(delta,playerSprite);
-        /*
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            playerSprite.translateX(speed * delta * 0.75f);
+        //movement.update(delta,playerSprite);
+        for (Entity entity: entities) {
+            if (entity instanceof Player) {
+                movement.update(delta, entity);
+            }
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            playerSprite.translateX(-speed * delta * 0.75f);
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            playerSprite.translateY(speed * delta * 0.5f);
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            playerSprite.translateY(-speed * delta * 0.5f);
-        }*/
-        /*if (Gdx.input.isTouched()) {
-            touchPos.set(Gdx.input.getX(), Gdx.input.getY()); // Get where the touch happened on screen
-            viewport.unproject(touchPos); // Convert the units to the world units of the viewport
-            playerSprite.setCenterX(touchPos.x); // Change the horizontally centered position of the bucket
-        }*/
     }
 
     private void logic() {
-        // Store the worldWidth and worldHeight as local variables for brevity
-        float worldWidth = viewport.getWorldWidth();
-        float worldHeight = viewport.getWorldHeight();
-        float playerWidth = playerSprite.getWidth();
-        float playerHeight = playerSprite.getHeight();
-
-        // Clamp x to values between 0 and worldWidth
-        playerSprite.setX(MathUtils.clamp(playerSprite.getX(), 0, worldWidth-playerWidth));
-        playerSprite.setY(MathUtils.clamp(playerSprite.getY(),0,worldHeight-playerHeight));
-        wallSprite.setX(playerSprite.getX()+20);
-        wallSprite.setY(playerSprite.getY());
-        //float delta = Gdx.graphics.getDeltaTime(); // retrieve the current delta
-        /*
-        for (int i = dropSprites.size - 1; i >= 0; i--) {
-            Sprite dropSprite = dropSprites.get(i); // Get the sprite from the list
-            float dropWidth = dropSprite.getWidth();
-            float dropHeight = dropSprite.getHeight();
-
-            dropSprite.translateY(-2f * delta);
-
-            // if the top of the drop goes below the bottom of the view, remove it
-            if (dropSprite.getY() < -dropHeight) dropSprites.removeIndex(i);
-        }
-        dropTimer += delta; // Adds the current delta to the timer
-        if (dropTimer > 1f) { // Check if it has been more than a second
-            dropTimer = 0; // Reset the timer
-            createDroplet(); // Create the droplet
+        /*for (Entity entity: entities) {
+            entity.logic();
         }*/
     }
 
@@ -115,12 +87,9 @@ public class Main extends ApplicationAdapter {
         batch.setProjectionMatrix(viewport.getCamera().combined);
         batch.begin();
         batch.draw(backgroundTexture, 0, 0, worldWidth, worldHeight); // draw the background
-        //batch.draw(playerTexture, 0, 0, 1, 1); // draw the bucket with width/height of 1 meter
-        playerSprite.draw(batch);
-        /*for (Sprite dropSprite : dropSprites) {
-            dropSprite.draw(batch);
-        }*/
-        wallSprite.draw(batch);
+        for (Entity entity: entities) {
+            entity.render(batch);
+        }
         batch.end();
     }
 
