@@ -20,10 +20,8 @@ public class Main extends ApplicationAdapter {
     Texture backgroundTexture;
     Texture playerTexture;
     Sprite playerSprite; // Declare a new Sprite variable
-    Vector2 touchPos;
     Texture wallTexture;
     Character wall;
-    Array<Sprite> wallSprites;
     Movement movement;
     Player player;
     Array<Entity> entities;
@@ -47,7 +45,6 @@ public class Main extends ApplicationAdapter {
         playerSprite.setSize(15, 15); // Define the size of the sprite
         wallTexture = new Texture("wallMaybe.png");
         wall = new Character(50,50,10,10,wallTexture);
-        //touchPos = new Vector2();
         movement = new Movement();
         //dropSprites = new Array<>();
         player = new Player(0,0,15,15,playerTexture);
