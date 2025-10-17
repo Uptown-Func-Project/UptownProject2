@@ -2,7 +2,6 @@ package io.github.OMAL_Maze;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -19,26 +18,38 @@ public class Main extends ApplicationAdapter {
     private SpriteBatch batch;
     FitViewport viewport;
     Texture backgroundTexture;
-    Texture bucketTexture;
-    Texture dropTexture;
-    Sprite bucketSprite; // Declare a new Sprite variable
-    Vector2 touchPos;
-    Array<Sprite> dropSprites;
-    float dropTimer;
+    Texture playerTexture;
+    Sprite playerSprite; // Declare a new Sprite variable
+    Texture wallTexture;
+    Character wall;
+    Movement movement;
+    Player player;
+    Array<Entity> entities;
+    private static Main instance;
 
-    // praneel teting 1.1.1
+    public Main() {
+        instance = this;
+    }
+    public static Main getInstance() {
+        return instance;
+    }
     @Override
     public void create() {
+        entities = new Array<>();
         batch = new SpriteBatch();
-        viewport = new FitViewport(8, 5);
-        backgroundTexture = new Texture("background.png");
-        bucketTexture = new Texture("bucket.png");
-        dropTexture = new Texture("drop.png");
-        bucketSprite = new Sprite(bucketTexture); // Initialize the sprite based on the texture
-        bucketSprite.setSize(1, 1); // Define the size of the sprite
-        touchPos = new Vector2();
-        dropSprites = new Array<>();
-
+        viewport = new FitViewport(400, 400);
+        backgroundTexture = new Texture("maze_background.png");
+        playerTexture = new Texture("playerCopy.png");
+        //dropTexture = new Texture("drop.png");
+        playerSprite = new Sprite(playerTexture); // Initialize the sprite based on the texture
+        playerSprite.setSize(15, 15); // Define the size of the sprite
+        wallTexture = new Texture("wallMaybe.png");
+        wall = new Character(50,50,10,10,wallTexture);
+        movement = new Movement();
+        //dropSprites = new Array<>();
+        player = new Player(0,0,15,15,playerTexture);
+        entities.add(player);
+        entities.add(wall);
     }
 
     @Override
@@ -49,54 +60,20 @@ public class Main extends ApplicationAdapter {
     }
 
     private void input() {
-        float speed = 4f;
+        //float speed = 40f;
         float delta = Gdx.graphics.getDeltaTime(); // retrieve the current delta
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            bucketSprite.translateX(speed * delta);
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            bucketSprite.translateX(-speed * delta);
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            bucketSprite.translateY(speed * delta);
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            bucketSprite.translateY(-speed * delta);
-        }
-        if (Gdx.input.isTouched()) {
-            touchPos.set(Gdx.input.getX(), Gdx.input.getY()); // Get where the touch happened on screen
-            viewport.unproject(touchPos); // Convert the units to the world units of the viewport
-            bucketSprite.setCenterX(touchPos.x); // Change the horizontally centered position of the bucket
+        //movement.update(delta,playerSprite);
+        for (Entity entity: entities) {
+            if (entity instanceof Player) {
+                movement.update(delta, entity);
+            }
         }
     }
 
     private void logic() {
-        // Store the worldWidth and worldHeight as local variables for brevity
-        float worldWidth = viewport.getWorldWidth();
-        float worldHeight = viewport.getWorldHeight();
-        float bucketWidth = bucketSprite.getWidth();
-        float bucketHeight = bucketSprite.getHeight();
-
-        // Clamp x to values between 0 and worldWidth
-        bucketSprite.setX(MathUtils.clamp(bucketSprite.getX(), 0, worldWidth-bucketWidth));
-
-        float delta = Gdx.graphics.getDeltaTime(); // retrieve the current delta
-
-        for (int i = dropSprites.size - 1; i >= 0; i--) {
-            Sprite dropSprite = dropSprites.get(i); // Get the sprite from the list
-            float dropWidth = dropSprite.getWidth();
-            float dropHeight = dropSprite.getHeight();
-
-            dropSprite.translateY(-2f * delta);
-
-            // if the top of the drop goes below the bottom of the view, remove it
-            if (dropSprite.getY() < -dropHeight) dropSprites.removeIndex(i);
-        }
-        dropTimer += delta; // Adds the current delta to the timer
-        if (dropTimer > 1f) { // Check if it has been more than a second
-            dropTimer = 0; // Reset the timer
-            createDroplet(); // Create the droplet
-        }
+        /*for (Entity entity: entities) {
+            entity.logic();
+        }*/
     }
 
     private void draw() {
@@ -107,15 +84,13 @@ public class Main extends ApplicationAdapter {
         batch.setProjectionMatrix(viewport.getCamera().combined);
         batch.begin();
         batch.draw(backgroundTexture, 0, 0, worldWidth, worldHeight); // draw the background
-        //batch.draw(bucketTexture, 0, 0, 1, 1); // draw the bucket with width/height of 1 meter
-        bucketSprite.draw(batch);
-        for (Sprite dropSprite : dropSprites) {
-            dropSprite.draw(batch);
+        for (Entity entity: entities) {
+            entity.render(batch);
         }
         batch.end();
     }
 
-    private void createDroplet() {
+    /*private void createDroplet() {
         float dropWidth = 1;
         float dropHeight = 1;
         float worldWidth = viewport.getWorldWidth();
@@ -126,11 +101,11 @@ public class Main extends ApplicationAdapter {
         dropSprite.setX(MathUtils.random(0f, worldWidth - dropWidth)); // Randomize the drop's x position
         dropSprite.setY(worldHeight);
         dropSprites.add(dropSprite);
-    }
+    }*/
 
     @Override
     public void resize(int width, int height) {
-        viewport.update(640, 480, true); // true centers the camera
+        viewport.update(909, 909, true); // true centers the camera
     }
 
     @Override
