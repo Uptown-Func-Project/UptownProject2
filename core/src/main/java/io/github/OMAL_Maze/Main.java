@@ -38,16 +38,16 @@ public class Main extends ApplicationAdapter {
         buildings = new Array<>();
         batch = new SpriteBatch();
         viewport = new FitViewport(400, 400);
-        backgroundTexture = new Texture("maze_background.png");
-        playerTexture = new Texture("playerCopy.png");
-        wallTexture = new Texture("wallMaybe.png");
+        backgroundTexture = new Texture("screenTextures/maze1_WL.png");
+        playerTexture = new Texture("entityTextures/playerCopy.png");
+        wallTexture = new Texture("buildingTextures/wallMaybe.png");
         movement = new Movement();
         player = new Player(0,0,15,15,playerTexture);
         entities.add(player);
-        Building fakeNisa = new Building(100,100,56,42,new Texture("NiniLool.png"));
-        Building wall = new Building(50,50,10,10,wallTexture);
+        Building fakeNisa = new Building(100,100,56,42,new Texture("buildingTextures/NiniLool.png"));
+        Building CS_Building = new Building(50,340,64,45,new Texture("buildingTextures/CS_Building.png"));
         buildings.add(fakeNisa);
-        buildings.add(wall);
+        buildings.add(CS_Building);
     }
 
     @Override

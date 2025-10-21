@@ -11,9 +11,6 @@ public class Movement {
     private final float friction = 4000f;
     float Xspeed = 0;
     float Yspeed = 0;
-    public void update(float delta, Sprite playerSprite) {
-
-    }
     public void update(float delta, Entity entity) {
         Main instance = Main.getInstance();
         Array<Entity> entities = instance.entities;
