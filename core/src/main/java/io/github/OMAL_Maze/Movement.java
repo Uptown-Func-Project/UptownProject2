@@ -18,6 +18,7 @@ public class Movement {
         Main instance = Main.getInstance();
         Array<Entity> entities = instance.entities;
         Sprite playerSprite = entity.sprite;
+        Array<Building> buildings = instance.buildings;
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
             Xspeed += accelerate * delta;
             //if (Xspeed < 0) Xspeed = 0;
@@ -62,6 +63,12 @@ public class Movement {
                 break;
             }
         }
+        for (Building building: buildings) {
+            if (building.Overlaps(playerBounds)) {
+                collisionX = true;
+                break;
+            }
+        }
 
         if (collisionX) {
             playerSprite.translateX(-moveX);
@@ -75,6 +82,12 @@ public class Movement {
         for (Entity possibleEntity : entities) {
             if (possibleEntity==entity) continue;
             if (possibleEntity.Overlaps(playerBounds)) {
+                collisionY = true;
+                break;
+            }
+        }
+        for (Building building: buildings) {
+            if (building.Overlaps(playerBounds)) {
                 collisionY = true;
                 break;
             }
