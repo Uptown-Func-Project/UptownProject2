@@ -19,7 +19,6 @@ public class Main extends ApplicationAdapter {
     FitViewport viewport;
     Texture backgroundTexture;
     Texture playerTexture;
-    Texture wallTexture;
     Movement movement;
     Player player;
     Array<Entity> entities;
@@ -40,7 +39,6 @@ public class Main extends ApplicationAdapter {
         viewport = new FitViewport(400, 400);
         backgroundTexture = new Texture("screenTextures/maze1_WL.png");
         playerTexture = new Texture("entityTextures/playerCopy.png");
-        wallTexture = new Texture("buildingTextures/wallMaybe.png");
         movement = new Movement();
         player = new Player(0,0,15,15,playerTexture);
         entities.add(player);
