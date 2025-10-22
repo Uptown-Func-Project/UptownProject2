@@ -5,15 +5,16 @@ import java.time.chrono.MinguoChronology;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends ApplicationAdapter {
@@ -68,6 +69,10 @@ public class Main extends ApplicationAdapter {
         entities.add(goose);
 
         instance = this;
+      
+        //Background music plays the entire time
+        Sound BackgroundMusic = Gdx.audio.newSound(Gdx.files.internal("assets/Sounds/Background.mp3"));
+        BackgroundMusic.play();
 
         //button experiments
         button = new Button(Gdx.files.internal("button.png"));
@@ -92,6 +97,7 @@ public class Main extends ApplicationAdapter {
         };
         Timer.schedule(myTimerTask, 1f, 1f);
     }
+
     @Override
     public void render() {
         input();
