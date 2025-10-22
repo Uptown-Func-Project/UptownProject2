@@ -19,11 +19,13 @@ public class Main extends ApplicationAdapter {
     FitViewport viewport;
     Texture backgroundTexture;
     Texture playerTexture;
+    Texture gooseTexture;
     Sprite playerSprite; // Declare a new Sprite variable
     Texture wallTexture;
     Character wall;
     Movement movement;
     Player player;
+    Goose goose;
     Array<Entity> entities;
     private static Main instance;
 
@@ -38,18 +40,27 @@ public class Main extends ApplicationAdapter {
         entities = new Array<>();
         batch = new SpriteBatch();
         viewport = new FitViewport(400, 400);
+
         backgroundTexture = new Texture("maze_background.png");
         playerTexture = new Texture("playerCopy.png");
+        wallTexture = new Texture("wallMaybe.png");
+        gooseTexture = new Texture("goose.png");
         //dropTexture = new Texture("drop.png");
+
         playerSprite = new Sprite(playerTexture); // Initialize the sprite based on the texture
         playerSprite.setSize(15, 15); // Define the size of the sprite
-        wallTexture = new Texture("wallMaybe.png");
+        player = new Player(0,0,15,15,playerTexture);
+
         wall = new Character(50,50,10,10,wallTexture);
+
+        goose = new Goose(200, 200, 20, 20, gooseTexture, player);
         movement = new Movement();
         //dropSprites = new Array<>();
-        player = new Player(0,0,15,15,playerTexture);
+
         entities.add(player);
         entities.add(wall);
+        entities.add(goose);
+        goose.show();
     }
 
     @Override
@@ -74,6 +85,7 @@ public class Main extends ApplicationAdapter {
         /*for (Entity entity: entities) {
             entity.logic();
         }*/
+        goose.logic();
     }
 
     private void draw() {
@@ -85,7 +97,9 @@ public class Main extends ApplicationAdapter {
         batch.begin();
         batch.draw(backgroundTexture, 0, 0, worldWidth, worldHeight); // draw the background
         for (Entity entity: entities) {
-            entity.render(batch);
+            if (entity.visible) {
+                entity.render(batch);
+            }
         }
         batch.end();
     }

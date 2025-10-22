@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
+import org.w3c.dom.Text;
 
 public class Entity {
     Rectangle rectangle;
@@ -14,6 +15,7 @@ public class Entity {
     int height;
     Sprite sprite;
     Texture entityTexture;
+    boolean visible;
 
     public Entity(int x, int y, int width, int height, Texture entityTexture) {
         rectangle = new Rectangle(x,y,width,height);
@@ -21,7 +23,6 @@ public class Entity {
         this.y=y;
         this.width=width;
         this.height=height;
-        this.entityTexture=entityTexture;
         this.sprite = new Sprite(entityTexture);
         this.sprite.setSize(width,height);
         this.sprite.setX(this.x);
