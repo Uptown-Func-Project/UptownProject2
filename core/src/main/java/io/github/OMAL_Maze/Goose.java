@@ -55,11 +55,11 @@ public class Goose extends Character{
      */
     public void followPlayer(){
         isMoving = true;
-
-        // TODO: prevent goose from leaving screen
     }
 
-
+/*
+ Where the goose moves - in future the code within can be hopefully replaced with calling a Movement class
+ */
     public void logic(){
         float playerX = player.sprite.getX();
         float playerY = player.sprite.getY();
@@ -68,10 +68,6 @@ public class Goose extends Character{
             /* TODO:
             if (goose collides with player)   {
                 bitePlayer();
-
-                // need to prevent goose from immediately re-biting player, temporary solution is to hide goose
-                isMoving = false;
-                hide();
             }
             */
 
@@ -82,8 +78,8 @@ public class Goose extends Character{
             double unitVector_x = X_diff / distance;
             double unitVector_y = Y_diff / distance;
             sprite.translate((float) (unitVector_x * speed), (float) (unitVector_y * speed));
-            rectangle.x = sprite.getX();
-            rectangle.y = sprite.getY();
+//            rectangle.x = sprite.getX();
+//            rectangle.y = sprite.getY();
         }
     }
 
@@ -92,6 +88,9 @@ public class Goose extends Character{
      */
     public void bitePlayer(){
         player.decreaseHearts();
-        //move back? - something to stop the player from getting repeatedly bitten
+        // need to prevent goose from immediately re-biting player - move goose negative direction a small distance
+        // temporary solution for testing - goose hides and stops moving on collision with player (delete later):
+        isMoving = false;
+        hide();
     }
 }
