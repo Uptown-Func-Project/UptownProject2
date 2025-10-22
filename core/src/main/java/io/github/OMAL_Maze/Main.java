@@ -51,28 +51,28 @@ public class Main extends ApplicationAdapter {
         player = new Player(0,0,15,15,playerTexture);
         font = new BitmapFont();
         timerText = "Time: " + miniutesRemaining;
-        startTimer(); 
-        Timer.schedule(myTimerTask, 1f, 1f);
+        startTimer();
         Building fakeNisa = new Building(100,100,56,42,new Texture("buildingTextures/NiniLool.png"));
         Building CS_Building = new Building(50,340,64,45,new Texture("buildingTextures/CS_Building.png"));
         buildings.add(fakeNisa);
         buildings.add(CS_Building);
     }
 
-    private void startTimer(){
+    private void startTimer() {
         myTimerTask = new Timer.Task() {
             @Override
             public void run() {
-            if (miniutesRemaining > 0){
-                miniutesRemaining--;
-                timerText = "Time: " + miniutesRemaining;
-            } else{
-                System.out.println("Time is up!");
-                this.cancel();
-                    }
+                if (miniutesRemaining > 0) {
+                    miniutesRemaining--;
+                    timerText = "Time: " + miniutesRemaining;
+                } else {
+                    System.out.println("Time is up!");
+                    this.cancel();
+                }
             }
         };
-
+        Timer.schedule(myTimerTask, 1f, 1f);
+    }
     @Override
     public void render() {
         input();
