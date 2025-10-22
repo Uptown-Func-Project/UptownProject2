@@ -7,11 +7,10 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends ApplicationAdapter {
@@ -26,6 +25,9 @@ public class Main extends ApplicationAdapter {
     Player player;
     Array<Entity> entities;
     private static Main instance;
+
+    //button experiment
+    Button button;
 
     public Main() {
         instance = this;
@@ -50,13 +52,23 @@ public class Main extends ApplicationAdapter {
         player = new Player(0,0,15,15,playerTexture);
         entities.add(player);
         entities.add(wall);
+
+        //button experiments
+        button = new Button(Gdx.files.internal("button.png"));
+
     }
+
+
+
+
 
     @Override
     public void render() {
         input();
         logic();
         draw();
+
+
     }
 
     private void input() {
@@ -88,6 +100,19 @@ public class Main extends ApplicationAdapter {
             entity.render(batch);
         }
         batch.end();
+
+        //button code added below
+        Gdx.gl.glClearColor(1, 1, 1, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        batch.begin();
+        batch.draw(button,0,0,button.getWidth(),button.getHeight());
+        batch.end();
+
+        if(button.isClicked()){
+            System.out.println("Button clicked");
+            //perform action when button is clicked
+        }
     }
 
     /*private void createDroplet() {
@@ -113,3 +138,7 @@ public class Main extends ApplicationAdapter {
         batch.dispose();
     }
 }
+
+
+
+
