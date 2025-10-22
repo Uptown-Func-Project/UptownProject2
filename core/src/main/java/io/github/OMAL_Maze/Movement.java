@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 
-// player movement???
 public class Movement {
     private final float speed = 200f;
     private final float accelerate = 400f;
@@ -56,7 +55,7 @@ public class Movement {
         boolean collisionX = false;
         for (Entity possibleEntity : entities) {
             if (possibleEntity==entity) continue;
-            if (possibleEntity.Overlaps(playerBounds) && possibleEntity.visible) {
+            if (possibleEntity.Overlaps(playerBounds)) {
                 collisionX = true;
                 break;
             }
@@ -79,7 +78,7 @@ public class Movement {
         boolean collisionY = false;
         for (Entity possibleEntity : entities) {
             if (possibleEntity==entity) continue;
-            if (possibleEntity.Overlaps(playerBounds) && possibleEntity.visible) {
+            if (possibleEntity.Overlaps(playerBounds)) {
                 collisionY = true;
                 break;
             }

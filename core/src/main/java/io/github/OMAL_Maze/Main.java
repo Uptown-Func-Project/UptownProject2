@@ -26,10 +26,8 @@ public class Main extends ApplicationAdapter {
     FitViewport viewport;
     Texture backgroundTexture;
     Texture playerTexture;
-    Texture gooseTexture;
     Movement movement;
     Player player;
-    Goose goose;
     Array<Entity> entities;
     Array<Building> buildings;
     private static Main instance;
@@ -46,39 +44,26 @@ public class Main extends ApplicationAdapter {
         buildings = new Array<>();
         batch = new SpriteBatch();
         viewport = new FitViewport(400, 400);
-
         backgroundTexture = new Texture("screenTextures/maze1_WL.png");
         playerTexture = new Texture("entityTextures/playerCopy.png");
-        gooseTexture = new Texture("goose.png");
-
-        player = new Player(0,0,15,15,playerTexture);
-        goose = new Goose(200, 200, 20, 20, gooseTexture, player);
-      
         movement = new Movement();
-      
+        player = new Player(0,0,15,15,playerTexture);
         font = new BitmapFont();
         timerText = "Time: " + miniutesRemaining;
         startTimer();
-      
         Building fakeNisa = new Building(100,100,56,42,new Texture("buildingTextures/NiniLool.png"));
         Building CS_Building = new Building(50,340,64,45,new Texture("buildingTextures/CS_Building.png"));
         buildings.add(fakeNisa);
         buildings.add(CS_Building);
-      
-        entities.add(player);
-        entities.add(goose);
-
-        instance = this;
-      
         //Background music plays the entire time
         Sound BackgroundMusic = Gdx.audio.newSound(Gdx.files.internal("assets/Sounds/Background.mp3"));
         BackgroundMusic.play();
 
+        entities.add(player);
+        instance = this;
+
         //button experiments
         button = new Button(Gdx.files.internal("button.png"));
-      
-        // for testing goose - delete later
-        goose.show();
 
     }
 
@@ -125,7 +110,6 @@ public class Main extends ApplicationAdapter {
         /*for (Entity entity: entities) {
             entity.logic();
         }*/
-        goose.logic();
     }
 
     private void draw() {
@@ -137,9 +121,7 @@ public class Main extends ApplicationAdapter {
         batch.begin();
         batch.draw(backgroundTexture, 0, 0, worldWidth, worldHeight); // draw the background
         for (Entity entity: entities) {
-            if (entity.visible) {
-                entity.render(batch);
-            }
+            entity.render(batch);
         }
         font.draw(batch, timerText,10, worldHeight - 10);
         for (Building building: buildings) {
