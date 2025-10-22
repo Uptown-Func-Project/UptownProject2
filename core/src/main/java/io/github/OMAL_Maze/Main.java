@@ -1,23 +1,28 @@
 package io.github.OMAL_Maze;
+import com.badlogic.gdx.utils.Timer;
+
+import java.time.chrono.MinguoChronology;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.audio.Sound;
-
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends ApplicationAdapter {
+    private int miniutesRemaining = 10;
+    private Timer.Task myTimerTask;
     private SpriteBatch batch;
+    private BitmapFont font;
+    private String timerText = "Time = 0";
     FitViewport viewport;
     Texture backgroundTexture;
     Texture playerTexture;
@@ -27,9 +32,9 @@ public class Main extends ApplicationAdapter {
     Array<Building> buildings;
     private static Main instance;
 
-    public Main() {
-        instance = this;
-    }
+    //button experiment
+    Button button;
+
     public static Main getInstance() {
         return instance;
     }
@@ -43,15 +48,39 @@ public class Main extends ApplicationAdapter {
         playerTexture = new Texture("entityTextures/playerCopy.png");
         movement = new Movement();
         player = new Player(0,0,15,15,playerTexture);
-        entities.add(player);
+        font = new BitmapFont();
+        timerText = "Time: " + miniutesRemaining;
+        startTimer();
         Building fakeNisa = new Building(100,100,56,42,new Texture("buildingTextures/NiniLool.png"));
         Building CS_Building = new Building(50,340,64,45,new Texture("buildingTextures/CS_Building.png"));
         buildings.add(fakeNisa);
         buildings.add(CS_Building);
-
         //Background music plays the entire time
         Sound BackgroundMusic = Gdx.audio.newSound(Gdx.files.internal("assets/Sounds/Background.mp3"));
         BackgroundMusic.play();
+
+        entities.add(player);
+        instance = this;
+
+        //button experiments
+        button = new Button(Gdx.files.internal("button.png"));
+
+    }
+
+    private void startTimer() {
+        myTimerTask = new Timer.Task() {
+            @Override
+            public void run() {
+                if (miniutesRemaining > 0) {
+                    miniutesRemaining--;
+                    timerText = "Time: " + miniutesRemaining;
+                } else {
+                    System.out.println("Time is up!");
+                    this.cancel();
+                }
+            }
+        };
+        Timer.schedule(myTimerTask, 1f, 1f);
     }
 
     @Override
@@ -59,6 +88,11 @@ public class Main extends ApplicationAdapter {
         input();
         logic();
         draw();
+
+
+        batch.begin();
+        font.draw(batch,timerText,50,450);
+        batch.end();
     }
 
     private void input() {
@@ -89,10 +123,17 @@ public class Main extends ApplicationAdapter {
         for (Entity entity: entities) {
             entity.render(batch);
         }
+        font.draw(batch, timerText,10, worldHeight - 10);
         for (Building building: buildings) {
             building.render(batch);
         }
+        batch.draw(button,0,0,button.getWidth(),button.getHeight());
         batch.end();
+
+        if(button.isClicked()){
+            System.out.println("Button clicked");
+            //perform action when button is clicked
+        }
     }
 
     /*private void createDroplet() {
@@ -116,5 +157,10 @@ public class Main extends ApplicationAdapter {
     @Override
     public void dispose() {
         batch.dispose();
-    }
+        font.dispose();
+        }
 }
+
+
+
+
