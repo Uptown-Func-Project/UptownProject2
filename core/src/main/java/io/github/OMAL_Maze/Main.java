@@ -15,7 +15,6 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
-
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends ApplicationAdapter {
     private int miniutesRemaining = 10;
@@ -35,9 +34,6 @@ public class Main extends ApplicationAdapter {
     //button experiment
     Button button;
 
-    public Main() {
-        instance = this;
-    }
     public static Main getInstance() {
         return instance;
     }
@@ -59,16 +55,10 @@ public class Main extends ApplicationAdapter {
         buildings.add(fakeNisa);
         buildings.add(CS_Building);
         entities.add(player);
-        entities.add(wall);
+        instance = this;
 
         //button experiments
         button = new Button(Gdx.files.internal("button.png"));
-
-    }
-
-
-
-
 
     }
 
@@ -131,13 +121,6 @@ public class Main extends ApplicationAdapter {
         for (Building building: buildings) {
             building.render(batch);
         }
-        batch.end();
-
-        //button code added below
-        Gdx.gl.glClearColor(1, 1, 1, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        batch.begin();
         batch.draw(button,0,0,button.getWidth(),button.getHeight());
         batch.end();
 
