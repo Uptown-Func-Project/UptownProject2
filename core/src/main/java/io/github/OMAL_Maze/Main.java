@@ -1,4 +1,7 @@
 package io.github.OMAL_Maze;
+import com.badlogic.gdx.utils.Timer;
+
+import java.time.chrono.MinguoChronology;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -12,10 +15,15 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends ApplicationAdapter {
+    private int miniutesRemaining = 10;
+    private Timer.Task myTimerTask;
     private SpriteBatch batch;
+    private BitmapFont font;
+    private String timerText = "Time = 0";
     FitViewport viewport;
     Texture backgroundTexture;
     Texture playerTexture;
@@ -50,6 +58,25 @@ public class Main extends ApplicationAdapter {
         player = new Player(0,0,15,15,playerTexture);
         entities.add(player);
         entities.add(wall);
+        font = new BitmapFont();
+        timerText = "Time: " + miniutesRemaining;
+        startTimer(); }
+
+
+    private void startTimer(){
+        myTimerTask = new Timer.Task() {
+            @Override
+            public void run() {
+            if (miniutesRemaining > 0){
+                miniutesRemaining--;
+                timerText = "Time: " + miniutesRemaining;
+            } else{
+                System.out.println("Time is up!");
+                this.cancel();
+                    }
+            }
+        };
+        Timer.schedule(myTimerTask, 1f, 1f);
     }
 
     @Override
@@ -57,6 +84,9 @@ public class Main extends ApplicationAdapter {
         input();
         logic();
         draw();
+        batch.begin();
+        font.draw(batch,timerText,50,450);
+        batch.end();
     }
 
     private void input() {
@@ -87,6 +117,7 @@ public class Main extends ApplicationAdapter {
         for (Entity entity: entities) {
             entity.render(batch);
         }
+        font.draw(batch, timerText,10, worldHeight - 10);
         batch.end();
     }
 
@@ -111,5 +142,6 @@ public class Main extends ApplicationAdapter {
     @Override
     public void dispose() {
         batch.dispose();
-    }
+        font.dispose();
+        }
 }
