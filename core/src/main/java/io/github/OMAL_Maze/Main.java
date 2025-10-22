@@ -56,6 +56,7 @@ public class Main extends ApplicationAdapter {
         Building CS_Building = new Building(50,340,64,45,new Texture("buildingTextures/CS_Building.png"));
         buildings.add(fakeNisa);
         buildings.add(CS_Building);
+        entities.add(player);
     }
 
     private void startTimer() {
