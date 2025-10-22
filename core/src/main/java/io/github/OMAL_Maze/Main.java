@@ -27,12 +27,10 @@ public class Main extends ApplicationAdapter {
     FitViewport viewport;
     Texture backgroundTexture;
     Texture playerTexture;
-    Sprite playerSprite; // Declare a new Sprite variable
-    Texture wallTexture;
-    Character wall;
     Movement movement;
     Player player;
     Array<Entity> entities;
+    Array<Building> buildings;
     private static Main instance;
 
     public Main() {
@@ -44,24 +42,22 @@ public class Main extends ApplicationAdapter {
     @Override
     public void create() {
         entities = new Array<>();
+        buildings = new Array<>();
         batch = new SpriteBatch();
         viewport = new FitViewport(400, 400);
-        backgroundTexture = new Texture("maze_background.png");
-        playerTexture = new Texture("playerCopy.png");
-        //dropTexture = new Texture("drop.png");
-        playerSprite = new Sprite(playerTexture); // Initialize the sprite based on the texture
-        playerSprite.setSize(15, 15); // Define the size of the sprite
-        wallTexture = new Texture("wallMaybe.png");
-        wall = new Character(50,50,10,10,wallTexture);
+        backgroundTexture = new Texture("screenTextures/maze1_WL.png");
+        playerTexture = new Texture("entityTextures/playerCopy.png");
         movement = new Movement();
-        //dropSprites = new Array<>();
         player = new Player(0,0,15,15,playerTexture);
-        entities.add(player);
-        entities.add(wall);
         font = new BitmapFont();
         timerText = "Time: " + miniutesRemaining;
-        startTimer(); }
-
+        startTimer(); 
+        Timer.schedule(myTimerTask, 1f, 1f);
+        Building fakeNisa = new Building(100,100,56,42,new Texture("buildingTextures/NiniLool.png"));
+        Building CS_Building = new Building(50,340,64,45,new Texture("buildingTextures/CS_Building.png"));
+        buildings.add(fakeNisa);
+        buildings.add(CS_Building);
+    }
 
     private void startTimer(){
         myTimerTask = new Timer.Task() {
@@ -76,8 +72,6 @@ public class Main extends ApplicationAdapter {
                     }
             }
         };
-        Timer.schedule(myTimerTask, 1f, 1f);
-    }
 
     @Override
     public void render() {
@@ -118,6 +112,9 @@ public class Main extends ApplicationAdapter {
             entity.render(batch);
         }
         font.draw(batch, timerText,10, worldHeight - 10);
+        for (Building building: buildings) {
+            building.render(batch);
+        }
         batch.end();
     }
 
