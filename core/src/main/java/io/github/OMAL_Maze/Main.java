@@ -37,6 +37,9 @@ public class Main extends ApplicationAdapter {
     //button experiment
     Button button;
 
+    public Main() {
+        instance = this;
+    }
     public static Main getInstance() {
         return instance;
     }
@@ -49,34 +52,34 @@ public class Main extends ApplicationAdapter {
 
         backgroundTexture = new Texture("screenTextures/maze1_WL.png");
         playerTexture = new Texture("entityTextures/playerCopy.png");
-        gooseTexture = new Texture("goose.png");
+        gooseTexture = new Texture("entityTextures/goose.png");
 
         player = new Player(0,0,15,15,playerTexture);
         goose = new Goose(200, 200, 20, 20, gooseTexture, player);
-      
+
         movement = new Movement();
-      
+
         font = new BitmapFont();
         timerText = "Time: " + miniutesRemaining;
         startTimer();
-      
+
         Building fakeNisa = new Building(100,100,56,42,new Texture("buildingTextures/NiniLool.png"));
         Building CS_Building = new Building(50,340,64,45,new Texture("buildingTextures/CS_Building.png"));
         buildings.add(fakeNisa);
         buildings.add(CS_Building);
-      
+
         entities.add(player);
         entities.add(goose);
 
         instance = this;
-      
+
         //Background music plays the entire time
-        Sound BackgroundMusic = Gdx.audio.newSound(Gdx.files.internal("assets/Sounds/Background.mp3"));
+        Sound BackgroundMusic = Gdx.audio.newSound(Gdx.files.internal("Sounds/Background.mp3"));
         BackgroundMusic.play();
 
         //button experiments
         button = new Button(Gdx.files.internal("button.png"));
-      
+
         // for testing goose - delete later
         goose.show();
 
@@ -178,7 +181,3 @@ public class Main extends ApplicationAdapter {
         font.dispose();
         }
 }
-
-
-
-
