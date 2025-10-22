@@ -1,16 +1,12 @@
 package io.github.OMAL_Maze;
 import com.badlogic.gdx.utils.Timer;
 
-import java.time.chrono.MinguoChronology;
-
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -18,7 +14,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends ApplicationAdapter {
-    private int miniutesRemaining = 10;
+    private int minutesRemaining = 10;
     private Timer.Task myTimerTask;
     private SpriteBatch batch;
     private BitmapFont font;
@@ -60,7 +56,7 @@ public class Main extends ApplicationAdapter {
         movement = new Movement();
 
         font = new BitmapFont();
-        timerText = "Time: " + miniutesRemaining;
+        timerText = "Time: " + minutesRemaining;
         startTimer();
 
         Building fakeNisa = new Building(100,100,56,42,new Texture("buildingTextures/NiniLool.png"));
@@ -89,9 +85,9 @@ public class Main extends ApplicationAdapter {
         myTimerTask = new Timer.Task() {
             @Override
             public void run() {
-                if (miniutesRemaining > 0) {
-                    miniutesRemaining--;
-                    timerText = "Time: " + miniutesRemaining;
+                if (minutesRemaining > 0) {
+                    minutesRemaining--;
+                    timerText = "Time: " + minutesRemaining;
                 } else {
                     System.out.println("Time is up!");
                     this.cancel();
