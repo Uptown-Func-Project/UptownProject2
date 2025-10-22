@@ -12,13 +12,11 @@ public class Movement {
     private final float friction = 4000f;
     float Xspeed = 0;
     float Yspeed = 0;
-    public void update(float delta, Sprite playerSprite) {
-
-    }
     public void update(float delta, Entity entity) {
         Main instance = Main.getInstance();
         Array<Entity> entities = instance.entities;
         Sprite playerSprite = entity.sprite;
+        Array<Building> buildings = instance.buildings;
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
             Xspeed += accelerate * delta;
             //if (Xspeed < 0) Xspeed = 0;
@@ -63,6 +61,12 @@ public class Movement {
                 break;
             }
         }
+        for (Building building: buildings) {
+            if (building.Overlaps(playerBounds)) {
+                collisionX = true;
+                break;
+            }
+        }
 
         if (collisionX) {
             playerSprite.translateX(-moveX);
@@ -76,6 +80,12 @@ public class Movement {
         for (Entity possibleEntity : entities) {
             if (possibleEntity==entity) continue;
             if (possibleEntity.Overlaps(playerBounds) && possibleEntity.visible) {
+                collisionY = true;
+                break;
+            }
+        }
+        for (Building building: buildings) {
+            if (building.Overlaps(playerBounds)) {
                 collisionY = true;
                 break;
             }

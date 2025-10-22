@@ -1,4 +1,7 @@
 package io.github.OMAL_Maze;
+import com.badlogic.gdx.utils.Timer;
+
+import java.time.chrono.MinguoChronology;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -7,67 +10,98 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends ApplicationAdapter {
+    private int miniutesRemaining = 10;
+    private Timer.Task myTimerTask;
     private SpriteBatch batch;
+    private BitmapFont font;
+    private String timerText = "Time = 0";
     FitViewport viewport;
     Texture backgroundTexture;
     Texture playerTexture;
     Texture gooseTexture;
-    Sprite playerSprite; // Declare a new Sprite variable
-    Texture wallTexture;
-    Character wall;
     Movement movement;
     Player player;
     Goose goose;
     Array<Entity> entities;
+    Array<Building> buildings;
     private static Main instance;
 
-    public Main() {
-        instance = this;
-    }
+    //button experiment
+    Button button;
+
     public static Main getInstance() {
         return instance;
     }
     @Override
     public void create() {
         entities = new Array<>();
+        buildings = new Array<>();
         batch = new SpriteBatch();
         viewport = new FitViewport(400, 400);
 
-        backgroundTexture = new Texture("maze_background.png");
-        playerTexture = new Texture("playerCopy.png");
-        wallTexture = new Texture("wallMaybe.png");
+        backgroundTexture = new Texture("screenTextures/maze1_WL.png");
+        playerTexture = new Texture("entityTextures/playerCopy.png");
         gooseTexture = new Texture("goose.png");
-        //dropTexture = new Texture("drop.png");
 
-        playerSprite = new Sprite(playerTexture); // Initialize the sprite based on the texture
-        playerSprite.setSize(15, 15); // Define the size of the sprite
         player = new Player(0,0,15,15,playerTexture);
-
-        wall = new Character(50,50,10,10,wallTexture);
-
         goose = new Goose(200, 200, 20, 20, gooseTexture, player);
+      
         movement = new Movement();
-        //dropSprites = new Array<>();
-
+      
+        font = new BitmapFont();
+        timerText = "Time: " + miniutesRemaining;
+        startTimer();
+      
+        Building fakeNisa = new Building(100,100,56,42,new Texture("buildingTextures/NiniLool.png"));
+        Building CS_Building = new Building(50,340,64,45,new Texture("buildingTextures/CS_Building.png"));
+        buildings.add(fakeNisa);
+        buildings.add(CS_Building);
+      
         entities.add(player);
-        entities.add(wall);
         entities.add(goose);
+
+        instance = this;
+
+        //button experiments
+        button = new Button(Gdx.files.internal("button.png"));
+      
+        // for testing goose - delete later
         goose.show();
+
     }
 
+    private void startTimer() {
+        myTimerTask = new Timer.Task() {
+            @Override
+            public void run() {
+                if (miniutesRemaining > 0) {
+                    miniutesRemaining--;
+                    timerText = "Time: " + miniutesRemaining;
+                } else {
+                    System.out.println("Time is up!");
+                    this.cancel();
+                }
+            }
+        };
+        Timer.schedule(myTimerTask, 1f, 1f);
+    }
     @Override
     public void render() {
         input();
         logic();
         draw();
+
+
+        batch.begin();
+        font.draw(batch,timerText,50,450);
+        batch.end();
     }
 
     private void input() {
@@ -101,7 +135,17 @@ public class Main extends ApplicationAdapter {
                 entity.render(batch);
             }
         }
+        font.draw(batch, timerText,10, worldHeight - 10);
+        for (Building building: buildings) {
+            building.render(batch);
+        }
+        batch.draw(button,0,0,button.getWidth(),button.getHeight());
         batch.end();
+
+        if(button.isClicked()){
+            System.out.println("Button clicked");
+            //perform action when button is clicked
+        }
     }
 
     /*private void createDroplet() {
@@ -125,5 +169,10 @@ public class Main extends ApplicationAdapter {
     @Override
     public void dispose() {
         batch.dispose();
-    }
+        font.dispose();
+        }
 }
+
+
+
+
