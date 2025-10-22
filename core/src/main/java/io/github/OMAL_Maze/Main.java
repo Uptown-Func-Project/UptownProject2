@@ -12,6 +12,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.audio.Sound;
+
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends ApplicationAdapter {
@@ -46,6 +48,10 @@ public class Main extends ApplicationAdapter {
         Building CS_Building = new Building(50,340,64,45,new Texture("buildingTextures/CS_Building.png"));
         buildings.add(fakeNisa);
         buildings.add(CS_Building);
+
+        //Background music plays the entire time
+        Sound BackgroundMusic = Gdx.audio.newSound(Gdx.files.internal("assets/Sounds/Background.mp3"));
+        BackgroundMusic.play();
     }
 
     @Override
