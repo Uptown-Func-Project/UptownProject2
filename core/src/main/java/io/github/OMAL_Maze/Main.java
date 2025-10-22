@@ -1,4 +1,7 @@
 package io.github.OMAL_Maze;
+import com.badlogic.gdx.utils.Timer;
+
+import java.time.chrono.MinguoChronology;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -10,20 +13,23 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends ApplicationAdapter {
+    private int miniutesRemaining = 10;
+    private Timer.Task myTimerTask;
     private SpriteBatch batch;
+    private BitmapFont font;
+    private String timerText = "Time = 0";
     FitViewport viewport;
     Texture backgroundTexture;
     Texture playerTexture;
-    Sprite playerSprite; // Declare a new Sprite variable
-    Texture wallTexture;
-    Character wall;
     Movement movement;
     Player player;
     Array<Entity> entities;
+    Array<Building> buildings;
     private static Main instance;
 
     //button experiment
@@ -38,18 +44,20 @@ public class Main extends ApplicationAdapter {
     @Override
     public void create() {
         entities = new Array<>();
+        buildings = new Array<>();
         batch = new SpriteBatch();
         viewport = new FitViewport(400, 400);
-        backgroundTexture = new Texture("maze_background.png");
-        playerTexture = new Texture("playerCopy.png");
-        //dropTexture = new Texture("drop.png");
-        playerSprite = new Sprite(playerTexture); // Initialize the sprite based on the texture
-        playerSprite.setSize(15, 15); // Define the size of the sprite
-        wallTexture = new Texture("wallMaybe.png");
-        wall = new Character(50,50,10,10,wallTexture);
+        backgroundTexture = new Texture("screenTextures/maze1_WL.png");
+        playerTexture = new Texture("entityTextures/playerCopy.png");
         movement = new Movement();
-        //dropSprites = new Array<>();
         player = new Player(0,0,15,15,playerTexture);
+        font = new BitmapFont();
+        timerText = "Time: " + miniutesRemaining;
+        startTimer();
+        Building fakeNisa = new Building(100,100,56,42,new Texture("buildingTextures/NiniLool.png"));
+        Building CS_Building = new Building(50,340,64,45,new Texture("buildingTextures/CS_Building.png"));
+        buildings.add(fakeNisa);
+        buildings.add(CS_Building);
         entities.add(player);
         entities.add(wall);
 
@@ -62,6 +70,23 @@ public class Main extends ApplicationAdapter {
 
 
 
+    }
+
+    private void startTimer() {
+        myTimerTask = new Timer.Task() {
+            @Override
+            public void run() {
+                if (miniutesRemaining > 0) {
+                    miniutesRemaining--;
+                    timerText = "Time: " + miniutesRemaining;
+                } else {
+                    System.out.println("Time is up!");
+                    this.cancel();
+                }
+            }
+        };
+        Timer.schedule(myTimerTask, 1f, 1f);
+    }
     @Override
     public void render() {
         input();
@@ -69,6 +94,9 @@ public class Main extends ApplicationAdapter {
         draw();
 
 
+        batch.begin();
+        font.draw(batch,timerText,50,450);
+        batch.end();
     }
 
     private void input() {
@@ -98,6 +126,10 @@ public class Main extends ApplicationAdapter {
         batch.draw(backgroundTexture, 0, 0, worldWidth, worldHeight); // draw the background
         for (Entity entity: entities) {
             entity.render(batch);
+        }
+        font.draw(batch, timerText,10, worldHeight - 10);
+        for (Building building: buildings) {
+            building.render(batch);
         }
         batch.end();
 
@@ -136,7 +168,8 @@ public class Main extends ApplicationAdapter {
     @Override
     public void dispose() {
         batch.dispose();
-    }
+        font.dispose();
+        }
 }
 
 
