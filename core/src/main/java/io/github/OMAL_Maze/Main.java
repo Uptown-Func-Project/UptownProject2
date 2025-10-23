@@ -1,14 +1,10 @@
 package io.github.OMAL_Maze;
 import com.badlogic.gdx.utils.Timer;
 
-import java.time.chrono.MinguoChronology;
-
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -17,8 +13,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends ApplicationAdapter {
-    private int miniutesRemaining = 10;
-    private Timer.Task myTimerTask;
+    private int minutesRemaining = 10;
     private SpriteBatch batch;
     private BitmapFont font;
     private String timerText = "Time = 0";
@@ -29,8 +24,6 @@ public class Main extends ApplicationAdapter {
     Player player;
     Array<Entity> entities;
     Array<Building> buildings;
-    private int worldWidth=880;
-    private int worldHeight=880;
     private int tileSize;
     private static Main instance;
 
@@ -44,12 +37,14 @@ public class Main extends ApplicationAdapter {
     public void create() {
         buildings = new Array<>();
         batch = new SpriteBatch();
+        int worldWidth = 880;
+        int worldHeight = 880;
         viewport = new FitViewport(worldWidth, worldHeight);
-        tileSize=worldWidth/20;
+        tileSize= worldWidth /20;
         backgroundTexture = new Texture("screenTextures/maze_grid.png");
         movement = new Movement();
         font = new BitmapFont();
-        timerText = "Time: " + miniutesRemaining;
+        timerText = "Time: " + minutesRemaining;
         startTimer();
         //Building fakeNisa = new Building(100,100,56,42,new Texture("buildingTextures/NiniLool.png"));
         //Building CS_Building = new Building(50,340,64,45,new Texture("buildingTextures/CS_Building.png"));
@@ -71,27 +66,37 @@ public class Main extends ApplicationAdapter {
             Texture texture = new Texture(entityData.getTexturePath());
             //Entity entity = new Entity(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture);
             String entityType = entityData.getType();
-            Entity entity = null;
-            if (entityType.equals("Player")) {
-                entity = new Player(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture);
-            } else if (entityType.equals("Character")) {
-                entity = new Character(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture);
-            } else if (entityType.equals("Item")) {
-                //Item code needed. Deciding to add the class as seed possible
-            } else if (entityType.equals("Goose")) {
-                //Goose code needed. I do not have the class in this branch.
-            } else if (entityType.equals("Seed")) {
-                //Seed code also needed.
-            } else {
-                //Only other one is just Entity or should be cast to basic entity
-                entity = new Entity(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture);
-            }
+            Entity entity = getEntity(entityData, entityType, texture);
             result.add(entity);
             System.out.println("Spawned new entity of type "+entityData.getType()+" at location ("+
                     entityData.getX()+","+entityData.getY()+") with texture "+entityData.getTexturePath());
         }
         return result;
     }
+
+    private static Entity getEntity(EntityData entityData, String entityType, Texture texture) {
+        Entity entity = null;
+        switch (entityType) {
+            case "Player" ->
+                    entity = new Player(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture);
+            case "Character" ->
+                    entity = new Character(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture);
+            case "Item" -> {
+                //Item code needed. Deciding to add the class as seed possible
+            }
+            case "Goose" -> {
+                //Goose code needed. I do not have the class in this branch.
+            }
+            case "Seed" -> {
+                //Seed code also needed.
+            }
+            default ->
+                //Only other one is just Entity or should be cast to basic entity
+                    entity = new Entity(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture);
+        }
+        return entity;
+    }
+
     private Array<Building> createBuildings(MazeData mazeData) {
         //Add some stuff for walls innit
         Array<Building> result = new Array<>();
@@ -116,12 +121,12 @@ public class Main extends ApplicationAdapter {
     }
 
     private void startTimer() {
-        myTimerTask = new Timer.Task() {
+        Timer.Task myTimerTask = new Timer.Task() {
             @Override
             public void run() {
-                if (miniutesRemaining > 0) {
-                    miniutesRemaining--;
-                    timerText = "Time: " + miniutesRemaining;
+                if (minutesRemaining > 0) {
+                    minutesRemaining--;
+                    timerText = "Time: " + minutesRemaining;
                 } else {
                     System.out.println("Time is up!");
                     this.cancel();
