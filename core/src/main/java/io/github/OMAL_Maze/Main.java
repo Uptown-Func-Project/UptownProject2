@@ -39,14 +39,14 @@ public class Main extends ApplicationAdapter {
     }
     @Override
     public void create() {
-        entities = new Array<>();
+        //entities = new Array<>();
         buildings = new Array<>();
         batch = new SpriteBatch();
-        viewport = new FitViewport(400, 400);
-        backgroundTexture = new Texture("screenTextures/maze1_WL.png");
-        playerTexture = new Texture("entityTextures/playerCopy.png");
+        viewport = new FitViewport(880, 880);
+        backgroundTexture = new Texture("screenTextures/maze_grid.png");
+        //playerTexture = new Texture("entityTextures/playerCopy.png");
         movement = new Movement();
-        player = new Player(0,0,15,15,playerTexture);
+        //player = new Player(0,0,44,44,playerTexture);
         font = new BitmapFont();
         timerText = "Time: " + miniutesRemaining;
         startTimer();
@@ -54,12 +54,42 @@ public class Main extends ApplicationAdapter {
         Building CS_Building = new Building(50,340,64,45,new Texture("buildingTextures/CS_Building.png"));
         buildings.add(fakeNisa);
         buildings.add(CS_Building);
-        entities.add(player);
+        //entities.add(player);
         instance = this;
 
         //button experiments
         button = new Button(Gdx.files.internal("button.png"));
+        MazeData mazeData = MazeLoader.loadMaze("loadAssets/assets.json");
+        entities = createEntities(mazeData);
 
+    }
+
+    private Array<Entity> createEntities(MazeData mazeData) {
+        Array<Entity> result = new Array<>();
+        for (EntityData entityData: mazeData.getEntities()) {
+            Texture texture = new Texture(entityData.getTexturePath());
+            //Entity entity = new Entity(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture);
+            String entityType = entityData.getType();
+            Entity entity = null;
+            if (entityType.equals("Player")) {
+                entity = new Player(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture);
+            } else if (entityType.equals("Character")) {
+                entity = new Character(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture);
+            } else if (entityType.equals("Item")) {
+                //Item code needed. Deciding to add the class as seed possible
+            } else if (entityType.equals("Goose")) {
+                //Goose code needed. I do not have the class in this branch.
+            } else if (entityType.equals("Seed")) {
+                //Seed code also needed.
+            } else {
+                //Only other one is just Entity or should be cast to basic entity
+                entity = new Entity(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture);
+            }
+            result.add(entity);
+            System.out.println("Spawned new entity of type "+entityData.getType()+" at location ("+
+                    entityData.getX()+","+entityData.getY()+") with texture "+entityData.getTexturePath());
+        }
+        return result;
     }
 
     private void startTimer() {
