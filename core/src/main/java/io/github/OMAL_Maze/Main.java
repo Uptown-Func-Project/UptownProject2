@@ -135,11 +135,6 @@ public class Main extends ApplicationAdapter {
         input();
         logic();
         draw();
-
-
-        batch.begin();
-        font.draw(batch,timerText,50,450);
-        batch.end();
     }
 
     private void input() {
