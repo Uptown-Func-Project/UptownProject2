@@ -29,6 +29,9 @@ public class Main extends ApplicationAdapter {
     Player player;
     Array<Entity> entities;
     Array<Building> buildings;
+    private int worldWidth=880;
+    private int worldHeight=880;
+    private int tileSize;
     private static Main instance;
 
     //button experiment
@@ -39,21 +42,19 @@ public class Main extends ApplicationAdapter {
     }
     @Override
     public void create() {
-        //entities = new Array<>();
         buildings = new Array<>();
         batch = new SpriteBatch();
-        viewport = new FitViewport(880, 880);
+        viewport = new FitViewport(worldWidth, worldHeight);
+        tileSize=worldWidth/20;
         backgroundTexture = new Texture("screenTextures/maze_grid.png");
-        //playerTexture = new Texture("entityTextures/playerCopy.png");
         movement = new Movement();
-        //player = new Player(0,0,44,44,playerTexture);
         font = new BitmapFont();
         timerText = "Time: " + miniutesRemaining;
         startTimer();
-        Building fakeNisa = new Building(100,100,56,42,new Texture("buildingTextures/NiniLool.png"));
-        Building CS_Building = new Building(50,340,64,45,new Texture("buildingTextures/CS_Building.png"));
-        buildings.add(fakeNisa);
-        buildings.add(CS_Building);
+        //Building fakeNisa = new Building(100,100,56,42,new Texture("buildingTextures/NiniLool.png"));
+        //Building CS_Building = new Building(50,340,64,45,new Texture("buildingTextures/CS_Building.png"));
+        //buildings.add(fakeNisa);
+        //buildings.add(CS_Building);
         //entities.add(player);
         instance = this;
 
@@ -61,7 +62,7 @@ public class Main extends ApplicationAdapter {
         button = new Button(Gdx.files.internal("button.png"));
         MazeData mazeData = MazeLoader.loadMaze("loadAssets/assets.json");
         entities = createEntities(mazeData);
-
+        buildings = createBuildings(mazeData);
     }
 
     private Array<Entity> createEntities(MazeData mazeData) {
@@ -88,6 +89,28 @@ public class Main extends ApplicationAdapter {
             result.add(entity);
             System.out.println("Spawned new entity of type "+entityData.getType()+" at location ("+
                     entityData.getX()+","+entityData.getY()+") with texture "+entityData.getTexturePath());
+        }
+        return result;
+    }
+    private Array<Building> createBuildings(MazeData mazeData) {
+        //Add some stuff for walls innit
+        Array<Building> result = new Array<>();
+        for (BuildingData buildingData: mazeData.getBuildings()) {
+            Building building = new Building(buildingData.getX(), buildingData.getY(), buildingData.getWidth(),
+                    buildingData.getHeight(), new Texture(buildingData.getTexturePath()));
+            result.add(building);
+        }
+        int[][] walls = mazeData.getWalls();
+        for (int i=0;i<walls.length;i++) {
+            for (int j=0;j<walls[i].length;j++) {
+                if (walls[i][j]==1) {
+                    int x = j*tileSize;
+                    int y = (walls.length - 1 - i)*tileSize;
+                    Building wall = new Building(x,y,tileSize,tileSize, new Texture("buildingTextures/wallMaybe.png"));
+                    wall.setVisible(false);
+                    result.add(wall);
+                }
+            }
         }
         return result;
     }
@@ -145,11 +168,11 @@ public class Main extends ApplicationAdapter {
         batch.begin();
         batch.draw(backgroundTexture, 0, 0, worldWidth, worldHeight); // draw the background
         for (Entity entity: entities) {
-            entity.render(batch);
+            render(entity);
         }
         font.draw(batch, timerText,10, worldHeight - 10);
         for (Building building: buildings) {
-            building.render(batch);
+            render(building);
         }
         batch.draw(button,0,0,button.getWidth(),button.getHeight());
         batch.end();
@@ -157,6 +180,16 @@ public class Main extends ApplicationAdapter {
         if(button.isClicked()){
             System.out.println("Button clicked");
             //perform action when button is clicked
+        }
+    }
+    private void render(Entity entity) {
+        if (entity.getVisible()) {
+            entity.render(batch);
+        }
+    }
+    private void render(Building building) {
+        if (building.getVisible()) {
+            building.render(batch);
         }
     }
 

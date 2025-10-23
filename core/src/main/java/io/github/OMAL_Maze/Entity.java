@@ -15,6 +15,7 @@ public class Entity {
     int height;
     Sprite sprite;
     Texture entityTexture;
+    private boolean visible=true;
 
     public Entity(int x, int y, int width, int height, Texture entityTexture) {
         rectangle = new Rectangle(x,y,width,height);
@@ -39,4 +40,6 @@ public class Entity {
     public void logic() {
         //Not sure yet
     }
+    public boolean getVisible() {return this.visible;}
+    public void setVisible(boolean nVisible) {this.visible=nVisible;}
 }

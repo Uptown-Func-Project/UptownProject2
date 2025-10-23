@@ -13,7 +13,7 @@ public class Building {
     int height;
     Sprite sprite;
     Texture buildingTexture;
-    boolean visible;
+    boolean visible=true;
     public Building(int x, int y, int width, int height, Texture buildingTexture) {
         rectangle = new Rectangle(x,y,width,height);
         this.x=x;

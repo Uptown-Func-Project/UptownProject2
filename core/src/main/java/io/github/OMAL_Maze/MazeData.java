@@ -4,6 +4,7 @@ import java.util.List;
 public class MazeData {
     private int[][] walls;
     private List<EntityData> entities;
+    private List<BuildingData> buildings;
 
     public int[][] getWalls() {
         return walls;
@@ -11,5 +12,8 @@ public class MazeData {
 
     public List<EntityData> getEntities() {
         return entities;
+    }
+    public List<BuildingData> getBuildings() {
+        return buildings;
     }
 }
