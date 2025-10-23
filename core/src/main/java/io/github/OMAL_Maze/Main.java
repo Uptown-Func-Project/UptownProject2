@@ -35,6 +35,9 @@ public class Main extends ApplicationAdapter {
     //button experiment
     Button button;
 
+    //Sounds
+    Sound BackgroundMusic;
+
     public static Main getInstance() {
         return instance;
     }
@@ -55,8 +58,9 @@ public class Main extends ApplicationAdapter {
         Building CS_Building = new Building(50,340,64,45,new Texture("buildingTextures/CS_Building.png"));
         buildings.add(fakeNisa);
         buildings.add(CS_Building);
+
         //Background music plays the entire time
-        Sound BackgroundMusic = Gdx.audio.newSound(Gdx.files.internal("assets/Sounds/Background.mp3"));
+        BackgroundMusic = Gdx.audio.newSound(Gdx.files.internal("assets/Sounds/Background.mp3"));
         BackgroundMusic.play();
 
         entities.add(player);
@@ -77,6 +81,11 @@ public class Main extends ApplicationAdapter {
                 } else {
                     System.out.println("Time is up!");
                     this.cancel();
+
+                    //Gameover sound plays
+                    Sound GameOverSound = Gdx.audio.newSound(Gdx.files.internal("assets/Sounds/Gameover.mp3"));
+                    BackgroundMusic.pause();
+                    GameOverSound.play();
                 }
             }
         };
