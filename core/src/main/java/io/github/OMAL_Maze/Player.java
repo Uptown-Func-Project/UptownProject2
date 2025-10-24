@@ -1,14 +1,17 @@
 package io.github.OMAL_Maze;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class Player extends Character{
-
+    int hearts;
     public Player(int x, int y, int width, int height, Texture entityTexture) {
-        super(x,y,width,height,entityTexture);
+        super(x,y,width,height, entityTexture);
+        visible = true;
+        hearts = 3;
     }
     @Override
     public void logic() {
@@ -26,6 +29,12 @@ public class Player extends Character{
         sprite.setY(MathUtils.clamp(sprite.getY(),0,worldHeight-playerHeight));
 
 
+    }
+    public void decreaseHearts(){
+        if (hearts > 0){
+            hearts--;
+        }
+        // else: game over
     }
 
 }

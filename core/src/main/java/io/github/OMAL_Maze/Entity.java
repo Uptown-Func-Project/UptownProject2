@@ -15,6 +15,7 @@ public class Entity {
     int height;
     Sprite sprite;
     Texture entityTexture;
+    boolean visible;
 
     public Entity(int x, int y, int width, int height, Texture entityTexture) {
         rectangle = new Rectangle(x,y,width,height);
@@ -27,6 +28,7 @@ public class Entity {
         this.sprite.setSize(width,height);
         this.sprite.setX(this.x);
         this.sprite.setY(this.y);
+        visible = false;
     }
 
     public boolean Overlaps(Rectangle bounds) {
