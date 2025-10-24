@@ -3,13 +3,13 @@ import com.badlogic.gdx.utils.Timer;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends ApplicationAdapter {
@@ -20,8 +20,10 @@ public class Main extends ApplicationAdapter {
     FitViewport viewport;
     Texture backgroundTexture;
     Texture playerTexture;
+    Texture gooseTexture;
     Movement movement;
     Player player;
+    Goose goose;
     Array<Entity> entities;
     Array<Building> buildings;
     private int tileSize;
@@ -30,6 +32,9 @@ public class Main extends ApplicationAdapter {
     //button experiment
     Button button;
 
+    public Main() {
+        instance = this;
+    }
     public static Main getInstance() {
         return instance;
     }
@@ -51,6 +56,10 @@ public class Main extends ApplicationAdapter {
         //buildings.add(CS_Building);
         //entities.add(player);
         instance = this;
+
+        //Background music plays the entire time
+        Sound BackgroundMusic = Gdx.audio.newSound(Gdx.files.internal("Sounds/Background.mp3"));
+        BackgroundMusic.play();
 
         //button experiments
         button = new Button(Gdx.files.internal("button.png"));
@@ -135,6 +144,7 @@ public class Main extends ApplicationAdapter {
         };
         Timer.schedule(myTimerTask, 1f, 1f);
     }
+
     @Override
     public void render() {
         input();
@@ -157,6 +167,7 @@ public class Main extends ApplicationAdapter {
         /*for (Entity entity: entities) {
             entity.logic();
         }*/
+        goose.logic();
     }
 
     private void draw() {
@@ -168,7 +179,9 @@ public class Main extends ApplicationAdapter {
         batch.begin();
         batch.draw(backgroundTexture, 0, 0, worldWidth, worldHeight); // draw the background
         for (Entity entity: entities) {
-            render(entity);
+            if (entity.visible) {
+                entity.render(batch);
+            }
         }
         font.draw(batch, timerText,10, worldHeight - 10);
         for (Building building: buildings) {
@@ -217,7 +230,3 @@ public class Main extends ApplicationAdapter {
         font.dispose();
         }
 }
-
-
-
-
