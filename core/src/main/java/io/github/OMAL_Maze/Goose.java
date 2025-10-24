@@ -57,9 +57,9 @@ public class Goose extends Character{
         isMoving = true;
     }
 
-/*
- Where the goose moves - in future the code within can be hopefully replaced with calling a Movement class
- */
+    /*
+    Where the goose moves - in future the code within can be hopefully replaced with calling a Movement class
+    */
     public void logic(){
         float playerX = player.sprite.getX();
         float playerY = player.sprite.getY();
