@@ -5,15 +5,16 @@ import java.time.chrono.MinguoChronology;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends ApplicationAdapter {
@@ -35,6 +36,9 @@ public class Main extends ApplicationAdapter {
     //button experiment
     Button button;
 
+    //Sounds
+    Sound BackgroundMusic;
+
     public static Main getInstance() {
         return instance;
     }
@@ -54,6 +58,11 @@ public class Main extends ApplicationAdapter {
         Building CS_Building = new Building(50,340,64,45,new Texture("buildingTextures/CS_Building.png"));
         buildings.add(fakeNisa);
         buildings.add(CS_Building);
+
+        //Background music plays the entire time
+        BackgroundMusic = Gdx.audio.newSound(Gdx.files.internal("assets/Sounds/Background.mp3"));
+        BackgroundMusic.play();
+
         entities.add(player);
         instance = this;
 
@@ -83,6 +92,7 @@ public class Main extends ApplicationAdapter {
         };
         Timer.schedule(myTimerTask, 1f, 1f); // dealys the timer speed by 1 second
     }
+
     @Override
     public void render() {
         input();
