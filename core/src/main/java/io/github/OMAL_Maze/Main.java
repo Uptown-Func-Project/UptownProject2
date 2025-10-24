@@ -40,8 +40,7 @@ public class Main extends ApplicationAdapter {
         int worldWidth = 880;
         int worldHeight = 880;
         viewport = new FitViewport(worldWidth, worldHeight);
-        tileSize= worldWidth /20;
-        backgroundTexture = new Texture("screenTextures/maze_grid.png");
+        tileSize= worldWidth /22;
         movement = new Movement();
         font = new BitmapFont();
         timerText = "Time: " + minutesRemaining;
@@ -56,6 +55,7 @@ public class Main extends ApplicationAdapter {
         //button experiments
         button = new Button(Gdx.files.internal("button.png"));
         MazeData mazeData = MazeLoader.loadMaze("loadAssets/assets.json");
+        backgroundTexture = new Texture(mazeData.getBackgroundImage());
         entities = createEntities(mazeData);
         buildings = createBuildings(mazeData);
     }

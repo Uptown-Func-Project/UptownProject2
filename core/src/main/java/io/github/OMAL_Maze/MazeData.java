@@ -2,6 +2,7 @@ package io.github.OMAL_Maze;
 import java.util.List;
 
 public class MazeData {
+    private String backgroundImage;
     private int[][] walls;
     private List<EntityData> entities;
     private List<BuildingData> buildings;
@@ -16,4 +17,5 @@ public class MazeData {
     public List<BuildingData> getBuildings() {
         return buildings;
     }
+    public String getBackgroundImage() {return this.backgroundImage;}
 }
