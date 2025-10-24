@@ -6,7 +6,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -15,7 +14,6 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends ApplicationAdapter {
     private int minutesRemaining = 10;
-    private Timer.Task myTimerTask;
     private SpriteBatch batch;
     private BitmapFont font;
     private String timerText = "Time = 0";
@@ -28,6 +26,7 @@ public class Main extends ApplicationAdapter {
     Goose goose;
     Array<Entity> entities;
     Array<Building> buildings;
+    private int tileSize;
     private static Main instance;
 
     //button experiment
@@ -41,32 +40,21 @@ public class Main extends ApplicationAdapter {
     }
     @Override
     public void create() {
-        entities = new Array<>();
         buildings = new Array<>();
         batch = new SpriteBatch();
-        viewport = new FitViewport(400, 400);
-
-        backgroundTexture = new Texture("screenTextures/maze1_WL.png");
-        playerTexture = new Texture("entityTextures/playerCopy.png");
-        gooseTexture = new Texture("entityTextures/goose.png");
-
-        player = new Player(0,0,15,15,playerTexture);
-        goose = new Goose(200, 200, 20, 20, gooseTexture, player);
-
+        int worldWidth = 880;
+        int worldHeight = 880;
+        viewport = new FitViewport(worldWidth, worldHeight);
+        tileSize= worldWidth /22;
         movement = new Movement();
-
         font = new BitmapFont();
         timerText = "Time: " + minutesRemaining;
         startTimer();
-
-        Building fakeNisa = new Building(100,100,56,42,new Texture("buildingTextures/NiniLool.png"));
-        Building CS_Building = new Building(50,340,64,45,new Texture("buildingTextures/CS_Building.png"));
-        buildings.add(fakeNisa);
-        buildings.add(CS_Building);
-
-        entities.add(player);
-        entities.add(goose);
-
+        //Building fakeNisa = new Building(100,100,56,42,new Texture("buildingTextures/NiniLool.png"));
+        //Building CS_Building = new Building(50,340,64,45,new Texture("buildingTextures/CS_Building.png"));
+        //buildings.add(fakeNisa);
+        //buildings.add(CS_Building);
+        //entities.add(player);
         instance = this;
 
         //Background music plays the entire time
@@ -75,14 +63,74 @@ public class Main extends ApplicationAdapter {
 
         //button experiments
         button = new Button(Gdx.files.internal("button.png"));
+        MazeData mazeData = MazeLoader.loadMaze("loadAssets/assets.json");
+        backgroundTexture = new Texture(mazeData.getBackgroundImage());
+        entities = createEntities(mazeData);
+        buildings = createBuildings(mazeData);
+    }
 
-        // for testing goose - delete later
-        goose.show();
+    private Array<Entity> createEntities(MazeData mazeData) {
+        Array<Entity> result = new Array<>();
+        for (EntityData entityData: mazeData.getEntities()) {
+            Texture texture = new Texture(entityData.getTexturePath());
+            //Entity entity = new Entity(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture);
+            String entityType = entityData.getType();
+            Entity entity = getEntity(entityData, entityType, texture);
+            result.add(entity);
+            System.out.println("Spawned new entity of type "+entityData.getType()+" at location ("+
+                    entityData.getX()+","+entityData.getY()+") with texture "+entityData.getTexturePath());
+        }
+        return result;
+    }
 
+    private static Entity getEntity(EntityData entityData, String entityType, Texture texture) {
+        Entity entity = null;
+        switch (entityType) {
+            case "Player" ->
+                    entity = new Player(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture);
+            case "Character" ->
+                    entity = new Character(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture);
+            case "Item" -> {
+                //Item code needed. Deciding to add the class as seed possible
+            }
+            case "Goose" -> {
+                //Goose code needed. I do not have the class in this branch.
+            }
+            case "Seed" -> {
+                //Seed code also needed.
+            }
+            default ->
+                //Only other one is just Entity or should be cast to basic entity
+                    entity = new Entity(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture);
+        }
+        return entity;
+    }
+
+    private Array<Building> createBuildings(MazeData mazeData) {
+        //Add some stuff for walls innit
+        Array<Building> result = new Array<>();
+        for (BuildingData buildingData: mazeData.getBuildings()) {
+            Building building = new Building(buildingData.getX(), buildingData.getY(), buildingData.getWidth(),
+                    buildingData.getHeight(), new Texture(buildingData.getTexturePath()));
+            result.add(building);
+        }
+        int[][] walls = mazeData.getWalls();
+        for (int i=0;i<walls.length;i++) {
+            for (int j=0;j<walls[i].length;j++) {
+                if (walls[i][j]==1) {
+                    int x = j*tileSize;
+                    int y = (walls.length - 1 - i)*tileSize;
+                    Building wall = new Building(x,y,tileSize,tileSize, new Texture("buildingTextures/wallMaybe.png"));
+                    wall.setVisible(false);
+                    result.add(wall);
+                }
+            }
+        }
+        return result;
     }
 
     private void startTimer() {
-        myTimerTask = new Timer.Task() {
+        Timer.Task myTimerTask = new Timer.Task() {
             @Override
             public void run() {
                 if (minutesRemaining > 0) {
@@ -102,11 +150,6 @@ public class Main extends ApplicationAdapter {
         input();
         logic();
         draw();
-
-
-        batch.begin();
-        font.draw(batch,timerText,50,450);
-        batch.end();
     }
 
     private void input() {
@@ -142,7 +185,7 @@ public class Main extends ApplicationAdapter {
         }
         font.draw(batch, timerText,10, worldHeight - 10);
         for (Building building: buildings) {
-            building.render(batch);
+            render(building);
         }
         batch.draw(button,0,0,button.getWidth(),button.getHeight());
         batch.end();
@@ -150,6 +193,16 @@ public class Main extends ApplicationAdapter {
         if(button.isClicked()){
             System.out.println("Button clicked");
             //perform action when button is clicked
+        }
+    }
+    private void render(Entity entity) {
+        if (entity.getVisible()) {
+            entity.render(batch);
+        }
+    }
+    private void render(Building building) {
+        if (building.getVisible()) {
+            building.render(batch);
         }
     }
 
