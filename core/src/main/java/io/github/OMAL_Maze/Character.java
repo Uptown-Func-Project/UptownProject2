@@ -1,15 +1,12 @@
 package io.github.OMAL_Maze;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 
 public class Character extends Entity {
     Rectangle rectangle;
-    Sprite sprite;
     public Character(int x, int y, int width, int height, Texture entityTexture) {
         super(x,y,width,height,entityTexture);
-        this.sprite = super.sprite;
     }
     /**
     *This is a reuse of the Overlaps function for readability.
