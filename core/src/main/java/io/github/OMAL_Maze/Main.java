@@ -18,11 +18,11 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends ApplicationAdapter {
-    private int secondsRemaining = 5;
+    private int secondsRemaining = 10;
     private Timer.Task myTimerTask;
     private SpriteBatch batch;
     private BitmapFont font;
-    private String timerText = "Time = 0:05";
+    private String timerText = "Time = 0:10";
     private boolean timerIsUp = false;
     FitViewport viewport;
     Texture backgroundTexture;
@@ -86,6 +86,10 @@ public class Main extends ApplicationAdapter {
                     Building gameOverScreen = new Building(0,0,400,500,new Texture("buildingTextures/GAME OVER.png"));
                     buildings.add(gameOverScreen);
                     this.cancel();
+
+                    Sound GameOverSound = Gdx.audio.newSound(Gdx.files.internal("assets/Sounds/Gameover.mp3"));
+                    BackgroundMusic.pause();
+                    GameOverSound.play();
 
                 }
             }
