@@ -95,5 +95,6 @@ public class Movement {
             Yspeed = 0;
         }
         entity.logic();
+
     }
 }
