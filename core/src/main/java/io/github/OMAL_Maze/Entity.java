@@ -15,7 +15,7 @@ public class Entity {
     int height;
     Sprite sprite;
     Texture entityTexture;
-    private boolean visible=true;
+    boolean visible=true;
 
     public Entity(int x, int y, int width, int height, Texture entityTexture) {
         rectangle = new Rectangle(x,y,width,height);

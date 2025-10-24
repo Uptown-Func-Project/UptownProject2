@@ -7,8 +7,8 @@ import com.badlogic.gdx.utils.Array;
 
 // player movement???
 public class Movement {
-    private final float speed = 200f;
-    private final float accelerate = 400f;
+    private final float speed = 100f;
+    private final float accelerate = 800;
     private final float friction = 4000f;
     float Xspeed = 0;
     float Yspeed = 0;

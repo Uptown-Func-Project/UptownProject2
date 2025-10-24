@@ -34,7 +34,7 @@
             "texturePath": "entityTextures/playerCopy.png"
         },
         {
-            "type": "Character",
+            "type": "Goose",
             "x": 480,
             "y": 480,
             "width": 36,

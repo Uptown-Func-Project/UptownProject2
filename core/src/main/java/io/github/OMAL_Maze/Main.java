@@ -1,4 +1,5 @@
 package io.github.OMAL_Maze;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.utils.Timer;
 
 import com.badlogic.gdx.ApplicationAdapter;
@@ -19,13 +20,10 @@ public class Main extends ApplicationAdapter {
     private String timerText = "Time = 0";
     FitViewport viewport;
     Texture backgroundTexture;
-    Texture playerTexture;
-    Texture gooseTexture;
     Movement movement;
-    Player player;
-    Goose goose;
     Array<Entity> entities;
     Array<Building> buildings;
+    static Player player;
     private int tileSize;
     private static Main instance;
 
@@ -54,7 +52,6 @@ public class Main extends ApplicationAdapter {
         //Building CS_Building = new Building(50,340,64,45,new Texture("buildingTextures/CS_Building.png"));
         //buildings.add(fakeNisa);
         //buildings.add(CS_Building);
-        //entities.add(player);
         instance = this;
 
         //Background music plays the entire time
@@ -86,14 +83,18 @@ public class Main extends ApplicationAdapter {
     private static Entity getEntity(EntityData entityData, String entityType, Texture texture) {
         Entity entity = null;
         switch (entityType) {
-            case "Player" ->
+            case "Player" -> {
                     entity = new Player(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture);
+                    player = (Player) entity;
+            }
             case "Character" ->
                     entity = new Character(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture);
             case "Item" -> {
                 //Item code needed. Deciding to add the class as seed possible
             }
             case "Goose" -> {
+                entity = new Goose(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(),
+                        texture, player);
                 //Goose code needed. I do not have the class in this branch.
             }
             case "Seed" -> {
@@ -167,7 +168,6 @@ public class Main extends ApplicationAdapter {
         /*for (Entity entity: entities) {
             entity.logic();
         }*/
-        goose.logic();
     }
 
     private void draw() {
@@ -179,7 +179,8 @@ public class Main extends ApplicationAdapter {
         batch.begin();
         batch.draw(backgroundTexture, 0, 0, worldWidth, worldHeight); // draw the background
         for (Entity entity: entities) {
-            if (entity.visible) {
+            if (entity==null) continue;
+            if (entity.getVisible()) {
                 entity.render(batch);
             }
         }

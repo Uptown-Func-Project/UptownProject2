@@ -14,9 +14,10 @@ public class Goose extends Character{
         ANGRY,
         HAPPY
     }
+
     public Goose(int x, int y, int width, int height, Texture entityTexture, Player player) {
         super(x, y, width, height, entityTexture);
-        visible = false;
+        visible = true;
         this.player = player;
         //state = gooseState.IDLE;
         state = gooseState.ANGRY; // for testing, delete later
