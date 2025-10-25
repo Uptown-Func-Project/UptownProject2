@@ -27,6 +27,8 @@ public class Main extends ApplicationAdapter {
     FitViewport viewport;
     Texture backgroundTexture;
     Texture playerTexture;
+    Texture seedsTexture;
+    Entity seeds;
     Movement movement;
     Player player;
     Array<Entity> entities;
@@ -50,6 +52,8 @@ public class Main extends ApplicationAdapter {
         viewport = new FitViewport(400, 400);
         backgroundTexture = new Texture("screenTextures/maze1_WL.png");
         playerTexture = new Texture("entityTextures/playerCopy.png");
+        seedsTexture = new Texture("entityTextures/Seeds.png");
+        seeds = new seeds(110,80,15,15,seedsTexture);
         movement = new Movement();
         player = new Player(0,0,15,15,playerTexture);
         font = new BitmapFont();
@@ -63,6 +67,7 @@ public class Main extends ApplicationAdapter {
         BackgroundMusic = Gdx.audio.newSound(Gdx.files.internal("assets/Sounds/Background.mp3"));
         BackgroundMusic.play();
 
+        entities.add(seeds);
         entities.add(player);
         instance = this;
 
@@ -105,6 +110,10 @@ public class Main extends ApplicationAdapter {
 
         batch.begin();
         font.draw(batch,timerText,50,450);
+        //if seeds are collected then text is displayed
+        if(player.HasSeeds) {
+            font.draw(batch, "Inventory: Seeds", 200, 16);
+        }
         batch.end();
     }
 

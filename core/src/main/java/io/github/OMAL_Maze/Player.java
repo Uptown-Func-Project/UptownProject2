@@ -1,15 +1,20 @@
 package io.github.OMAL_Maze;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class Player extends Character{
 
+    public boolean HasSeeds;
     public Player(int x, int y, int width, int height, Texture entityTexture) {
         super(x,y,width,height,entityTexture);
+        this.HasSeeds = false;
     }
+
     @Override
     public void logic() {
         super.logic();
@@ -25,7 +30,21 @@ public class Player extends Character{
         sprite.setX(MathUtils.clamp(sprite.getX(), 0, worldWidth-playerWidth));
         sprite.setY(MathUtils.clamp(sprite.getY(),0,worldHeight-playerHeight));
 
+        //picking up seeds
+        for(int i=0; i < entities.size; i++) {
+            Entity entity = entities.get(i);
+            if(entity instanceof seeds) {
+                //getting boudning box
+                Rectangle playerBounds = sprite.getBoundingRectangle();
+                Rectangle seedBounds = entity.sprite.getBoundingRectangle();
 
+                //checking bounding box
+                if (playerBounds.overlaps(seedBounds)) {
+                    entities.removeIndex(i);
+                    this.HasSeeds = true;
+                    break;
+                }
+            }
+        }
     }
-
 }
