@@ -2,6 +2,8 @@ package io.github.OMAL_Maze;
 import com.badlogic.gdx.utils.Timer;
 
 import java.time.chrono.MinguoChronology;
+import java.util.ArrayList;
+import java.util.Collections;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -33,6 +35,15 @@ public class Main extends ApplicationAdapter {
 
     //button experiment
     Button button;
+    BeginButton begin;
+    QuitButton quit;
+    CloseSettingsButton closeSettings;
+    OpenSettingsButton openSettings;
+    PauseButton pause;
+    UnpauseButton unpause;
+
+    ArrayList<AbstractButton> buttons = new ArrayList<AbstractButton>(6);
+
 
     public static Main getInstance() {
         return instance;
@@ -59,6 +70,14 @@ public class Main extends ApplicationAdapter {
 
         //button experiments
         button = new Button(Gdx.files.internal("button.png"));
+        begin = new BeginButton(Gdx.files.internal("button.png"));
+        quit = new QuitButton(Gdx.files.internal("button.png"));
+        closeSettings = new CloseSettingsButton(Gdx.files.internal("button.png"));
+        openSettings = new OpenSettingsButton(Gdx.files.internal("button.png"));
+        pause = new PauseButton(Gdx.files.internal("button.png"));
+        unpause = new UnpauseButton(Gdx.files.internal("button.png"));
+
+        Collections.addAll(buttons, begin, quit, closeSettings, openSettings, pause, unpause);
 
     }
 
@@ -121,13 +140,21 @@ public class Main extends ApplicationAdapter {
         for (Building building: buildings) {
             building.render(batch);
         }
-        batch.draw(button,0,0,button.getWidth(),button.getHeight());
-        batch.end();
 
-        if(button.isClicked()){
-            System.out.println("Button clicked");
-            //perform action when button is clicked
+        pause.makeActive();
+        //begin.makeActive();
+
+        for(AbstractButton b:buttons){  //for loop works
+            //System.out.println(b);
+            if (b.isActive()){
+                b.draw(batch);
+               // System.out.println("active");
+                if (b.isClicked(viewport)){
+                    System.out.println("clicked");
+                }
+            }
         }
+        batch.end();
     }
 
     /*private void createDroplet() {
