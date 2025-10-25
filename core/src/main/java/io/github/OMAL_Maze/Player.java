@@ -1,5 +1,7 @@
 package io.github.OMAL_Maze;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
@@ -8,6 +10,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class Player extends Character{
+    static Sound itemPickup;
 
     public boolean HasSeeds;
     public Player(int x, int y, int width, int height, Texture entityTexture) {
@@ -42,6 +45,11 @@ public class Player extends Character{
                 if (playerBounds.overlaps(seedBounds)) {
                     entities.removeIndex(i);
                     this.HasSeeds = true;
+                    //seeds pickup sound 
+                    itemPickup = Gdx.audio.newSound(Gdx.files.internal("assets/Sounds/ItemPickup.mp3"));
+                    if (this.HasSeeds) {
+                        itemPickup.play();
+                    }
                     break;
                 }
             }
