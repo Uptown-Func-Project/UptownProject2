@@ -7,26 +7,30 @@ import java.util.Collections;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends ApplicationAdapter {
-    private int miniutesRemaining = 10;
+    private int secondsRemaining = 10;
     private Timer.Task myTimerTask;
     private SpriteBatch batch;
     private BitmapFont font;
-    private String timerText = "Time = 0";
+    private String timerText = "Time = 0:10";
+    private boolean timerIsUp = false;
     FitViewport viewport;
     Texture backgroundTexture;
     Texture playerTexture;
+    Texture seedsTexture;
+    Entity seeds;
     Movement movement;
     Player player;
     Array<Entity> entities;
@@ -45,6 +49,9 @@ public class Main extends ApplicationAdapter {
     ArrayList<AbstractButton> buttons = new ArrayList<AbstractButton>(6);
 
 
+    //Sounds
+    Sound BackgroundMusic;
+
     public static Main getInstance() {
         return instance;
     }
@@ -56,15 +63,22 @@ public class Main extends ApplicationAdapter {
         viewport = new FitViewport(400, 400);
         backgroundTexture = new Texture("screenTextures/maze1_WL.png");
         playerTexture = new Texture("entityTextures/playerCopy.png");
+        seedsTexture = new Texture("entityTextures/Seeds.png");
+        seeds = new seeds(110,80,15,15,seedsTexture);
         movement = new Movement();
         player = new Player(0,0,15,15,playerTexture);
         font = new BitmapFont();
-        timerText = "Time: " + miniutesRemaining;
         startTimer();
         Building fakeNisa = new Building(100,100,56,42,new Texture("buildingTextures/NiniLool.png"));
         Building CS_Building = new Building(50,340,64,45,new Texture("buildingTextures/CS_Building.png"));
         buildings.add(fakeNisa);
         buildings.add(CS_Building);
+
+        //Background music plays the entire time
+        BackgroundMusic = Gdx.audio.newSound(Gdx.files.internal("Sounds/Background.mp3"));
+        BackgroundMusic.play();
+
+        entities.add(seeds);
         entities.add(player);
         instance = this;
 
@@ -85,26 +99,40 @@ public class Main extends ApplicationAdapter {
         myTimerTask = new Timer.Task() {
             @Override
             public void run() {
-                if (miniutesRemaining > 0) {
-                    miniutesRemaining--;
-                    timerText = "Time: " + miniutesRemaining;
+                if (secondsRemaining > 0) {
+                    secondsRemaining--;
+                    int minutes = secondsRemaining / 60;
+                    int seconds = secondsRemaining % 60;
+                    timerText = String.format("Time: %02d:%02d", minutes, seconds);
                 } else {
-                    System.out.println("Time is up!");
+                    timerIsUp = true; 
+                    timerText = "Time: 00:00";
+                    Building gameOverScreen = new Building(0,0,400,500,new Texture("buildingTextures/GAME OVER.png"));
+                    buildings.add(gameOverScreen);
                     this.cancel();
+
+                    Sound GameOverSound = Gdx.audio.newSound(Gdx.files.internal("assets/Sounds/Gameover.mp3"));
+                    BackgroundMusic.pause();
+                    GameOverSound.play();
+
                 }
             }
         };
-        Timer.schedule(myTimerTask, 1f, 1f);
+        Timer.schedule(myTimerTask, 1f, 1f); // dealys the timer speed by 1 second
     }
+
     @Override
     public void render() {
         input();
         logic();
         draw();
 
-
         batch.begin();
         font.draw(batch,timerText,50,450);
+        //if seeds are collected then text is displayed
+        if(player.HasSeeds) {
+            font.draw(batch, "Inventory: Seeds", 200, 16);
+        }
         batch.end();
     }
 
