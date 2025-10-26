@@ -34,7 +34,7 @@ public class Main extends ApplicationAdapter {
     private static Main instance;
 
     //button experiment
-    Button button;
+    //Button button;
     BeginButton begin;
     QuitButton quit;
     CloseSettingsButton closeSettings;
@@ -69,7 +69,7 @@ public class Main extends ApplicationAdapter {
         instance = this;
 
         //button experiments
-        button = new Button(Gdx.files.internal("button.png"));
+        //button = new Button(Gdx.files.internal("button.png"));
         begin = new BeginButton(Gdx.files.internal("button.png"));
         quit = new QuitButton(Gdx.files.internal("button.png"));
         closeSettings = new CloseSettingsButton(Gdx.files.internal("button.png"));
