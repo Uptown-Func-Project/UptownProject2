@@ -64,7 +64,7 @@ public class Main extends ApplicationAdapter {
         buildings.add(CS_Building);
 
         //Background music plays the entire time
-        BackgroundMusic = Gdx.audio.newSound(Gdx.files.internal("assets/Sounds/Background.mp3"));
+        BackgroundMusic = Gdx.audio.newSound(Gdx.files.internal("Sounds/Background.mp3"));
         BackgroundMusic.play();
 
         entities.add(seeds);

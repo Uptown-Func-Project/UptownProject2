@@ -46,7 +46,7 @@ public class Player extends Character{
                     entities.removeIndex(i);
                     this.HasSeeds = true;
                     //seeds pickup sound 
-                    itemPickup = Gdx.audio.newSound(Gdx.files.internal("assets/Sounds/ItemPickup.mp3"));
+                    itemPickup = Gdx.audio.newSound(Gdx.files.internal("Sounds/ItemPickup.mp3"));
                     if (this.HasSeeds) {
                         itemPickup.play();
                     }
