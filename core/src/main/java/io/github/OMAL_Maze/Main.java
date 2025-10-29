@@ -129,9 +129,11 @@ public class Main extends ApplicationAdapter {
 
         batch.begin();
         font.draw(batch,timerText,50,450);
-        //if seeds are collected then text is displayed
+        //if player pickes up seeds then text is displayed
         if(player.HasSeeds) {
-            font.draw(batch, "Inventory: Seeds", 200, 16);
+            if(secondsRemaining > 0) {
+                font.draw(batch, "Inventory: Seeds", 200, 16);
+            }
         }
         batch.end();
     }
@@ -184,19 +186,6 @@ public class Main extends ApplicationAdapter {
         }
         batch.end();
     }
-
-    /*private void createDroplet() {
-        float dropWidth = 1;
-        float dropHeight = 1;
-        float worldWidth = viewport.getWorldWidth();
-        float worldHeight = viewport.getWorldHeight();
-
-        Sprite dropSprite = new Sprite(dropTexture);
-        dropSprite.setSize(dropWidth, dropHeight);
-        dropSprite.setX(MathUtils.random(0f, worldWidth - dropWidth)); // Randomize the drop's x position
-        dropSprite.setY(worldHeight);
-        dropSprites.add(dropSprite);
-    }*/
 
     @Override
     public void resize(int width, int height) {
