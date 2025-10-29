@@ -251,6 +251,19 @@ public class Main extends ApplicationAdapter {
         for (Building building: buildings) {
             render(building);
         }
+        pause.makeActive();
+        //begin.makeActive();
+
+        for(AbstractButton b:buttons){  //for loop works
+            //System.out.println(b);
+            if (b.isActive()){
+                b.draw(batch);
+                // System.out.println("active");
+                if (b.isClicked(viewport)){
+                    System.out.println("clicked");
+                }
+            }
+        }
         //batch.draw(button,0,0,button.getWidth(),button.getHeight());
         batch.end();
 
@@ -261,19 +274,7 @@ public class Main extends ApplicationAdapter {
             shapeRenderer.rect(zone.bounds.x, zone.bounds.y, zone.bounds.width, zone.bounds.height);
         }
         shapeRenderer.end();
-        pause.makeActive();
-        //begin.makeActive();
 
-        for(AbstractButton b:buttons){  //for loop works
-            //System.out.println(b);
-            if (b.isActive()){
-                b.draw(batch);
-               // System.out.println("active");
-                if (b.isClicked(viewport)){
-                    System.out.println("clicked");
-                }
-            }
-        }
 
     }
     private void render(Entity entity) {
