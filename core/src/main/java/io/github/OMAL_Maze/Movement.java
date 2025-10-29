@@ -5,9 +5,12 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 
+
+
+// player movement???
 public class Movement {
-    private final float speed = 200f;
-    private final float accelerate = 400f;
+    private final float speed = 150f;
+    private final float accelerate = 800;
     private final float friction = 4000f;
     float Xspeed = 0;
     float Yspeed = 0;
@@ -16,29 +19,31 @@ public class Movement {
         Array<Entity> entities = instance.entities;
         Sprite playerSprite = entity.sprite;
         Array<Building> buildings = instance.buildings;
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D)) {
             Xspeed += accelerate * delta;
             //if (Xspeed < 0) Xspeed = 0;
             if (Xspeed < 0) Xspeed *= 0.25f;
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A)) {
             Xspeed -= accelerate * delta;
             //if (Xspeed > 0) Xspeed = 0;
             if (Xspeed > 0) Xspeed *= 0.25f;
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.W)) {
             Yspeed += accelerate * delta;
             if (Yspeed < 0) Yspeed *= 0.25f;
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN) || Gdx.input.isKeyPressed(Input.Keys.S)) {
             Yspeed -= accelerate * delta;
             if (Yspeed >0) Yspeed *= 0.25f;
         }
 
-        if (!Gdx.input.isKeyPressed(Input.Keys.RIGHT) && !Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+        if (!(Gdx.input.isKeyPressed(Input.Keys.RIGHT)||Gdx.input.isKeyPressed(Input.Keys.D))
+                && !(Gdx.input.isKeyPressed(Input.Keys.LEFT)||Gdx.input.isKeyPressed(Input.Keys.A))) {
             Xspeed *= Math.max(0, 1 - friction * delta / speed);
         }
-        if (!Gdx.input.isKeyPressed(Input.Keys.UP) && !Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+        if (!(Gdx.input.isKeyPressed(Input.Keys.UP)||Gdx.input.isKeyPressed(Input.Keys.W))
+                && !(Gdx.input.isKeyPressed(Input.Keys.DOWN)||Gdx.input.isKeyPressed(Input.Keys.S))) {
             Yspeed *= Math.max(0, 1 - friction * delta / speed);
         }
         if (Xspeed>speed) Xspeed = speed;
