@@ -541,12 +541,12 @@
           "texturePath": "entityTextures/playerCopy.png"
         },
         {
-          "type": "Goose",
-          "x": 480,
-          "y": 480,
-          "width": 36,
-          "height": 36,
-          "texturePath": "entityTextures/goose.png"
+          "type": "Seeds",
+          "x": 40,
+          "y": 40,
+          "width": 20,
+          "height": 20,
+          "texturePath": "entityTextures/Seeds.png"
         }
       ],
       "buildings": [

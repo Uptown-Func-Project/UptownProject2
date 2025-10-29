@@ -3,7 +3,6 @@ package io.github.OMAL_Maze;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
@@ -38,8 +37,8 @@ public class Player extends Character{
         //picking up seeds
         for(int i=0; i < entities.size; i++) {
             Entity entity = entities.get(i);
-            if(entity instanceof seeds) {
-                //getting boudning box
+            if(entity instanceof Seeds) {
+                //getting bounding box
                 Rectangle playerBounds = sprite.getBoundingRectangle();
                 Rectangle seedBounds = entity.sprite.getBoundingRectangle();
 
@@ -63,5 +62,4 @@ public class Player extends Character{
         }
         // else: game over
     }
-
 }

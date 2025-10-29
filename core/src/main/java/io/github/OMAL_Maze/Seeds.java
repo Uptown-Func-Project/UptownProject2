@@ -3,8 +3,8 @@ import com.badlogic.gdx.graphics.Texture;
 
 
 //takes most attributes from suerclass but solid is false so it can be collected 
-public class seeds extends Entity {
-    public seeds(int x, int y, int width, int height, Texture entityTexture){
+public class Seeds extends Entity {
+    public Seeds(int x, int y, int width, int height, Texture entityTexture){
         super(x,y,width,height,entityTexture);
         isSolid = false;
     }

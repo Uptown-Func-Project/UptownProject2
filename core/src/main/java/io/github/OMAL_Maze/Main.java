@@ -20,15 +20,12 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends ApplicationAdapter {
-    private int secondsRemaining = 10;
+    private int secondsRemaining = 300;
     private SpriteBatch batch;
     private BitmapFont font;
-    private String timerText = "Time = 0:10";
-    private boolean timerIsUp = false;
+    private String timerText;
     FitViewport viewport;
     Texture backgroundTexture;
-    Texture seedsTexture;
-    Entity seeds;
     Movement movement;
     Array<Entity> entities;
     Array<Building> buildings;
@@ -68,21 +65,17 @@ public class Main extends ApplicationAdapter {
         int worldHeight = 880;
         viewport = new FitViewport(worldWidth, worldHeight);
         tileSize= worldWidth /22;
-        seedsTexture = new Texture("entityTextures/Seeds.png");
-        seeds = new seeds(110,80,15,15,seedsTexture);
         movement = new Movement();
         font = new BitmapFont();
-        timerText = "Time: " + secondsRemaining;
-        startTimer();
         mazeData = MazeLoader.loadMaze("loadAssets/assets.json");
         instance = this;
         shapeRenderer = new ShapeRenderer();
         //Background music plays the entire time
-        Sound BackgroundMusic = Gdx.audio.newSound(Gdx.files.internal("Sounds/Background.mp3"));
-        BackgroundMusic.play();
+        BackgroundMusic = Gdx.audio.newSound(Gdx.files.internal("Sounds/Background.mp3"));
+        long id = BackgroundMusic.play();
+        BackgroundMusic.setLooping(id,true);
 
         loadMaze(0,40,800);
-        entities.add(seeds);
 
         begin = new BeginButton(Gdx.files.internal("button.png"));
         quit = new QuitButton(Gdx.files.internal("button.png"));
@@ -92,6 +85,7 @@ public class Main extends ApplicationAdapter {
         unpause = new UnpauseButton(Gdx.files.internal("button.png"));
 
         Collections.addAll(buttons, begin, quit, closeSettings, openSettings, pause, unpause);
+        startTimer();
     }
 
     private Array<Entity> createEntities(MazeData.LevelData level) {
@@ -132,10 +126,10 @@ public class Main extends ApplicationAdapter {
             case "Goose" -> {
                 entity = new Goose(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(),
                         texture, player);
-                //Goose code needed. I do not have the class in this branch.
             }
-            case "Seed" -> {
-                //Seed code also needed.
+            case "Seeds" -> {
+                entity = new Seeds(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(),
+                        texture);
             }
             default ->
                 //Only other one is just Entity or should be cast to basic entity
@@ -177,13 +171,12 @@ public class Main extends ApplicationAdapter {
                     int seconds = secondsRemaining % 60;
                     timerText = String.format("Time: %02d:%02d", minutes, seconds);
                 } else {
-                    timerIsUp = true; 
                     timerText = "Time: 00:00";
                     Building gameOverScreen = new Building(0,0,400,500,new Texture("buildingTextures/GAME OVER.png"));
                     buildings.add(gameOverScreen);
-                    this.cancel();
+                    //this.cancel();
 
-                    Sound GameOverSound = Gdx.audio.newSound(Gdx.files.internal("assets/Sounds/Gameover.mp3"));
+                    Sound GameOverSound = Gdx.audio.newSound(Gdx.files.internal("Sounds/Gameover.mp3"));
                     BackgroundMusic.pause();
                     GameOverSound.play();
 
@@ -242,12 +235,15 @@ public class Main extends ApplicationAdapter {
             if (entity==null) continue;
             render(entity);
         }
-        font.draw(batch,timerText,50,450);
+        float timerX = (float) tileSize /2;
+        float timerY = worldHeight -((float) tileSize /2)+15;
+        if (timerText!=null) {
+            font.draw(batch, timerText, timerX, timerY);
+        }
         //if seeds are collected then text is displayed
         if(player.hasSeeds) {
-            font.draw(batch, "Inventory: Seeds", 200, 16);
+            font.draw(batch, " Inventory: Seeds", timerX, timerY-15);
         }
-        //font.draw(batch, timerText,10, worldHeight - 10);
         for (Building building: buildings) {
             render(building);
         }
@@ -255,7 +251,6 @@ public class Main extends ApplicationAdapter {
         //begin.makeActive();
 
         for(AbstractButton b:buttons){  //for loop works
-            //System.out.println(b);
             if (b.isActive()){
                 b.draw(batch);
                 // System.out.println("active");
@@ -294,9 +289,13 @@ public class Main extends ApplicationAdapter {
     private void loadMaze(int maze, int spawnPointX, int spawnPointY) {
         //Clear all previous buildings, entities, and trigger zones
         //These will be null upon first use of the function (initialization)
+        boolean seedCheck = false;
         if (buildings!=null) buildings.clear();
         if (triggerZones!=null) triggerZones.clear();
-        if (entities!=null) entities.clear();
+        if (entities!=null) {
+            if (player.hasSeeds) seedCheck = true;
+            entities.clear();
+        }
         //Level int is 1 behind naming convention, add 1 when loading.
         MazeData.LevelData currentLevel = mazeData.getLevel("level_"+(maze+1));
         //Recreate all level
@@ -306,6 +305,7 @@ public class Main extends ApplicationAdapter {
         buildings = createBuildings(currentLevel);
         triggerZones = createTriggerZones(currentLevel);
         player.sprite.setPosition(spawnPointX,spawnPointY);
+        player.hasSeeds=seedCheck;
     }
 
     @Override
