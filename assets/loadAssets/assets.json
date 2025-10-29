@@ -550,12 +550,17 @@
         }
       ],
       "buildings": [
+      ],
+      "triggerZones": [
         {
-          "x": 240,
-          "y": 720,
-          "width": 132,
-          "height": 88,
-          "texturePath": "buildingTextures/CS_Building.png"
+          "x": 860,
+          "y": 50,
+          "width": 20,
+          "height": 20,
+          "targetMaze": 1,
+          "spawnPointX": 40,
+          "spawnPointY": 80,
+          "fromMaze": 0
         }
       ]
     },
@@ -604,6 +609,28 @@
         }
       ],
       "buildings": [
+      ],
+      "triggerZones": [
+        {
+          "x": 810,
+          "y": 0,
+          "width": 20,
+          "height": 20,
+          "targetMaze": 3,
+          "spawnPointX": 800,
+          "spawnPointY": 800,
+          "fromMaze": 1
+        },
+        {
+          "x": 860,
+          "y": 810,
+          "width": 20,
+          "height": 20,
+          "targetMaze": 2,
+          "spawnPointX": 0,
+          "spawnPointY": 800,
+          "fromMaze": 1
+        }
       ]
     },
     "level_3": {
@@ -642,7 +669,8 @@
           "texturePath": "entityTextures/playerCopy.png"
         }
       ],
-      "buildings": []
+      "buildings": [],
+      "triggerZones": []
     },
     "level_4": {
       "backgroundImage": "screenTextures/maze4.png",
@@ -680,6 +708,18 @@
           "texturePath": "entityTextures/playerCopy.png"
         }
       ],
-      "buildings": []
+      "buildings": [],
+      "triggerZones": [
+        {
+          "x": 810,
+          "y": 860,
+          "width": 20,
+          "height": 20,
+          "targetMaze": 1,
+          "spawnPointX": 800,
+          "spawnPointY": 40,
+          "fromMaze": 3
+        }
+      ]
     }
 }

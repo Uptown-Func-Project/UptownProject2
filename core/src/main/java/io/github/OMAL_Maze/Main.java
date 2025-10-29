@@ -1,5 +1,7 @@
 package io.github.OMAL_Maze;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Timer;
 
 import com.badlogic.gdx.ApplicationAdapter;
@@ -23,12 +25,17 @@ public class Main extends ApplicationAdapter {
     Movement movement;
     Array<Entity> entities;
     Array<Building> buildings;
+    Array<TriggerZone> triggerZones;
     static Player player;
     private int tileSize;
+    private int currentMaze=0;
+    ShapeRenderer shapeRenderer; //for debugging, delete when necessary
+    private float triggerCooldown = 0f;
     private static Main instance;
+    private MazeData mazeData;
 
     //button experiment
-    Button button;
+    //Button button;
 
     public Main() {
         instance = this;
@@ -38,7 +45,6 @@ public class Main extends ApplicationAdapter {
     }
     @Override
     public void create() {
-        buildings = new Array<>();
         batch = new SpriteBatch();
         int worldWidth = 880;
         int worldHeight = 880;
@@ -48,30 +54,22 @@ public class Main extends ApplicationAdapter {
         font = new BitmapFont();
         timerText = "Time: " + minutesRemaining;
         startTimer();
-        //Building fakeNisa = new Building(100,100,56,42,new Texture("buildingTextures/NiniLool.png"));
-        //Building CS_Building = new Building(50,340,64,45,new Texture("buildingTextures/CS_Building.png"));
-        //buildings.add(fakeNisa);
-        //buildings.add(CS_Building);
+        mazeData = MazeLoader.loadMaze("loadAssets/assets.json");
         instance = this;
-
+        shapeRenderer = new ShapeRenderer();
         //Background music plays the entire time
         Sound BackgroundMusic = Gdx.audio.newSound(Gdx.files.internal("Sounds/Background.mp3"));
         BackgroundMusic.play();
 
         //button experiments
-        button = new Button(Gdx.files.internal("button.png"));
-        MazeData mazeData = MazeLoader.loadMaze("loadAssets/assets.json");
-        MazeData.LevelData level_1 = mazeData.getLevel("level_1");
-        backgroundTexture = new Texture(level_1.getBackgroundImage());
-        entities = createEntities(level_1);
-        buildings = createBuildings(level_1);
+        //button = new Button(Gdx.files.internal("button.png"));
+        loadMaze(0,40,800,-1); //-1 means no previous maze
     }
 
     private Array<Entity> createEntities(MazeData.LevelData level) {
         Array<Entity> result = new Array<>();
         for (EntityData entityData: level.getEntities()) {
             Texture texture = new Texture(entityData.getTexturePath());
-            //Entity entity = new Entity(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture);
             String entityType = entityData.getType();
             Entity entity = getEntity(entityData, entityType, texture);
             result.add(entity);
@@ -79,6 +77,16 @@ public class Main extends ApplicationAdapter {
                     entityData.getX()+","+entityData.getY()+") with texture "+entityData.getTexturePath());
         }
         return result;
+    }
+    private Array<TriggerZone> createTriggerZones(MazeData.LevelData level) {
+        Array<TriggerZone> result = new Array<>();
+        for (TriggerZone triggerZone: level.getTriggerZones()) {
+            triggerZone.bounds = new Rectangle(triggerZone.x, triggerZone.y, triggerZone.width, triggerZone.height);
+            result.add(triggerZone);
+            System.out.println("Added new triggerzone with target maze "+triggerZone.targetMaze);
+        }
+        return result;
+
     }
 
     private static Entity getEntity(EntityData entityData, String entityType, Texture texture) {
@@ -166,9 +174,22 @@ public class Main extends ApplicationAdapter {
     }
 
     private void logic() {
-        /*for (Entity entity: entities) {
-            entity.logic();
-        }*/
+        triggerCooldown -= Gdx.graphics.getDeltaTime();
+        if (triggerCooldown < 0) triggerCooldown = 0;
+
+        Rectangle playerRect = player.sprite.getBoundingRectangle();
+
+        if (triggerCooldown <= 0) {
+            for (TriggerZone zone : triggerZones) {
+                if (playerRect.overlaps(zone.bounds)) {
+                    changeLevel(zone.targetMaze, zone.spawnPointX, zone.spawnPointY, currentMaze);
+                    triggerCooldown = 1.0f;
+                    break;
+                }
+
+            }
+        }
+
     }
 
     private void draw() {
@@ -187,13 +208,21 @@ public class Main extends ApplicationAdapter {
         for (Building building: buildings) {
             render(building);
         }
-        batch.draw(button,0,0,button.getWidth(),button.getHeight());
+        //batch.draw(button,0,0,button.getWidth(),button.getHeight());
         batch.end();
 
-        if(button.isClicked()){
+        shapeRenderer.setProjectionMatrix(viewport.getCamera().combined);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(Color.RED);
+        for (TriggerZone zone : triggerZones) {
+            shapeRenderer.rect(zone.bounds.x, zone.bounds.y, zone.bounds.width, zone.bounds.height);
+        }
+        shapeRenderer.end();
+
+        /*if(button.isClicked()){
             System.out.println("Button clicked");
             //perform action when button is clicked
-        }
+        }*/
     }
     private void render(Entity entity) {
         if (entity.getVisible()) {
@@ -205,19 +234,26 @@ public class Main extends ApplicationAdapter {
             building.render(batch);
         }
     }
+    private void changeLevel(int newMaze, int spawnPointX, int spawnPointY, int fromMaze) {
+        currentMaze = newMaze;
+        loadMaze(currentMaze, spawnPointX, spawnPointY, fromMaze);
+    }
 
-    /*private void createDroplet() {
-        float dropWidth = 1;
-        float dropHeight = 1;
-        float worldWidth = viewport.getWorldWidth();
-        float worldHeight = viewport.getWorldHeight();
-
-        Sprite dropSprite = new Sprite(dropTexture);
-        dropSprite.setSize(dropWidth, dropHeight);
-        dropSprite.setX(MathUtils.random(0f, worldWidth - dropWidth)); // Randomize the drop's x position
-        dropSprite.setY(worldHeight);
-        dropSprites.add(dropSprite);
-    }*/
+    private void loadMaze(int maze, int spawnPointX, int spawnPointY, int fromMaze) {
+        //Clear all previous buildings, entities, and trigger zones
+        //These will be null upon first use of the function (initialization)
+        if (buildings!=null) buildings.clear();
+        if (triggerZones!=null) triggerZones.clear();
+        if (entities!=null) entities.clear();
+        //Level int is 1 behind naming convention, add 1 when loading.
+        MazeData.LevelData currentLevel = mazeData.getLevel("level_"+(currentMaze+1));
+        backgroundTexture = new Texture(currentLevel.getBackgroundImage());
+        System.out.println("Loaded level for "+currentLevel.getBackgroundImage());
+        entities = createEntities(currentLevel);
+        buildings = createBuildings(currentLevel);
+        triggerZones = createTriggerZones(currentLevel);
+        player.sprite.setPosition(spawnPointX,spawnPointY);
+    }
 
     @Override
     public void resize(int width, int height) {
@@ -228,5 +264,6 @@ public class Main extends ApplicationAdapter {
     public void dispose() {
         batch.dispose();
         font.dispose();
-        }
+        shapeRenderer.dispose();
+    }
 }

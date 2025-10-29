@@ -27,6 +27,7 @@ public class MazeData {
         private int[][] walls;
         private List<EntityData> entities;
         private List<BuildingData> buildings;
+        private List<TriggerZone> triggerZones;
 
         public int[][] getWalls() {
             return walls;
@@ -38,6 +39,10 @@ public class MazeData {
 
         public List<BuildingData> getBuildings() {
             return buildings;
+        }
+
+        public List<TriggerZone> getTriggerZones() {
+            return triggerZones;
         }
 
         public String getBackgroundImage() {
