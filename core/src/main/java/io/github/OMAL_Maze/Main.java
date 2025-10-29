@@ -182,7 +182,7 @@ public class Main extends ApplicationAdapter {
         if (triggerCooldown <= 0) {
             for (TriggerZone zone : triggerZones) {
                 if (playerRect.overlaps(zone.bounds)) {
-                    changeLevel(zone.targetMaze, zone.spawnPointX, zone.spawnPointY, currentMaze);
+                    changeLevel(zone.targetMaze, zone.spawnPointX, zone.spawnPointY);
                     triggerCooldown = 1.0f;
                     break;
                 }
@@ -234,21 +234,22 @@ public class Main extends ApplicationAdapter {
             building.render(batch);
         }
     }
-    private void changeLevel(int newMaze, int spawnPointX, int spawnPointY, int fromMaze) {
+    private void changeLevel(int newMaze, int spawnPointX, int spawnPointY) {
         currentMaze = newMaze;
-        loadMaze(currentMaze, spawnPointX, spawnPointY, fromMaze);
+        loadMaze(currentMaze, spawnPointX, spawnPointY);
     }
 
-    private void loadMaze(int maze, int spawnPointX, int spawnPointY, int fromMaze) {
+    private void loadMaze(int maze, int spawnPointX, int spawnPointY) {
         //Clear all previous buildings, entities, and trigger zones
         //These will be null upon first use of the function (initialization)
         if (buildings!=null) buildings.clear();
         if (triggerZones!=null) triggerZones.clear();
         if (entities!=null) entities.clear();
         //Level int is 1 behind naming convention, add 1 when loading.
-        MazeData.LevelData currentLevel = mazeData.getLevel("level_"+(currentMaze+1));
+        MazeData.LevelData currentLevel = mazeData.getLevel("level_"+(maze+1));
+        //Recreate all level
         backgroundTexture = new Texture(currentLevel.getBackgroundImage());
-        System.out.println("Loaded level for "+currentLevel.getBackgroundImage());
+
         entities = createEntities(currentLevel);
         buildings = createBuildings(currentLevel);
         triggerZones = createTriggerZones(currentLevel);
