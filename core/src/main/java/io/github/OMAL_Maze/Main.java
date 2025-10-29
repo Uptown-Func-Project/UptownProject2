@@ -72,7 +72,7 @@ public class Main extends ApplicationAdapter {
         seeds = new seeds(110,80,15,15,seedsTexture);
         movement = new Movement();
         font = new BitmapFont();
-        timerText = "Time: " + minutesRemaining;
+        timerText = "Time: " + secondsRemaining;
         startTimer();
         mazeData = MazeLoader.loadMaze("loadAssets/assets.json");
         instance = this;
@@ -244,7 +244,7 @@ public class Main extends ApplicationAdapter {
         }
         font.draw(batch,timerText,50,450);
         //if seeds are collected then text is displayed
-        if(player.HasSeeds) {
+        if(player.hasSeeds) {
             font.draw(batch, "Inventory: Seeds", 200, 16);
         }
         //font.draw(batch, timerText,10, worldHeight - 10);
@@ -284,6 +284,7 @@ public class Main extends ApplicationAdapter {
     private void render(Building building) {
         if (building.getVisible()) {
             building.render(batch);
+        }
     }
     private void changeLevel(int newMaze, int spawnPointX, int spawnPointY) {
         loadMaze(newMaze, spawnPointX, spawnPointY);
