@@ -29,8 +29,8 @@
             "type": "Player",
             "x": 40,
             "y": 40,
-            "width": 36,
-            "height": 36,
+            "width": 32,
+            "height": 32,
             "texturePath": "entityTextures/playerCopy.png"
         },
         {
