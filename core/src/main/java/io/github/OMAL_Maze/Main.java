@@ -4,6 +4,10 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Timer;
 
+import java.time.chrono.MinguoChronology;
+import java.util.ArrayList;
+import java.util.Collections;
+
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
@@ -16,12 +20,15 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends ApplicationAdapter {
-    private int minutesRemaining = 10;
+    private int secondsRemaining = 10;
     private SpriteBatch batch;
     private BitmapFont font;
-    private String timerText = "Time = 0";
+    private String timerText = "Time = 0:10";
+    private boolean timerIsUp = false;
     FitViewport viewport;
     Texture backgroundTexture;
+    Texture seedsTexture;
+    Entity seeds;
     Movement movement;
     Array<Entity> entities;
     Array<Building> buildings;
@@ -35,6 +42,18 @@ public class Main extends ApplicationAdapter {
 
     //button experiment
     //Button button;
+    BeginButton begin;
+    QuitButton quit;
+    CloseSettingsButton closeSettings;
+    OpenSettingsButton openSettings;
+    PauseButton pause;
+    UnpauseButton unpause;
+
+    ArrayList<AbstractButton> buttons = new ArrayList<AbstractButton>(6);
+
+
+    //Sounds
+    Sound BackgroundMusic;
 
     public Main() {
         instance = this;
@@ -49,6 +68,8 @@ public class Main extends ApplicationAdapter {
         int worldHeight = 880;
         viewport = new FitViewport(worldWidth, worldHeight);
         tileSize= worldWidth /22;
+        seedsTexture = new Texture("entityTextures/Seeds.png");
+        seeds = new seeds(110,80,15,15,seedsTexture);
         movement = new Movement();
         font = new BitmapFont();
         timerText = "Time: " + minutesRemaining;
@@ -60,9 +81,17 @@ public class Main extends ApplicationAdapter {
         Sound BackgroundMusic = Gdx.audio.newSound(Gdx.files.internal("Sounds/Background.mp3"));
         BackgroundMusic.play();
 
-        //button experiments
-        //button = new Button(Gdx.files.internal("button.png"));
         loadMaze(0,40,800);
+        entities.add(seeds);
+
+        begin = new BeginButton(Gdx.files.internal("button.png"));
+        quit = new QuitButton(Gdx.files.internal("button.png"));
+        closeSettings = new CloseSettingsButton(Gdx.files.internal("button.png"));
+        openSettings = new OpenSettingsButton(Gdx.files.internal("button.png"));
+        pause = new PauseButton(Gdx.files.internal("button.png"));
+        unpause = new UnpauseButton(Gdx.files.internal("button.png"));
+
+        Collections.addAll(buttons, begin, quit, closeSettings, openSettings, pause, unpause);
     }
 
     private Array<Entity> createEntities(MazeData.LevelData level) {
@@ -142,16 +171,26 @@ public class Main extends ApplicationAdapter {
         Timer.Task myTimerTask = new Timer.Task() {
             @Override
             public void run() {
-                if (minutesRemaining > 0) {
-                    minutesRemaining--;
-                    timerText = "Time: " + minutesRemaining;
+                if (secondsRemaining > 0) {
+                    secondsRemaining--;
+                    int minutes = secondsRemaining / 60;
+                    int seconds = secondsRemaining % 60;
+                    timerText = String.format("Time: %02d:%02d", minutes, seconds);
                 } else {
-                    System.out.println("Time is up!");
+                    timerIsUp = true; 
+                    timerText = "Time: 00:00";
+                    Building gameOverScreen = new Building(0,0,400,500,new Texture("buildingTextures/GAME OVER.png"));
+                    buildings.add(gameOverScreen);
                     this.cancel();
+
+                    Sound GameOverSound = Gdx.audio.newSound(Gdx.files.internal("assets/Sounds/Gameover.mp3"));
+                    BackgroundMusic.pause();
+                    GameOverSound.play();
+
                 }
             }
         };
-        Timer.schedule(myTimerTask, 1f, 1f);
+        Timer.schedule(myTimerTask, 1f, 1f); // dealys the timer speed by 1 second
     }
 
     @Override
@@ -203,7 +242,12 @@ public class Main extends ApplicationAdapter {
             if (entity==null) continue;
             render(entity);
         }
-        font.draw(batch, timerText,10, worldHeight - 10);
+        font.draw(batch,timerText,50,450);
+        //if seeds are collected then text is displayed
+        if(player.HasSeeds) {
+            font.draw(batch, "Inventory: Seeds", 200, 16);
+        }
+        //font.draw(batch, timerText,10, worldHeight - 10);
         for (Building building: buildings) {
             render(building);
         }
@@ -217,11 +261,20 @@ public class Main extends ApplicationAdapter {
             shapeRenderer.rect(zone.bounds.x, zone.bounds.y, zone.bounds.width, zone.bounds.height);
         }
         shapeRenderer.end();
+        pause.makeActive();
+        //begin.makeActive();
 
-        /*if(button.isClicked()){
-            System.out.println("Button clicked");
-            //perform action when button is clicked
-        }*/
+        for(AbstractButton b:buttons){  //for loop works
+            //System.out.println(b);
+            if (b.isActive()){
+                b.draw(batch);
+               // System.out.println("active");
+                if (b.isClicked(viewport)){
+                    System.out.println("clicked");
+                }
+            }
+        }
+
     }
     private void render(Entity entity) {
         if (entity.getVisible()) {
@@ -231,7 +284,6 @@ public class Main extends ApplicationAdapter {
     private void render(Building building) {
         if (building.getVisible()) {
             building.render(batch);
-        }
     }
     private void changeLevel(int newMaze, int spawnPointX, int spawnPointY) {
         loadMaze(newMaze, spawnPointX, spawnPointY);

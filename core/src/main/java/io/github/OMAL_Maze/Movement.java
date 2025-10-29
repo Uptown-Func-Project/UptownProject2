@@ -60,7 +60,7 @@ public class Movement {
         boolean collisionX = false;
         for (Entity possibleEntity : entities) {
             if (possibleEntity==entity) continue;
-            if (possibleEntity.Overlaps(playerBounds) && possibleEntity.visible) {
+            if (possibleEntity.Overlaps(playerBounds) && !entity.isSolid) {
                 collisionX = true;
                 break;
             }
@@ -83,7 +83,7 @@ public class Movement {
         boolean collisionY = false;
         for (Entity possibleEntity : entities) {
             if (possibleEntity==entity) continue;
-            if (possibleEntity.Overlaps(playerBounds) && possibleEntity.visible) {
+            if (possibleEntity.Overlaps(playerBounds) && !entity.isSolid ) {
                 collisionY = true;
                 break;
             }
@@ -100,5 +100,6 @@ public class Movement {
             Yspeed = 0;
         }
         entity.logic();
+
     }
 }
