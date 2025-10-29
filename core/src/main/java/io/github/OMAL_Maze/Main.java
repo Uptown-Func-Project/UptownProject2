@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Timer;
 
-import java.time.chrono.MinguoChronology;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -46,7 +45,7 @@ public class Main extends ApplicationAdapter {
     PauseButton pause;
     UnpauseButton unpause;
 
-    ArrayList<AbstractButton> buttons = new ArrayList<AbstractButton>(6);
+    ArrayList<AbstractButton> buttons = new ArrayList<>(6);
 
 
     //Sounds
@@ -123,14 +122,10 @@ public class Main extends ApplicationAdapter {
             case "Item" -> {
                 //Item code needed. Deciding to add the class as seed possible
             }
-            case "Goose" -> {
-                entity = new Goose(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(),
-                        texture, player);
-            }
-            case "Seeds" -> {
-                entity = new Seeds(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(),
-                        texture);
-            }
+            case "Goose" -> entity = new Goose(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(),
+                    texture, player);
+            case "Seeds" -> entity = new Seeds(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(),
+                    texture);
             default ->
                 //Only other one is just Entity or should be cast to basic entity
                     entity = new Entity(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture);
