@@ -28,7 +28,6 @@ public class Main extends ApplicationAdapter {
     Array<TriggerZone> triggerZones;
     static Player player;
     private int tileSize;
-    private int currentMaze=0;
     ShapeRenderer shapeRenderer; //for debugging, delete when necessary
     private float triggerCooldown = 0f;
     private static Main instance;
@@ -63,7 +62,7 @@ public class Main extends ApplicationAdapter {
 
         //button experiments
         //button = new Button(Gdx.files.internal("button.png"));
-        loadMaze(0,40,800,-1); //-1 means no previous maze
+        loadMaze(0,40,800);
     }
 
     private Array<Entity> createEntities(MazeData.LevelData level) {
@@ -235,8 +234,7 @@ public class Main extends ApplicationAdapter {
         }
     }
     private void changeLevel(int newMaze, int spawnPointX, int spawnPointY) {
-        currentMaze = newMaze;
-        loadMaze(currentMaze, spawnPointX, spawnPointY);
+        loadMaze(newMaze, spawnPointX, spawnPointY);
     }
 
     private void loadMaze(int maze, int spawnPointX, int spawnPointY) {
