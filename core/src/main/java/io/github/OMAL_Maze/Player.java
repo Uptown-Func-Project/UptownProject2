@@ -10,12 +10,14 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class Player extends Character{
+    public int hearts;
     static Sound itemPickup;
-
-    public boolean HasSeeds;
-    public Player(int x, int y, int width, int height, Texture entityTexture) {
-        super(x,y,width,height,entityTexture);
-        this.HasSeeds = false;
+    public boolean hasSeeds;
+  public Player(int x, int y, int width, int height, Texture entityTexture) {
+        super(x,y,width,height, entityTexture);
+        this.visible = true;
+        this.hearts = 3;
+        this.hasSeeds = false;
     }
 
     @Override
@@ -44,10 +46,10 @@ public class Player extends Character{
                 //checking bounding box
                 if (playerBounds.overlaps(seedBounds)) {
                     entities.removeIndex(i);
-                    this.HasSeeds = true;
+                    this.hasSeeds = true;
                     //seeds pickup sound 
                     itemPickup = Gdx.audio.newSound(Gdx.files.internal("Sounds/ItemPickup.mp3"));
-                    if (this.HasSeeds) {
+                    if (this.hasSeeds) {
                         itemPickup.play();
                     }
                     break;
@@ -55,4 +57,11 @@ public class Player extends Character{
             }
         }
     }
+    public void decreaseHearts(){
+        if (hearts > 0){
+            hearts--;
+        }
+        // else: game over
+    }
+
 }

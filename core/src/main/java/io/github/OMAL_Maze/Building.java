@@ -13,6 +13,7 @@ public class Building {
     int height;
     Sprite sprite;
     Texture buildingTexture;
+    boolean visible=true;
     public Building(int x, int y, int width, int height, Texture buildingTexture) {
         rectangle = new Rectangle(x,y,width,height);
         this.x=x;
@@ -31,5 +32,11 @@ public class Building {
 
     public void render(Batch batch) {
         sprite.draw(batch);
+    }
+    public boolean getVisible() {
+        return this.visible;
+    }
+    public void setVisible(boolean nVisible) {
+        this.visible=nVisible;
     }
 }

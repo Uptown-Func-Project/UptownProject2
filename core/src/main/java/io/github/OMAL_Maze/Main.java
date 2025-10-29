@@ -1,4 +1,7 @@
 package io.github.OMAL_Maze;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Timer;
 
 import java.time.chrono.MinguoChronology;
@@ -9,10 +12,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -21,21 +21,24 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends ApplicationAdapter {
     private int secondsRemaining = 10;
-    private Timer.Task myTimerTask;
     private SpriteBatch batch;
     private BitmapFont font;
     private String timerText = "Time = 0:10";
     private boolean timerIsUp = false;
     FitViewport viewport;
     Texture backgroundTexture;
-    Texture playerTexture;
     Texture seedsTexture;
     Entity seeds;
     Movement movement;
-    Player player;
     Array<Entity> entities;
     Array<Building> buildings;
+    Array<TriggerZone> triggerZones;
+    static Player player;
+    private int tileSize;
+    ShapeRenderer shapeRenderer; //for debugging, delete when necessary
+    private float triggerCooldown = 0f;
     private static Main instance;
+    private MazeData mazeData;
 
     //button experiment
     //Button button;
@@ -52,38 +55,35 @@ public class Main extends ApplicationAdapter {
     //Sounds
     Sound BackgroundMusic;
 
+    public Main() {
+        instance = this;
+    }
     public static Main getInstance() {
         return instance;
     }
     @Override
     public void create() {
-        entities = new Array<>();
-        buildings = new Array<>();
         batch = new SpriteBatch();
-        viewport = new FitViewport(400, 400);
-        backgroundTexture = new Texture("screenTextures/maze1_WL.png");
-        playerTexture = new Texture("entityTextures/playerCopy.png");
+        int worldWidth = 880;
+        int worldHeight = 880;
+        viewport = new FitViewport(worldWidth, worldHeight);
+        tileSize= worldWidth /22;
         seedsTexture = new Texture("entityTextures/Seeds.png");
         seeds = new seeds(110,80,15,15,seedsTexture);
         movement = new Movement();
-        player = new Player(0,0,15,15,playerTexture);
         font = new BitmapFont();
+        timerText = "Time: " + secondsRemaining;
         startTimer();
-        Building fakeNisa = new Building(100,100,56,42,new Texture("buildingTextures/NiniLool.png"));
-        Building CS_Building = new Building(50,340,64,45,new Texture("buildingTextures/CS_Building.png"));
-        buildings.add(fakeNisa);
-        buildings.add(CS_Building);
-
+        mazeData = MazeLoader.loadMaze("loadAssets/assets.json");
+        instance = this;
+        shapeRenderer = new ShapeRenderer();
         //Background music plays the entire time
-        BackgroundMusic = Gdx.audio.newSound(Gdx.files.internal("Sounds/Background.mp3"));
+        Sound BackgroundMusic = Gdx.audio.newSound(Gdx.files.internal("Sounds/Background.mp3"));
         BackgroundMusic.play();
 
+        loadMaze(0,40,800);
         entities.add(seeds);
-        entities.add(player);
-        instance = this;
 
-        //button experiments
-        //button = new Button(Gdx.files.internal("button.png"));
         begin = new BeginButton(Gdx.files.internal("button.png"));
         quit = new QuitButton(Gdx.files.internal("button.png"));
         closeSettings = new CloseSettingsButton(Gdx.files.internal("button.png"));
@@ -92,11 +92,83 @@ public class Main extends ApplicationAdapter {
         unpause = new UnpauseButton(Gdx.files.internal("button.png"));
 
         Collections.addAll(buttons, begin, quit, closeSettings, openSettings, pause, unpause);
+    }
+
+    private Array<Entity> createEntities(MazeData.LevelData level) {
+        Array<Entity> result = new Array<>();
+        for (EntityData entityData: level.getEntities()) {
+            Texture texture = new Texture(entityData.getTexturePath());
+            String entityType = entityData.getType();
+            Entity entity = getEntity(entityData, entityType, texture);
+            result.add(entity);
+            System.out.println("Spawned new entity of type "+entityData.getType()+" at location ("+
+                    entityData.getX()+","+entityData.getY()+") with texture "+entityData.getTexturePath());
+        }
+        return result;
+    }
+    private Array<TriggerZone> createTriggerZones(MazeData.LevelData level) {
+        Array<TriggerZone> result = new Array<>();
+        for (TriggerZone triggerZone: level.getTriggerZones()) {
+            triggerZone.bounds = new Rectangle(triggerZone.x, triggerZone.y, triggerZone.width, triggerZone.height);
+            result.add(triggerZone);
+            System.out.println("Added new triggerzone with target maze "+triggerZone.targetMaze);
+        }
+        return result;
 
     }
 
+    private static Entity getEntity(EntityData entityData, String entityType, Texture texture) {
+        Entity entity = null;
+        switch (entityType) {
+            case "Player" -> {
+                    entity = new Player(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture);
+                    player = (Player) entity;
+            }
+            case "Character" ->
+                    entity = new Character(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture);
+            case "Item" -> {
+                //Item code needed. Deciding to add the class as seed possible
+            }
+            case "Goose" -> {
+                entity = new Goose(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(),
+                        texture, player);
+                //Goose code needed. I do not have the class in this branch.
+            }
+            case "Seed" -> {
+                //Seed code also needed.
+            }
+            default ->
+                //Only other one is just Entity or should be cast to basic entity
+                    entity = new Entity(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture);
+        }
+        return entity;
+    }
+
+    private Array<Building> createBuildings(MazeData.LevelData level) {
+        //Add some stuff for walls innit
+        Array<Building> result = new Array<>();
+        for (BuildingData buildingData: level.getBuildings()) {
+            Building building = new Building(buildingData.getX(), buildingData.getY(), buildingData.getWidth(),
+                    buildingData.getHeight(), new Texture(buildingData.getTexturePath()));
+            result.add(building);
+        }
+        int[][] walls = level.getWalls();
+        for (int i=0;i<walls.length;i++) {
+            for (int j=0;j<walls[i].length;j++) {
+                if (walls[i][j]==1) {
+                    int x = j*tileSize;
+                    int y = (walls.length - 1 - i)*tileSize;
+                    Building wall = new Building(x,y,tileSize,tileSize, new Texture("buildingTextures/wallMaybe.png"));
+                    wall.setVisible(false);
+                    result.add(wall);
+                }
+            }
+        }
+        return result;
+    }
+
     private void startTimer() {
-        myTimerTask = new Timer.Task() {
+        Timer.Task myTimerTask = new Timer.Task() {
             @Override
             public void run() {
                 if (secondsRemaining > 0) {
@@ -126,14 +198,6 @@ public class Main extends ApplicationAdapter {
         input();
         logic();
         draw();
-
-        batch.begin();
-        font.draw(batch,timerText,50,450);
-        //if seeds are collected then text is displayed
-        if(player.HasSeeds) {
-            font.draw(batch, "Inventory: Seeds", 200, 16);
-        }
-        batch.end();
     }
 
     private void input() {
@@ -148,9 +212,22 @@ public class Main extends ApplicationAdapter {
     }
 
     private void logic() {
-        /*for (Entity entity: entities) {
-            entity.logic();
-        }*/
+        triggerCooldown -= Gdx.graphics.getDeltaTime();
+        if (triggerCooldown < 0) triggerCooldown = 0;
+
+        Rectangle playerRect = player.sprite.getBoundingRectangle();
+
+        if (triggerCooldown <= 0) {
+            for (TriggerZone zone : triggerZones) {
+                if (playerRect.overlaps(zone.bounds)) {
+                    changeLevel(zone.targetMaze, zone.spawnPointX, zone.spawnPointY);
+                    triggerCooldown = 1.0f;
+                    break;
+                }
+
+            }
+        }
+
     }
 
     private void draw() {
@@ -162,13 +239,18 @@ public class Main extends ApplicationAdapter {
         batch.begin();
         batch.draw(backgroundTexture, 0, 0, worldWidth, worldHeight); // draw the background
         for (Entity entity: entities) {
-            entity.render(batch);
+            if (entity==null) continue;
+            render(entity);
         }
-        font.draw(batch, timerText,10, worldHeight - 10);
+        font.draw(batch,timerText,50,450);
+        //if seeds are collected then text is displayed
+        if(player.hasSeeds) {
+            font.draw(batch, "Inventory: Seeds", 200, 16);
+        }
+        //font.draw(batch, timerText,10, worldHeight - 10);
         for (Building building: buildings) {
-            building.render(batch);
+            render(building);
         }
-
         pause.makeActive();
         //begin.makeActive();
 
@@ -176,27 +258,55 @@ public class Main extends ApplicationAdapter {
             //System.out.println(b);
             if (b.isActive()){
                 b.draw(batch);
-               // System.out.println("active");
+                // System.out.println("active");
                 if (b.isClicked(viewport)){
                     System.out.println("clicked");
                 }
             }
         }
+        //batch.draw(button,0,0,button.getWidth(),button.getHeight());
         batch.end();
+
+        shapeRenderer.setProjectionMatrix(viewport.getCamera().combined);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(Color.RED);
+        for (TriggerZone zone : triggerZones) {
+            shapeRenderer.rect(zone.bounds.x, zone.bounds.y, zone.bounds.width, zone.bounds.height);
+        }
+        shapeRenderer.end();
+
+
+    }
+    private void render(Entity entity) {
+        if (entity.getVisible()) {
+            entity.render(batch);
+        }
+    }
+    private void render(Building building) {
+        if (building.getVisible()) {
+            building.render(batch);
+        }
+    }
+    private void changeLevel(int newMaze, int spawnPointX, int spawnPointY) {
+        loadMaze(newMaze, spawnPointX, spawnPointY);
     }
 
-    /*private void createDroplet() {
-        float dropWidth = 1;
-        float dropHeight = 1;
-        float worldWidth = viewport.getWorldWidth();
-        float worldHeight = viewport.getWorldHeight();
+    private void loadMaze(int maze, int spawnPointX, int spawnPointY) {
+        //Clear all previous buildings, entities, and trigger zones
+        //These will be null upon first use of the function (initialization)
+        if (buildings!=null) buildings.clear();
+        if (triggerZones!=null) triggerZones.clear();
+        if (entities!=null) entities.clear();
+        //Level int is 1 behind naming convention, add 1 when loading.
+        MazeData.LevelData currentLevel = mazeData.getLevel("level_"+(maze+1));
+        //Recreate all level
+        backgroundTexture = new Texture(currentLevel.getBackgroundImage());
 
-        Sprite dropSprite = new Sprite(dropTexture);
-        dropSprite.setSize(dropWidth, dropHeight);
-        dropSprite.setX(MathUtils.random(0f, worldWidth - dropWidth)); // Randomize the drop's x position
-        dropSprite.setY(worldHeight);
-        dropSprites.add(dropSprite);
-    }*/
+        entities = createEntities(currentLevel);
+        buildings = createBuildings(currentLevel);
+        triggerZones = createTriggerZones(currentLevel);
+        player.sprite.setPosition(spawnPointX,spawnPointY);
+    }
 
     @Override
     public void resize(int width, int height) {
@@ -207,9 +317,6 @@ public class Main extends ApplicationAdapter {
     public void dispose() {
         batch.dispose();
         font.dispose();
-        }
+        shapeRenderer.dispose();
+    }
 }
-
-
-
-
