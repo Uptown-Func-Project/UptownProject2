@@ -1,21 +1,47 @@
 package io.github.OMAL_Maze;
 import java.util.List;
+import java.util.Map;
 
 public class MazeData {
-    private String backgroundImage;
-    private int[][] walls;
-    private List<EntityData> entities;
-    private List<BuildingData> buildings;
+    private Map<String, LevelData> levels;
 
-    public int[][] getWalls() {
-        return walls;
+    // Constructor to handle the root object
+    public MazeData() {
+        this.levels = new java.util.HashMap<>();
     }
 
-    public List<EntityData> getEntities() {
-        return entities;
+    public LevelData getLevel(String levelName) {
+        return levels.get(levelName);
     }
-    public List<BuildingData> getBuildings() {
-        return buildings;
+
+    public Map<String, LevelData> getAllLevels() {
+        return levels;
     }
-    public String getBackgroundImage() {return this.backgroundImage;}
+
+    public void setLevels(Map<String, LevelData> levels) {
+        this.levels=levels;
+    }
+
+    public static class LevelData {
+        private String backgroundImage;
+        private int[][] walls;
+        private List<EntityData> entities;
+        private List<BuildingData> buildings;
+
+        public int[][] getWalls() {
+            return walls;
+        }
+
+        public List<EntityData> getEntities() {
+            return entities;
+        }
+
+        public List<BuildingData> getBuildings() {
+            return buildings;
+        }
+
+        public String getBackgroundImage() {
+            return backgroundImage;
+        }
+    }
 }

@@ -61,14 +61,15 @@ public class Main extends ApplicationAdapter {
         //button experiments
         button = new Button(Gdx.files.internal("button.png"));
         MazeData mazeData = MazeLoader.loadMaze("loadAssets/assets.json");
-        backgroundTexture = new Texture(mazeData.getBackgroundImage());
-        entities = createEntities(mazeData);
-        buildings = createBuildings(mazeData);
+        MazeData.LevelData level_1 = mazeData.getLevel("level_1");
+        backgroundTexture = new Texture(level_1.getBackgroundImage());
+        entities = createEntities(level_1);
+        buildings = createBuildings(level_1);
     }
 
-    private Array<Entity> createEntities(MazeData mazeData) {
+    private Array<Entity> createEntities(MazeData.LevelData level) {
         Array<Entity> result = new Array<>();
-        for (EntityData entityData: mazeData.getEntities()) {
+        for (EntityData entityData: level.getEntities()) {
             Texture texture = new Texture(entityData.getTexturePath());
             //Entity entity = new Entity(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture);
             String entityType = entityData.getType();
@@ -107,15 +108,15 @@ public class Main extends ApplicationAdapter {
         return entity;
     }
 
-    private Array<Building> createBuildings(MazeData mazeData) {
+    private Array<Building> createBuildings(MazeData.LevelData level) {
         //Add some stuff for walls innit
         Array<Building> result = new Array<>();
-        for (BuildingData buildingData: mazeData.getBuildings()) {
+        for (BuildingData buildingData: level.getBuildings()) {
             Building building = new Building(buildingData.getX(), buildingData.getY(), buildingData.getWidth(),
                     buildingData.getHeight(), new Texture(buildingData.getTexturePath()));
             result.add(building);
         }
-        int[][] walls = mazeData.getWalls();
+        int[][] walls = level.getWalls();
         for (int i=0;i<walls.length;i++) {
             for (int j=0;j<walls[i].length;j++) {
                 if (walls[i][j]==1) {
@@ -180,9 +181,7 @@ public class Main extends ApplicationAdapter {
         batch.draw(backgroundTexture, 0, 0, worldWidth, worldHeight); // draw the background
         for (Entity entity: entities) {
             if (entity==null) continue;
-            if (entity.getVisible()) {
-                entity.render(batch);
-            }
+            render(entity);
         }
         font.draw(batch, timerText,10, worldHeight - 10);
         for (Building building: buildings) {
