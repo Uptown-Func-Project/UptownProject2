@@ -30,7 +30,7 @@ public class Main extends ApplicationAdapter {
     Array<Building> buildings;
     Array<TriggerZone> triggerZones;
     static Player player;
-    private int tileSize;
+    public int tileSize;
     ShapeRenderer shapeRenderer; //for debugging, delete when necessary
     private float triggerCooldown = 0f;
     private static Main instance;
@@ -94,8 +94,8 @@ public class Main extends ApplicationAdapter {
             String entityType = entityData.getType();
             Entity entity = getEntity(entityData, entityType, texture);
             result.add(entity);
-            System.out.println("Spawned new entity of type "+entityData.getType()+" at location ("+
-                    entityData.getX()+","+entityData.getY()+") with texture "+entityData.getTexturePath());
+            //System.out.println("Spawned new entity of type "+entityData.getType()+" at location ("+
+            //        entityData.getX()+","+entityData.getY()+") with texture "+entityData.getTexturePath());
         }
         return result;
     }
@@ -104,7 +104,7 @@ public class Main extends ApplicationAdapter {
         for (TriggerZone triggerZone: level.getTriggerZones()) {
             triggerZone.bounds = new Rectangle(triggerZone.x, triggerZone.y, triggerZone.width, triggerZone.height);
             result.add(triggerZone);
-            System.out.println("Added new triggerzone with target maze "+triggerZone.targetMaze);
+            //System.out.println("Added new triggerzone with target maze "+triggerZone.targetMaze);
         }
         return result;
 
@@ -123,7 +123,7 @@ public class Main extends ApplicationAdapter {
                 //Item code needed. Deciding to add the class as seed possible
             }
             case "Goose" -> entity = new Goose(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(),
-                    texture, player);
+                    texture);
             case "Seeds" -> entity = new Seeds(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(),
                     texture);
             default ->
@@ -189,12 +189,11 @@ public class Main extends ApplicationAdapter {
     }
 
     private void input() {
-        //float speed = 40f;
         float delta = Gdx.graphics.getDeltaTime(); // retrieve the current delta
-        //movement.update(delta,playerSprite);
-        for (Entity entity: entities) {
-            if (entity instanceof Player) {
-                movement.update(delta, entity);
+        for (int i=0;i<entities.size;i++) {
+            Entity entity = entities.get(i);
+            if (entity instanceof Character character) {
+                character.movement(delta,entities,buildings);
             }
         }
     }
@@ -226,7 +225,8 @@ public class Main extends ApplicationAdapter {
         batch.setProjectionMatrix(viewport.getCamera().combined);
         batch.begin();
         batch.draw(backgroundTexture, 0, 0, worldWidth, worldHeight); // draw the background
-        for (Entity entity: entities) {
+        for (int i=0;i<entities.size;i++) {
+            Entity entity = entities.get(i);
             if (entity==null) continue;
             render(entity);
         }
@@ -242,7 +242,7 @@ public class Main extends ApplicationAdapter {
         for (Building building: buildings) {
             render(building);
         }
-        pause.makeActive();
+        /*pause.makeActive();
         //begin.makeActive();
 
         for(AbstractButton b:buttons){  //for loop works
@@ -253,15 +253,25 @@ public class Main extends ApplicationAdapter {
                     System.out.println("clicked");
                 }
             }
-        }
-        //batch.draw(button,0,0,button.getWidth(),button.getHeight());
+        }*/
         batch.end();
 
         shapeRenderer.setProjectionMatrix(viewport.getCamera().combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(Color.RED);
-        for (TriggerZone zone : triggerZones) {
+        /*for (TriggerZone zone : triggerZones) {
             shapeRenderer.rect(zone.bounds.x, zone.bounds.y, zone.bounds.width, zone.bounds.height);
+        }*/
+        for (int i=0;i<entities.size;i++) {
+            Entity entity = entities.get(i);
+            if (entity instanceof Goose goose) {
+                shapeRenderer.rect(
+                  goose.spawnTrigger.x,
+                  goose.spawnTrigger.y,
+                  goose.spawnTrigger.width,
+                  goose.spawnTrigger.height
+                );
+            }
         }
         shapeRenderer.end();
 

@@ -601,8 +601,8 @@
         },
         {
           "type": "Goose",
-          "x": 480,
-          "y": 480,
+          "x": 800,
+          "y": 40,
           "width": 36,
           "height": 36,
           "texturePath": "entityTextures/goose.png"
