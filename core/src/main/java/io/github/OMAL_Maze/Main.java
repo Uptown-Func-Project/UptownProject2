@@ -25,7 +25,6 @@ public class Main extends ApplicationAdapter {
     private String timerText;
     FitViewport viewport;
     Texture backgroundTexture;
-    Movement movement;
     Array<Entity> entities;
     Array<Building> buildings;
     Array<TriggerZone> triggerZones;
@@ -64,7 +63,6 @@ public class Main extends ApplicationAdapter {
         int worldHeight = 880;
         viewport = new FitViewport(worldWidth, worldHeight);
         tileSize= worldWidth /22;
-        movement = new Movement();
         font = new BitmapFont();
         mazeData = MazeLoader.loadMaze("loadAssets/assets.json");
         instance = this;

@@ -23,7 +23,7 @@ public class Goose extends Character{
 
     public Goose(int x, int y, int width, int height, Texture entityTexture) {
         super(x, y, width, height, entityTexture);
-        visible = true;
+        visible = false;
         state = gooseState.IDLE;
         //state = gooseState.ANGRY; // for testing, delete later
         this.isMoving = false;
@@ -77,7 +77,10 @@ public class Goose extends Character{
         Rectangle playerBounds = player.sprite.getBoundingRectangle();
         if (playerBounds.overlaps(this.spawnTrigger)) {
             //"Spawn goose" by moving it to right spawn point
+            this.sprite.setX(11*this.instance.tileSize);
+            this.sprite.setY(14*this.instance.tileSize+16);
             //Make goose visible
+            this.visible=true;
             //Start goose moving
             //Add a boolean to make this only happen once.
         }
