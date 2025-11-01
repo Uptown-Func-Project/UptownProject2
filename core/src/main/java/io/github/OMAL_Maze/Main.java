@@ -35,17 +35,14 @@ public class Main extends ApplicationAdapter {
     private static Main instance;
     private MazeData mazeData;
 
-    //button experiment
-    //Button button;
     BeginButton begin;
     QuitButton quit;
     CloseSettingsButton closeSettings;
     OpenSettingsButton openSettings;
     PauseButton pause;
     UnpauseButton unpause;
-
+    //storing all buttons in an arraylist so they can be iterated through
     ArrayList<AbstractButton> buttons = new ArrayList<>(6);
-
 
     //Sounds
     Sound BackgroundMusic;
@@ -74,13 +71,14 @@ public class Main extends ApplicationAdapter {
 
         loadMaze(0,40,800);
 
+        //the images of the buttons can be changed here
         begin = new BeginButton(Gdx.files.internal("button.png"));
         quit = new QuitButton(Gdx.files.internal("button.png"));
         closeSettings = new CloseSettingsButton(Gdx.files.internal("button.png"));
         openSettings = new OpenSettingsButton(Gdx.files.internal("button.png"));
         pause = new PauseButton(Gdx.files.internal("button.png"));
         unpause = new UnpauseButton(Gdx.files.internal("button.png"));
-
+        //adding all buttons to the arraylist in one go
         Collections.addAll(buttons, begin, quit, closeSettings, openSettings, pause, unpause);
         startTimer();
     }
@@ -240,18 +238,22 @@ public class Main extends ApplicationAdapter {
         for (Building building: buildings) {
             render(building);
         }
-        /*pause.makeActive();
+
+        //all buttons are initially inactive, making one button active for testing purposes
+        //pause.makeActive();
         //begin.makeActive();
 
-        for(AbstractButton b:buttons){  //for loop works
-            if (b.isActive()){
-                b.draw(batch);
-                // System.out.println("active");
-                if (b.isClicked(viewport)){
-                    System.out.println("clicked");
-                }
-            }
-        }*/
+        //for loop to go through all buttons to draw if needed
+        //for(AbstractButton b:buttons){
+        //    //only draw if active
+        //    if (b.isActive()){
+        //        b.draw(batch);
+        //        //check if button clicked using methods
+        //        if (b.isClicked(viewport)){
+        //            System.out.println("clicked");
+        //        }
+        //    }
+        //}
         batch.end();
 
         shapeRenderer.setProjectionMatrix(viewport.getCamera().combined);
