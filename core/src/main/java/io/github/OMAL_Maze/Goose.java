@@ -1,12 +1,17 @@
 package io.github.OMAL_Maze;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 
+/**
+ * Goose NPC with different states.
+ * Can bite the player to reduce health and slow them down.
+ */
 public class Goose extends Character{
     Player player;
     gooseState state;
@@ -22,6 +27,16 @@ public class Goose extends Character{
         HAPPY
     }
 
+    /**
+     * Constructor for the goose class.
+     * Calls super and sets goose to an idle, invisible entity.
+     * Creates a trigger area for the goose to spawn in.
+     * @param x X-axis (horizontal) location of the goose
+     * @param y Y-axis (vertical) location of the goose
+     * @param width width of the goose
+     * @param height height of the goose
+     * @param entityTexture the Texture object for the goose sprite
+     */
     public Goose(int x, int y, int width, int height, Texture entityTexture) {
         super(x, y, width, height, entityTexture);
         visible = false;
@@ -38,6 +53,10 @@ public class Goose extends Character{
         this.createTrigger();
     }
 
+    /**
+     * Sets the goose position and makes it visible.
+     * Should only be called when spawning the goose once.
+     */
     public void show(){
         //"Spawn goose" by moving it to right spawn point
         this.setPos(11*this.instance.tileSize,14*this.instance.tileSize+16);
@@ -62,21 +81,23 @@ public class Goose extends Character{
         }*/
     }
 
+    /**
+     * Unused so far.
+     */
     public void hide(){
         visible = false;
         state = gooseState.IDLE;
     }
 
-    /*
-    causes goose to follow player
+    /**
+     * Overridden logic class.
+     * Used to clamp sprite.
+     * Also used to determine goose spawn from player location.
+     * Also checks the bite timer to restart goose movement.
      */
-    public void followPlayer(){
-        isMoving = true;
-    }
-
-
     @Override
     public void logic(){
+        float delta = Gdx.graphics.getDeltaTime();
         // trying to prevent goose from leaving screen. does not work >
         sprite.setX(MathUtils.clamp(sprite.getX(), 0, instance.viewport.getWorldWidth()-width));
         sprite.setY(MathUtils.clamp(sprite.getY(),0,instance.viewport.getWorldHeight()-height));
@@ -85,19 +106,43 @@ public class Goose extends Character{
             this.show();
         }
 
+        if (bitPlayer) {
+            if (this.biteTimer>0f) {
+                this.biteTimer -= delta;
+            } else {
+                this.bitPlayer = false;
+                this.biteTimer = 5000f;
+                this.isMoving=true;
+                /* TODO:
+                Check if this has any issues for collision (aka do an overlap check first)
+                Might be annoying if it is actively overlapping as safe location needs to be found.
+                 */
+                this.isSolid=true;
+            }
+        }
+
     }
 
-    /*
-    // When angry goose collides with player, this method should be called to decrease the health of the player.
+    /**
+     * Decreases the player's hearts.
+     * Also stops the goose from moving and attacking for 5s.
+     * When not attacking, the goose becomes an entity that can be moved past.
      */
     public void bitePlayer(){
         player.decreaseHearts();
-        // need to prevent goose from immediately re-biting player - move goose negative direction a small distance
-        // temporary solution for testing - goose hides and stops moving on collision with player (delete later):
         isMoving = false;
+        //Timer starts.
         this.biteTimer=5000f;
-        //hide();
+        //Goose becomes unsolid so it can be walked past.
+        this.isSolid=false;
     }
+
+    /**
+     * Movement override, moves the goose towards the player if "isMoving" set to true.
+     * @param delta Time in milliseconds since last frame, used for speed difference.
+     * @param entities Array of the current entities in the map
+     * @param buildings Array of the current buildings in the map
+     */
     @Override
     public void movement(float delta, Array<Entity> entities, Array<Building> buildings) {
         this.player= Main.player;
@@ -150,18 +195,17 @@ public class Goose extends Character{
                 this.translate(0,-moveY);
                 Yspeed=0;
             }
-        } else if (bitPlayer) {
-            if (this.biteTimer>0f) {
-                this.biteTimer -= delta;
-            } else {
-                this.bitPlayer = false;
-                this.biteTimer = 5000f;
-                this.isMoving=true;
-            }
         }
         this.logic();
     }
 
+    /**
+     * Checks if the goose entity overlaps with any of the current entities or buildings.
+     * Used for the movement to stop goose moving into solid entities or buildings.
+     * @param entities Array of current entities in the map
+     * @param buildings Array of current buildings in the map
+     * @return boolean for whether the function overlaps or not
+     */
     private boolean checkOverlaps(Array<Entity> entities, Array<Building> buildings) {
         for (int i=0;i< buildings.size;i++) {
             Building building=buildings.get(i);
@@ -180,6 +224,12 @@ public class Goose extends Character{
         return false;
     }
 
+    /**
+     * Sets the position of the entity. Makes sure to update relevant values.
+     * Required function as this.x and this.y don't always sync with the rectangle or sprite.
+     * @param newX The new X location as a float value.
+     * @param newY The new Y location as a float value.
+     */
     private void setPos(float newX, float newY) {
         this.x=(int)newX;
         this.y=(int)newY;
@@ -188,6 +238,13 @@ public class Goose extends Character{
         this.sprite.setX(newX);
         this.sprite.setY(newY);
     }
+
+    /**
+     * Translates the position of the goose.
+     * This function is required to sync all values used for the position.
+     * @param distX The distance to move in the X axis as a float value.
+     * @param distY The distance to move in the Y axis as a float value.
+     */
     private void translate(float distX, float distY) {
         this.sprite.translate(distX,distY);
         this.x=(int)this.sprite.getX();
@@ -196,6 +253,10 @@ public class Goose extends Character{
         this.rectangle.y=this.sprite.getY();
     }
 
+    /**
+     * Creates the trigger area for spawning the goose.
+     * These values are hardcoded for level 2, however different functionality should be used if any other goose is used in the future.
+     */
     void createTrigger() {
         int leftX = 6;
         int leftY = 8;
