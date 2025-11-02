@@ -70,7 +70,8 @@ public class Main extends ApplicationAdapter {
         BackgroundMusic.setLooping(id,true);
 
         loadMaze(0,40,800);
-
+        //Debugging line below, Used to spawn at start of second level.
+        //loadMaze(1, 40, 80);
         //the images of the buttons can be changed here
         begin = new BeginButton(Gdx.files.internal("button.png"));
         quit = new QuitButton(Gdx.files.internal("button.png"));

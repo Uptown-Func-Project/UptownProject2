@@ -159,6 +159,10 @@ public class Player extends Character{
     public void decreaseHearts(){
         if (hearts > 0){
             hearts--;
+            //Slow down player.
+            this.speed*=0.8f;
+        } else {
+            System.out.println("Bit again at 0 hearts. Game should maybe end here.");
         }
         // else: game over
     }

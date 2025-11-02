@@ -50,6 +50,7 @@ public class Goose extends Character{
         this.Yspeed=0f;
         this.instance = Main.getInstance();
         this.bitPlayer=false;
+        this.biteTimer=5f;
         this.createTrigger();
     }
 
@@ -111,7 +112,7 @@ public class Goose extends Character{
                 this.biteTimer -= delta;
             } else {
                 this.bitPlayer = false;
-                this.biteTimer = 5000f;
+                this.biteTimer = 5f;
                 this.isMoving=true;
                 /* TODO:
                 Check if this has any issues for collision (aka do an overlap check first)
@@ -131,15 +132,16 @@ public class Goose extends Character{
     public void bitePlayer(){
         player.decreaseHearts();
         isMoving = false;
+        this.bitPlayer=true;
         //Timer starts.
-        this.biteTimer=5000f;
+        this.biteTimer=5f;
         //Goose becomes unsolid so it can be walked past.
         this.isSolid=false;
     }
 
     /**
      * Movement override, moves the goose towards the player if "isMoving" set to true.
-     * @param delta Time in milliseconds since last frame, used for speed difference.
+     * @param delta Time in seconds since last frame, used for speed difference.
      * @param entities Array of the current entities in the map
      * @param buildings Array of the current buildings in the map
      */
@@ -147,13 +149,6 @@ public class Goose extends Character{
     public void movement(float delta, Array<Entity> entities, Array<Building> buildings) {
         this.player= Main.player;
         if (isMoving) {
-
-            /* TODO:
-            if (goose collides with player)   {
-                bitePlayer();
-            }
-            */
-
             //final float speed = 1f;
             float X_diff = this.player.sprite.getX() - this.x;
             float Y_diff = this.player.sprite.getY() - this.y;
@@ -218,6 +213,9 @@ public class Goose extends Character{
             if (entity==this) continue;
             if (!entity.isSolid) continue;
             if (entity.Overlaps(this.rectangle)) {
+                if (entity.getClass()==Player.class) {
+                    this.bitePlayer();
+                }
                 return true;
             }
         }
