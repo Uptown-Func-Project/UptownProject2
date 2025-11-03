@@ -19,7 +19,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends ApplicationAdapter {
-    private int secondsRemaining = 300;
+    private int secondsRemaining = 5;
     private SpriteBatch batch;
     private BitmapFont font;
     private String timerText;
@@ -164,12 +164,11 @@ public class Main extends ApplicationAdapter {
                     timerText = String.format("Time: %02d:%02d", minutes, seconds);
                 } else {
                     timerText = "Time: 00:00";
-                    Building gameOverScreen = new Building(0,0,400,500,new Texture("buildingTextures/GAME OVER.png"));
+                    Building gameOverScreen = new Building(0,0,900,1000,new Texture("buildingTextures/GAME OVER.png"));
                     buildings.add(gameOverScreen);
                     //this.cancel();
 
                     Sound GameOverSound = Gdx.audio.newSound(Gdx.files.internal("Sounds/Gameover.mp3"));
-                    BackgroundMusic.pause();
                     GameOverSound.play();
 
                 }
@@ -211,7 +210,6 @@ public class Main extends ApplicationAdapter {
 
             }
         }
-
     }
 
     private void draw() {
@@ -234,7 +232,9 @@ public class Main extends ApplicationAdapter {
         }
         //if seeds are collected then text is displayed
         if(player.hasSeeds) {
-            font.draw(batch, " Inventory: Seeds", timerX, timerY-15);
+            if(secondsRemaining > 0){
+                font.draw(batch, " Inventory: Seeds", timerX, timerY-15);
+            }
         }
         for (Building building: buildings) {
             render(building);
@@ -245,16 +245,16 @@ public class Main extends ApplicationAdapter {
         //begin.makeActive();
 
         //for loop to go through all buttons to draw if needed
-        //for(AbstractButton b:buttons){
-        //    //only draw if active
-        //    if (b.isActive()){
-        //        b.draw(batch);
-        //        //check if button clicked using methods
-        //        if (b.isClicked(viewport)){
-        //            System.out.println("clicked");
-        //        }
-        //    }
-        //}
+        for(AbstractButton b:buttons){
+            //only draw if active
+            if (b.isActive()){
+                b.draw(batch);
+                // System.out.println("active");
+                if (b.isClicked(viewport)){
+                    System.out.println("clicked");
+                }
+            }
+        }
         batch.end();
 
         shapeRenderer.setProjectionMatrix(viewport.getCamera().combined);

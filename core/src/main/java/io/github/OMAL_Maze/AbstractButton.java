@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 //each button will need the visuals associated with it to also be displayed
 
@@ -83,7 +84,7 @@ public abstract class AbstractButton {
      * @param viewport the FitViewport that is holding the imformaton on the screen
      * @return true if the button has been clicked, false if not
      */
-    boolean isClicked(FitViewport viewport) {
+    boolean isClicked(Viewport viewport) {
         boolean clicked = false;
         int locationX;
         int locationY;
@@ -102,4 +103,6 @@ public abstract class AbstractButton {
         }
         return clicked;
     }
+
+    protected abstract void dispose();
 }
