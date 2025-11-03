@@ -19,18 +19,17 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends ApplicationAdapter {
-    private int secondsRemaining = 300;
+    private int secondsRemaining = 5;
     private SpriteBatch batch;
     private BitmapFont font;
     private String timerText;
     FitViewport viewport;
     Texture backgroundTexture;
-    Movement movement;
     Array<Entity> entities;
     Array<Building> buildings;
     Array<TriggerZone> triggerZones;
     static Player player;
-    private int tileSize;
+    public int tileSize;
     ShapeRenderer shapeRenderer; //for debugging, delete when necessary
     private float triggerCooldown = 0f;
     private static Main instance;
@@ -61,7 +60,6 @@ public class Main extends ApplicationAdapter {
         int worldHeight = 880;
         viewport = new FitViewport(worldWidth, worldHeight);
         tileSize= worldWidth /22;
-        movement = new Movement();
         font = new BitmapFont();
         mazeData = MazeLoader.loadMaze("loadAssets/assets.json");
         instance = this;
@@ -72,7 +70,8 @@ public class Main extends ApplicationAdapter {
         BackgroundMusic.setLooping(id,true);
 
         loadMaze(0,40,800);
-
+        //Debugging line below, Used to spawn at start of second level.
+        //loadMaze(1, 40, 80);
         //the images of the buttons can be changed here
         begin = new BeginButton(Gdx.files.internal("button.png"));
         quit = new QuitButton(Gdx.files.internal("button.png"));
@@ -92,8 +91,8 @@ public class Main extends ApplicationAdapter {
             String entityType = entityData.getType();
             Entity entity = getEntity(entityData, entityType, texture);
             result.add(entity);
-            System.out.println("Spawned new entity of type "+entityData.getType()+" at location ("+
-                    entityData.getX()+","+entityData.getY()+") with texture "+entityData.getTexturePath());
+            //System.out.println("Spawned new entity of type "+entityData.getType()+" at location ("+
+            //        entityData.getX()+","+entityData.getY()+") with texture "+entityData.getTexturePath());
         }
         return result;
     }
@@ -102,7 +101,7 @@ public class Main extends ApplicationAdapter {
         for (TriggerZone triggerZone: level.getTriggerZones()) {
             triggerZone.bounds = new Rectangle(triggerZone.x, triggerZone.y, triggerZone.width, triggerZone.height);
             result.add(triggerZone);
-            System.out.println("Added new triggerzone with target maze "+triggerZone.targetMaze);
+            //System.out.println("Added new triggerzone with target maze "+triggerZone.targetMaze);
         }
         return result;
 
@@ -121,7 +120,7 @@ public class Main extends ApplicationAdapter {
                 //Item code needed. Deciding to add the class as seed possible
             }
             case "Goose" -> entity = new Goose(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(),
-                    texture, player);
+                    texture);
             case "Seeds" -> entity = new Seeds(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(),
                     texture);
             default ->
@@ -165,12 +164,11 @@ public class Main extends ApplicationAdapter {
                     timerText = String.format("Time: %02d:%02d", minutes, seconds);
                 } else {
                     timerText = "Time: 00:00";
-                    Building gameOverScreen = new Building(0,0,400,500,new Texture("buildingTextures/GAME OVER.png"));
+                    Building gameOverScreen = new Building(0,0,900,1000,new Texture("buildingTextures/GAME OVER.png"));
                     buildings.add(gameOverScreen);
                     //this.cancel();
 
                     Sound GameOverSound = Gdx.audio.newSound(Gdx.files.internal("Sounds/Gameover.mp3"));
-                    BackgroundMusic.pause();
                     GameOverSound.play();
 
                 }
@@ -184,23 +182,14 @@ public class Main extends ApplicationAdapter {
         input();
         logic();
         draw();
-
-        batch.begin();
-        font.draw(batch,timerText,50,450);
-        //if seeds are collected then text is displayed
-        if(player.HasSeeds) {
-            font.draw(batch, "Inventory: Seeds", 200, 16);
-        }
-        batch.end();
     }
 
     private void input() {
-        //float speed = 40f;
         float delta = Gdx.graphics.getDeltaTime(); // retrieve the current delta
-        //movement.update(delta,playerSprite);
-        for (Entity entity: entities) {
-            if (entity instanceof Player) {
-                movement.update(delta, entity);
+        for (int i=0;i<entities.size;i++) {
+            Entity entity = entities.get(i);
+            if (entity instanceof Character character) {
+                character.movement(delta,entities,buildings);
             }
         }
     }
@@ -221,7 +210,6 @@ public class Main extends ApplicationAdapter {
 
             }
         }
-
     }
 
     private void draw() {
@@ -232,7 +220,8 @@ public class Main extends ApplicationAdapter {
         batch.setProjectionMatrix(viewport.getCamera().combined);
         batch.begin();
         batch.draw(backgroundTexture, 0, 0, worldWidth, worldHeight); // draw the background
-        for (Entity entity: entities) {
+        for (int i=0;i<entities.size;i++) {
+            Entity entity = entities.get(i);
             if (entity==null) continue;
             render(entity);
         }
@@ -243,14 +232,16 @@ public class Main extends ApplicationAdapter {
         }
         //if seeds are collected then text is displayed
         if(player.hasSeeds) {
-            font.draw(batch, " Inventory: Seeds", timerX, timerY-15);
+            if(secondsRemaining > 0){
+                font.draw(batch, " Inventory: Seeds", timerX, timerY-15);
+            }
         }
         for (Building building: buildings) {
             render(building);
         }
 
         //all buttons are initially inactive, making one button active for testing purposes
-        pause.makeActive();
+        //pause.makeActive();
         //begin.makeActive();
 
         //for loop to go through all buttons to draw if needed
@@ -258,27 +249,70 @@ public class Main extends ApplicationAdapter {
             //only draw if active
             if (b.isActive()){
                 b.draw(batch);
-                //check if button clicked using methods
+                // System.out.println("active");
                 if (b.isClicked(viewport)){
                     System.out.println("clicked");
                 }
             }
         }
         batch.end();
+
+        shapeRenderer.setProjectionMatrix(viewport.getCamera().combined);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(Color.RED);
+        /*for (TriggerZone zone : triggerZones) {
+            shapeRenderer.rect(zone.bounds.x, zone.bounds.y, zone.bounds.width, zone.bounds.height);
+        }*/
+        for (int i=0;i<entities.size;i++) {
+            Entity entity = entities.get(i);
+            if (entity instanceof Goose goose) {
+                shapeRenderer.rect(
+                  goose.spawnTrigger.x,
+                  goose.spawnTrigger.y,
+                  goose.spawnTrigger.width,
+                  goose.spawnTrigger.height
+                );
+            }
+        }
+        shapeRenderer.end();
+
+
+    }
+    private void render(Entity entity) {
+        if (entity.getVisible()) {
+            entity.render(batch);
+        }
+    }
+    private void render(Building building) {
+        if (building.getVisible()) {
+            building.render(batch);
+        }
+    }
+    private void changeLevel(int newMaze, int spawnPointX, int spawnPointY) {
+        loadMaze(newMaze, spawnPointX, spawnPointY);
     }
 
-    /*private void createDroplet() {
-        float dropWidth = 1;
-        float dropHeight = 1;
-        float worldWidth = viewport.getWorldWidth();
-        float worldHeight = viewport.getWorldHeight();
+    private void loadMaze(int maze, int spawnPointX, int spawnPointY) {
+        //Clear all previous buildings, entities, and trigger zones
+        //These will be null upon first use of the function (initialization)
+        boolean seedCheck = false;
+        if (buildings!=null) buildings.clear();
+        if (triggerZones!=null) triggerZones.clear();
+        if (entities!=null) {
+            if (player.hasSeeds) seedCheck = true;
+            entities.clear();
+        }
+        //Level int is 1 behind naming convention, add 1 when loading.
+        MazeData.LevelData currentLevel = mazeData.getLevel("level_"+(maze+1));
+        //Recreate all level
+        backgroundTexture = new Texture(currentLevel.getBackgroundImage());
 
-        Sprite dropSprite = new Sprite(dropTexture);
-        dropSprite.setSize(dropWidth, dropHeight);
-        dropSprite.setX(MathUtils.random(0f, worldWidth - dropWidth)); // Randomize the drop's x position
-        dropSprite.setY(worldHeight);
-        dropSprites.add(dropSprite);
-    }*/
+        entities = createEntities(currentLevel);
+        buildings = createBuildings(currentLevel);
+        triggerZones = createTriggerZones(currentLevel);
+        player.sprite.setPosition(spawnPointX,spawnPointY);
+        player.hasSeeds=seedCheck;
+    }
 
     @Override
     public void resize(int width, int height) {

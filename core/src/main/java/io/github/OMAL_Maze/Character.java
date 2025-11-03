@@ -2,9 +2,15 @@ package io.github.OMAL_Maze;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Array;
 
 public class Character extends Entity {
-    Rectangle rectangle;
+    float speed;
+    float accelerate;
+    float friction;
+    float Xspeed = 0;
+    float Yspeed = 0;
+
     public Character(int x, int y, int width, int height, Texture entityTexture) {
         super(x,y,width,height,entityTexture);
     }
@@ -18,6 +24,6 @@ public class Character extends Entity {
     @Override
     public void logic() {
         //Checking collision. Entities can call this method from super.
-
     }
+    public void movement(float delta, Array<Entity> entities, Array<Building> buildings) {}
 }
