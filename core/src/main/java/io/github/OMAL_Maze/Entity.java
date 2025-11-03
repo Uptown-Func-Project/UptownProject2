@@ -33,7 +33,7 @@ public class Entity {
     }
 
     public boolean Overlaps(Rectangle bounds) {
-        return rectangle.overlaps(bounds);
+        return sprite.getBoundingRectangle().overlaps(bounds);
     }
 
     public void render(Batch batch) {

@@ -25,12 +25,11 @@ public class Main extends ApplicationAdapter {
     private String timerText;
     FitViewport viewport;
     Texture backgroundTexture;
-    Movement movement;
     Array<Entity> entities;
     Array<Building> buildings;
     Array<TriggerZone> triggerZones;
     static Player player;
-    private int tileSize;
+    public int tileSize;
     ShapeRenderer shapeRenderer; //for debugging, delete when necessary
     private float triggerCooldown = 0f;
     private static Main instance;
@@ -61,7 +60,6 @@ public class Main extends ApplicationAdapter {
         int worldHeight = 880;
         viewport = new FitViewport(worldWidth, worldHeight);
         tileSize= worldWidth /22;
-        movement = new Movement();
         font = new BitmapFont();
         mazeData = MazeLoader.loadMaze("loadAssets/assets.json");
         instance = this;
@@ -72,7 +70,8 @@ public class Main extends ApplicationAdapter {
         BackgroundMusic.setLooping(id,true);
 
         loadMaze(0,40,800);
-
+        //Debugging line below, Used to spawn at start of second level.
+        //loadMaze(1, 40, 80);
         //the images of the buttons can be changed here
         begin = new BeginButton(Gdx.files.internal("button.png"));
         quit = new QuitButton(Gdx.files.internal("button.png"));
@@ -92,8 +91,8 @@ public class Main extends ApplicationAdapter {
             String entityType = entityData.getType();
             Entity entity = getEntity(entityData, entityType, texture);
             result.add(entity);
-            System.out.println("Spawned new entity of type "+entityData.getType()+" at location ("+
-                    entityData.getX()+","+entityData.getY()+") with texture "+entityData.getTexturePath());
+            //System.out.println("Spawned new entity of type "+entityData.getType()+" at location ("+
+            //        entityData.getX()+","+entityData.getY()+") with texture "+entityData.getTexturePath());
         }
         return result;
     }
@@ -102,7 +101,7 @@ public class Main extends ApplicationAdapter {
         for (TriggerZone triggerZone: level.getTriggerZones()) {
             triggerZone.bounds = new Rectangle(triggerZone.x, triggerZone.y, triggerZone.width, triggerZone.height);
             result.add(triggerZone);
-            System.out.println("Added new triggerzone with target maze "+triggerZone.targetMaze);
+            //System.out.println("Added new triggerzone with target maze "+triggerZone.targetMaze);
         }
         return result;
 
@@ -121,7 +120,7 @@ public class Main extends ApplicationAdapter {
                 //Item code needed. Deciding to add the class as seed possible
             }
             case "Goose" -> entity = new Goose(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(),
-                    texture, player);
+                    texture);
             case "Seeds" -> entity = new Seeds(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(),
                     texture);
             default ->
@@ -186,12 +185,11 @@ public class Main extends ApplicationAdapter {
     }
 
     private void input() {
-        //float speed = 40f;
         float delta = Gdx.graphics.getDeltaTime(); // retrieve the current delta
-        //movement.update(delta,playerSprite);
-        for (Entity entity: entities) {
-            if (entity instanceof Player) {
-                movement.update(delta, entity);
+        for (int i=0;i<entities.size;i++) {
+            Entity entity = entities.get(i);
+            if (entity instanceof Character character) {
+                character.movement(delta,entities,buildings);
             }
         }
     }
@@ -222,7 +220,8 @@ public class Main extends ApplicationAdapter {
         batch.setProjectionMatrix(viewport.getCamera().combined);
         batch.begin();
         batch.draw(backgroundTexture, 0, 0, worldWidth, worldHeight); // draw the background
-        for (Entity entity: entities) {
+        for (int i=0;i<entities.size;i++) {
+            Entity entity = entities.get(i);
             if (entity==null) continue;
             render(entity);
         }
@@ -242,7 +241,7 @@ public class Main extends ApplicationAdapter {
         }
 
         //all buttons are initially inactive, making one button active for testing purposes
-        pause.makeActive();
+        //pause.makeActive();
         //begin.makeActive();
 
         //for loop to go through all buttons to draw if needed
@@ -261,8 +260,19 @@ public class Main extends ApplicationAdapter {
         shapeRenderer.setProjectionMatrix(viewport.getCamera().combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(Color.RED);
-        for (TriggerZone zone : triggerZones) {
+        /*for (TriggerZone zone : triggerZones) {
             shapeRenderer.rect(zone.bounds.x, zone.bounds.y, zone.bounds.width, zone.bounds.height);
+        }*/
+        for (int i=0;i<entities.size;i++) {
+            Entity entity = entities.get(i);
+            if (entity instanceof Goose goose) {
+                shapeRenderer.rect(
+                  goose.spawnTrigger.x,
+                  goose.spawnTrigger.y,
+                  goose.spawnTrigger.width,
+                  goose.spawnTrigger.height
+                );
+            }
         }
         shapeRenderer.end();
 
