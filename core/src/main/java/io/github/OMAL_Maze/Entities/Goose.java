@@ -1,14 +1,14 @@
 package io.github.OMAL_Maze.Entities;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.audio.Sound;
-import io.github.OMAL_Maze.Map.Building;
+
 import io.github.OMAL_Maze.Main;
-import java.util.concurrent.TimeUnit;
+import io.github.OMAL_Maze.Map.Building;
 
 /**
  * Goose NPC with different states.
@@ -254,6 +254,7 @@ public class Goose extends Character{
                             if (player.hasSeeds) {
                                 //Set goose to happy
                                 this.state = gooseState.HAPPY;
+                                Main.getInstance().decrementGoodEventCounter();
                                 //Could play goose happy sound?
                                 //Set goose solid to false
                                 this.isSolid = false;
