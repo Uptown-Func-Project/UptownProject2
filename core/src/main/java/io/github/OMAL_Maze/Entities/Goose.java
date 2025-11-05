@@ -1,12 +1,12 @@
-package io.github.OMAL_Maze;
+package io.github.OMAL_Maze.Entities;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
+import io.github.OMAL_Maze.Map.Building;
+import io.github.OMAL_Maze.Main;
 
 /**
  * Goose NPC with different states.
@@ -19,7 +19,7 @@ public class Goose extends Character{
     Boolean bitPlayer;
     float biteTimer;
     Main instance;
-    Rectangle spawnTrigger;
+    public Rectangle spawnTrigger;
     Boolean spawned;
     enum gooseState{
         IDLE,
