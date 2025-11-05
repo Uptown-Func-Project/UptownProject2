@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.audio.Sound;
 
 /**
  * Goose NPC with different states.
@@ -67,6 +68,9 @@ public class Goose extends Character{
         this.isMoving=true;
         //Add a boolean to make this only happen once.
         this.spawned=true;
+        //play anrgy goose sound
+        Sound GooseQuack = Gdx.audio.newSound(Gdx.files.internal("assets/Geese.mp3"));
+        GooseQuack.play();
         /*switch (state) {
             case IDLE:
                 //Chill
