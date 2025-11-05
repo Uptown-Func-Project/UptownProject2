@@ -536,9 +536,9 @@
           "type": "Player",
           "x": 40,
           "y": 40,
-          "width": 32,
-          "height": 32,
-          "texturePath": "entityTextures/playerCopy.png"
+          "width": 23,
+          "height": 30,
+          "texturePath": "entityTextures/player_A.png"
         },
         {
           "type": "Seeds",
@@ -595,9 +595,9 @@
           "type": "Player",
           "x": 40,
           "y": 40,
-          "width": 32,
-          "height": 32,
-          "texturePath": "entityTextures/playerCopy.png"
+          "width": 23,
+          "height": 30,
+          "texturePath": "entityTextures/player_A.png"
         },
         {
           "type": "Goose",
@@ -664,9 +664,9 @@
           "type": "Player",
           "x": 40,
           "y": 40,
-          "width": 32,
-          "height": 32,
-          "texturePath": "entityTextures/playerCopy.png"
+          "width": 23,
+          "height": 30,
+          "texturePath": "entityTextures/player_A.png"
         }
       ],
       "buildings": [],
@@ -703,9 +703,9 @@
           "type": "Player",
           "x": 40,
           "y": 40,
-          "width": 32,
-          "height": 32,
-          "texturePath": "entityTextures/playerCopy.png"
+          "width": 23,
+          "height": 30,
+          "texturePath": "entityTextures/player_A.png"
         }
       ],
       "buildings": [],

@@ -19,7 +19,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends ApplicationAdapter {
-    private int secondsRemaining = 5;
+    private int secondsRemaining = 300;
     private SpriteBatch batch;
     private BitmapFont font;
     private String timerText;
@@ -174,7 +174,7 @@ public class Main extends ApplicationAdapter {
                 }
             }
         };
-        Timer.schedule(myTimerTask, 1f, 1f); // dealys the timer speed by 1 second
+        Timer.schedule(myTimerTask, 1f, 1f); // delays the timer speed by 1 second
     }
 
     @Override
