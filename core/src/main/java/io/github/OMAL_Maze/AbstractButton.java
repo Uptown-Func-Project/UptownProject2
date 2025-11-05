@@ -75,11 +75,11 @@ public abstract class AbstractButton {
     }
 
     /**
-     * Checks if the button has been clicked in the boundries of the image.
-     * @param viewport the FitViewport that is holding the imformaton on the screen
+     * Checks if the button has been clicked in the boundaries of the image.
+     * @param viewport the FitViewport that is holding the information on the screen
      * @return true if the button has been clicked, false if not
      */
-    boolean isClicked(Viewport viewport) {
+    boolean isClicked(FitViewport viewport) {
         boolean clicked = false;
         int locationX;
         int locationY;
@@ -92,6 +92,8 @@ public abstract class AbstractButton {
             if (click.x >= x && click.x <= x+getWidth()){
                 if (click.y >= y && click.y <= y+getHeight()){
                     clicked = true;
+                    //the below line is a test
+                    //main.render();
                     System.out.println(message);
                 }
             }
@@ -99,5 +101,5 @@ public abstract class AbstractButton {
         return clicked;
     }
 
-    protected abstract void dispose();
+    //protected abstract void dispose();
 }
