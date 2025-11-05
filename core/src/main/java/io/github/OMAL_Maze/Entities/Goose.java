@@ -111,6 +111,7 @@ public class Goose extends Character{
         Rectangle playerBounds = player.sprite.getBoundingRectangle();
         if (playerBounds.overlaps(this.spawnTrigger)&&(this.spawned==null || !this.spawned)) {
             this.show();
+            Main.getInstance().decrementHiddenEventCounter();
         }
 
         if (bitPlayer) {
