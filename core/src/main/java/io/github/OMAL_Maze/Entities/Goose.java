@@ -21,6 +21,7 @@ public class Goose extends Character{
     Boolean bitPlayer;
     float biteTimer;
     Main instance;
+    float solidTimer = 0.5f;
     public Rectangle spawnTrigger;
     Boolean spawned;
     enum gooseState{
@@ -122,6 +123,11 @@ public class Goose extends Character{
         }
 
         if (bitPlayer) {
+            if (this.solidTimer>0f) {
+                this.solidTimer -= delta;
+            } else {
+                this.isSolid=false;
+            }
             if (this.biteTimer>0f) {
                 this.biteTimer -= delta;
             } else {
@@ -132,6 +138,7 @@ public class Goose extends Character{
                 Check if this has any issues for collision (aka do an overlap check first)
                 Might be annoying if it is actively overlapping as safe location needs to be found.
                  */
+                this.solidTimer=0.5f;
                 this.isSolid=true;
             }
         }
@@ -150,7 +157,9 @@ public class Goose extends Character{
         //Timer starts.
         this.biteTimer=5f;
         //Goose becomes unsolid so it can be walked past.
-        this.isSolid=false;
+        //Now handled using a timer to add a delay
+        this.solidTimer=0.5f;
+        //this.isSolid=false;
     }
 
     /**

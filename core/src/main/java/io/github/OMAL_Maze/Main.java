@@ -71,21 +71,24 @@ public class Main extends ApplicationAdapter {
 
         //Background music plays the entire time
         BackgroundMusic = Gdx.audio.newSound(Gdx.files.internal("Sounds/Background.mp3"));
-        long id = BackgroundMusic.play();
-        BackgroundMusic.setLooping(id,true);
-
-        loadMaze(0,40,800);
         //Debugging line below, Used to spawn at start of second level.
         //loadMaze(1, 40, 80);
         //the images of the buttons can be changed here
-        begin = new BeginButton(Gdx.files.internal("button.png"));
-        quit = new QuitButton(Gdx.files.internal("button.png"));
-        closeSettings = new CloseSettingsButton(Gdx.files.internal("button.png"));
-        openSettings = new OpenSettingsButton(Gdx.files.internal("button.png"));
-        pause = new PauseButton(Gdx.files.internal("button.png"));
-        unpause = new UnpauseButton(Gdx.files.internal("button.png"));
+        //begin = new BeginButton(Gdx.files.internal("button.png"));
+        //quit = new QuitButton(Gdx.files.internal("button.png"));
+        //closeSettings = new CloseSettingsButton(Gdx.files.internal("button.png"));
+        //openSettings = new OpenSettingsButton(Gdx.files.internal("button.png"));
+        //pause = new PauseButton(Gdx.files.internal("button.png"));
+        //unpause = new UnpauseButton(Gdx.files.internal("button.png"));
         //adding all buttons to the arraylist in one go
-        Collections.addAll(buttons, begin, quit, closeSettings, openSettings, pause, unpause);
+        //Collections.addAll(buttons, begin, quit, closeSettings, openSettings, pause, unpause);
+        startGame();
+    }
+
+    public void startGame() {
+        long id = BackgroundMusic.play();
+        BackgroundMusic.setLooping(id,true);
+        loadMaze(0,40,800);
         startTimer();
     }
 
@@ -121,9 +124,6 @@ public class Main extends ApplicationAdapter {
             }
             case "Character" ->
                     entity = new io.github.OMAL_Maze.Entities.Character(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture);
-            case "Item" -> {
-                //Item code needed. Deciding to add the class as seed possible
-            }
             case "Goose" -> entity = new Goose(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(),
                     texture);
             case "Seeds" -> entity = new Seeds(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(),
@@ -273,7 +273,7 @@ public class Main extends ApplicationAdapter {
         /*for (TriggerZone zone : triggerZones) {
             shapeRenderer.rect(zone.bounds.x, zone.bounds.y, zone.bounds.width, zone.bounds.height);
         }*/
-        for (int i=0;i<entities.size;i++) {
+        /*for (int i=0;i<entities.size;i++) {
             Entity entity = entities.get(i);
             if (entity instanceof Goose goose) {
                 shapeRenderer.rect(
@@ -283,7 +283,7 @@ public class Main extends ApplicationAdapter {
                   goose.spawnTrigger.height
                 );
             }
-        }
+        }*/
         shapeRenderer.end();
 
 
