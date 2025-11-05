@@ -1,6 +1,7 @@
 package io.github.OMAL_Maze.Entities;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
@@ -8,7 +9,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.audio.Sound;
 import io.github.OMAL_Maze.Map.Building;
 import io.github.OMAL_Maze.Main;
-import java.util.concurrent.TimeUnit;
+import io.github.OMAL_Maze.Map.Building;
 
 /**
  * Goose NPC with different states.
@@ -76,7 +77,7 @@ public class Goose extends Character{
         this.isMoving=true;
         //Add a boolean to make this only happen once.
         this.spawned=true;
-        //play angry goose sound
+        //play anrgy goose sound
 
         this.soundID = gooseQuack.play();
         this.soundTimer=5f;

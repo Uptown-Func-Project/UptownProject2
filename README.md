@@ -5,7 +5,7 @@ The player must escape the maze within 5 minutes, if they want to win the game, 
 
 ## How to find the game
 
-Download the JAR file from the OMAL official website, and you are ready to go!
+Download the JAR file from the [OMAL](https://octopusmissingaleg.github.io/) official website, and you are ready to go!
 
 ## Credits
 
@@ -33,6 +33,8 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
+
+## libGDX 
 
 A [libGDX](https://libgdx.com/) project generated with [gdx-liftoff](https://github.com/libgdx/gdx-liftoff).
 
