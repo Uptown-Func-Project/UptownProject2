@@ -1,14 +1,15 @@
-package io.github.OMAL_Maze;
+package io.github.OMAL_Maze.Entities;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import io.github.OMAL_Maze.Map.Building;
+import io.github.OMAL_Maze.Main;
 
 public class Player extends Character{
     public int hearts;

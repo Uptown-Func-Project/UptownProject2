@@ -1,4 +1,4 @@
-package io.github.OMAL_Maze;
+package io.github.OMAL_Maze.Entities;
 
 
 import com.badlogic.gdx.graphics.Texture;
@@ -13,7 +13,7 @@ public class Entity {
     int y;
     int width;
     int height;
-    Sprite sprite;
+    public Sprite sprite;
     Texture entityTexture;
     boolean visible=true;
     boolean isSolid;

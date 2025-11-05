@@ -1,7 +1,6 @@
-package io.github.OMAL_Maze;
+package io.github.OMAL_Maze.Map;
 
-public class EntityData {
-    private String type;
+public class BuildingData {
     private int x;
     private int y;
     private int width;
@@ -9,7 +8,6 @@ public class EntityData {
 
     private String texturePath;
 
-    public String getType() { return type; }
     public int getX() { return x; }
     public int getY() { return y; }
     public int getWidth() { return width; }

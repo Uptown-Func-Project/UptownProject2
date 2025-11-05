@@ -16,6 +16,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import io.github.OMAL_Maze.Buttons.*;
+import io.github.OMAL_Maze.Entities.*;
+import io.github.OMAL_Maze.Entities.Character;
+import io.github.OMAL_Maze.Map.*;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends ApplicationAdapter {
@@ -23,12 +27,12 @@ public class Main extends ApplicationAdapter {
     private SpriteBatch batch;
     private BitmapFont font;
     private String timerText;
-    FitViewport viewport;
+    public FitViewport viewport;
     Texture backgroundTexture;
-    Array<Entity> entities;
+    public Array<Entity> entities;
     Array<Building> buildings;
     Array<TriggerZone> triggerZones;
-    static Player player;
+    public static Player player;
     public int tileSize;
     ShapeRenderer shapeRenderer; //for debugging, delete when necessary
     private float triggerCooldown = 0f;
@@ -116,7 +120,7 @@ public class Main extends ApplicationAdapter {
                     player = (Player) entity;
             }
             case "Character" ->
-                    entity = new Character(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture);
+                    entity = new io.github.OMAL_Maze.Entities.Character(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture);
             case "Item" -> {
                 //Item code needed. Deciding to add the class as seed possible
             }

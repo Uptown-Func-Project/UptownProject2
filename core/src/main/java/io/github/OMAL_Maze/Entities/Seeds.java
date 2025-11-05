@@ -1,4 +1,4 @@
-package io.github.OMAL_Maze;
+package io.github.OMAL_Maze.Entities;
 import com.badlogic.gdx.graphics.Texture;
 
 

@@ -1,13 +1,14 @@
-package io.github.OMAL_Maze;
+package io.github.OMAL_Maze.Entities;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.audio.Sound;
+import io.github.OMAL_Maze.Map.Building;
+import io.github.OMAL_Maze.Main;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Goose NPC with different states.
@@ -20,7 +21,7 @@ public class Goose extends Character{
     Boolean bitPlayer;
     float biteTimer;
     Main instance;
-    Rectangle spawnTrigger;
+    public Rectangle spawnTrigger;
     Boolean spawned;
     enum gooseState{
         IDLE,
@@ -69,8 +70,17 @@ public class Goose extends Character{
         //Add a boolean to make this only happen once.
         this.spawned=true;
         //play anrgy goose sound
+
         Sound GooseQuack = Gdx.audio.newSound(Gdx.files.internal("assets/Geese.mp3"));
         GooseQuack.play();
+        try {
+        // Pause the main thread for 5 seconds 
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            System.out.println("Thread interrupted");
+        }
+        GooseQuack.pause();
+
         /*switch (state) {
             case IDLE:
                 //Chill

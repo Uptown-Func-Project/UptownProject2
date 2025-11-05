@@ -1,6 +1,5 @@
-package io.github.OMAL_Maze;
+package io.github.OMAL_Maze.Buttons;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 /**
  * QuitButton class extends AbstractButton and inherits all the methods and attributes.
