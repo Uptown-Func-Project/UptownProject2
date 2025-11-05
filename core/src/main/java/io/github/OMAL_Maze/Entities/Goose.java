@@ -73,7 +73,7 @@ public class Goose extends Character{
         //play anrgy goose sound
 
         Sound GooseQuack = Gdx.audio.newSound(Gdx.files.internal("assets/Geese.mp3"));
-        GooseQuack.play();
+        GooseQuack.play(Main.volume);
         try {
         // Pause the main thread for 5 seconds 
             Thread.sleep(1000);

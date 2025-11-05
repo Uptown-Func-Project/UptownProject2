@@ -23,6 +23,7 @@ import io.github.OMAL_Maze.Map.*;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends ApplicationAdapter {
+    public static final float volume = 0;
     private int secondsRemaining = 300;
     private SpriteBatch batch;
     private BitmapFont font;
@@ -86,7 +87,7 @@ public class Main extends ApplicationAdapter {
     }
 
     public void startGame() {
-        long id = BackgroundMusic.play();
+        long id = BackgroundMusic.play(volume);
         BackgroundMusic.setLooping(id,true);
         loadMaze(0,40,800);
         startTimer();
@@ -178,7 +179,7 @@ public class Main extends ApplicationAdapter {
                     //pauses the background music in order to play the game over sound 
                     if(!hasPlayed){
                         hasPlayed=true;
-                        GameOverSound.play();
+                        GameOverSound.play(volume);
                         BackgroundMusic.pause();
                     }
                 }
