@@ -1,9 +1,4 @@
 package io.github.OMAL_Maze;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.utils.Timer;
-
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -12,18 +7,40 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import io.github.OMAL_Maze.Buttons.*;
-import io.github.OMAL_Maze.Entities.*;
+
+import io.github.OMAL_Maze.Buttons.AbstractButton;
+import io.github.OMAL_Maze.Buttons.BeginButton;
+import io.github.OMAL_Maze.Buttons.CloseSettingsButton;
+import io.github.OMAL_Maze.Buttons.OpenSettingsButton;
+import io.github.OMAL_Maze.Buttons.PauseButton;
+import io.github.OMAL_Maze.Buttons.QuitButton;
+import io.github.OMAL_Maze.Buttons.UnpauseButton;
 import io.github.OMAL_Maze.Entities.Character;
-import io.github.OMAL_Maze.Map.*;
+import io.github.OMAL_Maze.Entities.Entity;
+import io.github.OMAL_Maze.Entities.EntityData;
+import io.github.OMAL_Maze.Entities.Goose;
+import io.github.OMAL_Maze.Entities.Player;
+import io.github.OMAL_Maze.Entities.Seeds;
+import io.github.OMAL_Maze.Map.Building;
+import io.github.OMAL_Maze.Map.BuildingData;
+import io.github.OMAL_Maze.Map.MazeData;
+import io.github.OMAL_Maze.Map.MazeLoader;
+import io.github.OMAL_Maze.Map.TriggerZone;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends ApplicationAdapter {
     private int secondsRemaining = 300;
+    private int badEventsRemaining = 1;
+    private int goodEventsRemaining = 1;
+    private int hiddenEventsRemaining = 1;
     private SpriteBatch batch;
     private BitmapFont font;
     private String timerText;
@@ -181,6 +198,18 @@ public class Main extends ApplicationAdapter {
         Timer.schedule(myTimerTask, 1f, 1f); // delays the timer speed by 1 second
     }
 
+    public void decrementHiddenEventCounter(){
+        hiddenEventsRemaining=0;//set it to 0 instead of -- since the hidden event only happens once
+    }
+
+    public void decrementBadEventCounter(){
+        badEventsRemaining=0;
+    }
+
+    public void decrementGoodEventCounter(){
+        goodEventsRemaining=0;
+    }
+
     @Override
     public void render() {
         input();
@@ -243,7 +272,11 @@ public class Main extends ApplicationAdapter {
         for (Building building: buildings) {
             render(building);
         }
-
+        //text displaying how many of each event remains
+        font.draw(batch, "Events Remaining:", timerX +90, timerY);
+        font.draw(batch, "Good:" + goodEventsRemaining, timerX + 220, timerY);  //give goose seed
+        font.draw(batch, "Bad:" + badEventsRemaining, timerX + 300, timerY); //goose bites
+        font.draw(batch, "Hidden:" + hiddenEventsRemaining, timerX + 380, timerY);//goose appears
         //all buttons are initially inactive, making one button active for testing purposes
         //pause.makeActive();
         //begin.makeActive();

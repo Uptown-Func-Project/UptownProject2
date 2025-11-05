@@ -8,8 +8,9 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import io.github.OMAL_Maze.Map.Building;
+
 import io.github.OMAL_Maze.Main;
+import io.github.OMAL_Maze.Map.Building;
 
 public class Player extends Character{
     public int hearts;
@@ -166,5 +167,6 @@ public class Player extends Character{
             System.out.println("Bit again at 0 hearts. Game should maybe end here.");
         }
         // else: game over
+        Main.getInstance().decrementBadEventCounter();
     }
 }

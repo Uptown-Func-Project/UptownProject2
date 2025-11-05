@@ -5,8 +5,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
-import io.github.OMAL_Maze.Map.Building;
+
 import io.github.OMAL_Maze.Main;
+import io.github.OMAL_Maze.Map.Building;
 
 /**
  * Goose NPC with different states.
@@ -105,6 +106,7 @@ public class Goose extends Character{
         Rectangle playerBounds = player.sprite.getBoundingRectangle();
         if (playerBounds.overlaps(this.spawnTrigger)&&(this.spawned==null || !this.spawned)) {
             this.show();
+            Main.getInstance().decrementHiddenEventCounter();
         }
 
         if (bitPlayer) {
