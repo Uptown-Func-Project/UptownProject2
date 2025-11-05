@@ -277,6 +277,7 @@ public class Main extends ApplicationAdapter {
         font.draw(batch, "Good:" + goodEventsRemaining, timerX + 220, timerY);  //give goose seed
         font.draw(batch, "Bad:" + badEventsRemaining, timerX + 300, timerY); //goose bites
         font.draw(batch, "Hidden:" + hiddenEventsRemaining, timerX + 380, timerY);//goose appears
+        font.draw(batch, "Lives:" + player.hearts, timerX + 120, timerY-15);//lives remaining
         //all buttons are initially inactive, making one button active for testing purposes
         //pause.makeActive();
         //begin.makeActive();
