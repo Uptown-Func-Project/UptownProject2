@@ -1,4 +1,4 @@
-package io.github.OMAL_Maze;
+package io.github.OMAL_Maze.Buttons;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
@@ -20,8 +20,9 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 public abstract class AbstractButton {
     private Texture texture;
     boolean active = false;
-    int x, y;
-    String message;
+    protected int x;
+    protected int y;
+    protected String message;
 
     /**
      * Constructor that each subclass implements

@@ -16,13 +16,8 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
+import io.github.OMAL_Maze.Buttons.*;
 import io.github.OMAL_Maze.Buttons.AbstractButton;
-import io.github.OMAL_Maze.Buttons.BeginButton;
-import io.github.OMAL_Maze.Buttons.CloseSettingsButton;
-import io.github.OMAL_Maze.Buttons.OpenSettingsButton;
-import io.github.OMAL_Maze.Buttons.PauseButton;
-import io.github.OMAL_Maze.Buttons.QuitButton;
-import io.github.OMAL_Maze.Buttons.UnpauseButton;
 import io.github.OMAL_Maze.Entities.Character;
 import io.github.OMAL_Maze.Entities.Entity;
 import io.github.OMAL_Maze.Entities.EntityData;
@@ -59,8 +54,6 @@ public class Main extends ApplicationAdapter {
 
     BeginButton begin;
     QuitButton quit;
-    CloseSettingsButton closeSettings;
-    OpenSettingsButton openSettings;
     PauseButton pause;
     UnpauseButton unpause;
     MuteButton mute;
@@ -70,7 +63,7 @@ public class Main extends ApplicationAdapter {
     Screen TitleScreen;
     Screen CongratsScreen; //will use the same quit and start button as game over screen
     //storing all buttons in an arraylist so they can be iterated through
-    ArrayList<AbstractButton> buttons = new ArrayList<>(8);
+    ArrayList<AbstractButton> buttons = new ArrayList<>(6);
 
     //Sounds
     Sound BackgroundMusic;
@@ -99,14 +92,12 @@ public class Main extends ApplicationAdapter {
         //the images of the buttons can be changed here
         begin = new BeginButton(Gdx.files.internal("startNew.png"));
         quit = new QuitButton(Gdx.files.internal("quitNew.png"));
-        closeSettings = new CloseSettingsButton(Gdx.files.internal("button.png"));
-        openSettings = new OpenSettingsButton(Gdx.files.internal("button.png"));
         pause = new PauseButton(Gdx.files.internal("button.png"));
         unpause = new UnpauseButton(Gdx.files.internal("button.png"));
         mute = new MuteButton(Gdx.files.internal("button.png"));
         startT = new StartButtonT(Gdx.files.internal("startNew.png"));
         //adding all buttons to the arraylist in one go
-        Collections.addAll(buttons, begin, quit, closeSettings, openSettings, pause, unpause, mute, startT);
+        Collections.addAll(buttons, begin, quit, pause, unpause, mute, startT);
         startTimer();
         GameOverScreen = new Screen(batch, viewport, "GAME OVER.png");
         TitleScreen = new Screen (batch, viewport, "Title screen.png");
@@ -188,22 +179,17 @@ public class Main extends ApplicationAdapter {
         boolean hasPlayed = false;
             @Override
             public void run() {
+                System.out.println(secondsRemaining);
                 if (secondsRemaining > 0) {
                     secondsRemaining--;
                     int minutes = secondsRemaining / 60;
                     int seconds = secondsRemaining % 60;
                     timerText = String.format("Time: %02d:%02d", minutes, seconds);
-                } else {
+                } else {  //won't enter this loop
+                    //Gdx.app.exit();
                     timerText = "Time: 00:00";
-                    //Building gameOverScreen = new Building(0,0,900,1000,new Texture("buildingTextures/GAME OVER.png"));
-                    //buildings.add(gameOverScreen);
+                    System.out.println("timer is 0");
                         GameOverScreen.setActive(true);
-//                    GameOverScreen.render(); //need to stop displaying the map
-//                    //displaying the correct buttons on game over screen
-//                    begin.makeActive();
-//                    quit.makeActive();
-//                    openSettings.makeActive();
-                    //this.cancel();
 
                     //pauses the background music in order to play the game over sound
                     if(!hasPlayed){
@@ -344,6 +330,8 @@ public class Main extends ApplicationAdapter {
         shapeRenderer.end();
 
         if (GameOverScreen.getActive()){
+            //Gdx.app.exit(); //remove this!!
+            System.out.println("game over screen is active");
             GameOverScreen.render(); //need to stop displaying the map
             //displaying the correct buttons on game over screen
             begin.makeActive();
@@ -457,7 +445,7 @@ public class Main extends ApplicationAdapter {
         loadMaze(0,40,800);
 
         //startTimer();  //this meant it was in double time
-        secondsRemaining = 300;  //resets the time
+        secondsRemaining = 5;  //resets the time
         GameOverScreen.setActive(false);
         //draw(); //this continues to show the game over screen
     }

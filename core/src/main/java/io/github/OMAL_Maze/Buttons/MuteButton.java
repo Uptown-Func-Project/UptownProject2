@@ -1,6 +1,5 @@
-package io.github.OMAL_Maze;
+package io.github.OMAL_Maze.Buttons;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 
 /**
@@ -19,6 +18,11 @@ public class MuteButton extends AbstractButton{
         super.y = 830;
         super.message = "mute button";
 
+
+    }
+
+    @Override
+    public void dispose() {
 
     }
 

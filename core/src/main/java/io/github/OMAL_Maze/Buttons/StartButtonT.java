@@ -1,5 +1,5 @@
 
-package io.github.OMAL_Maze;
+package io.github.OMAL_Maze.Buttons;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
@@ -21,6 +21,11 @@ public class StartButtonT extends AbstractButton{
         super.x = 350;
         super.y = 50;
         super.message = "start button title screen";
+    }
+
+    @Override
+    public void dispose() {
+
     }
 
     boolean isClicked(FitViewport viewport) {
