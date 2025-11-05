@@ -20,6 +20,8 @@ public class Goose extends Character{
     float biteTimer;
     Main instance;
     float solidTimer = 0.5f;
+    private float wanderTimer = 0f;
+    private boolean wandering=false;
     public Rectangle spawnTrigger;
     Boolean spawned;
     enum gooseState{
@@ -68,19 +70,8 @@ public class Goose extends Character{
         this.isMoving=true;
         //Add a boolean to make this only happen once.
         this.spawned=true;
-        /*switch (state) {
-            case IDLE:
-                //Chill
-                break;
-            case ANGRY:
-                followPlayer();
-                break;
-            case HAPPY:
-                //Reward, increment timer by 30s?
-                break;
-            default:
-                break;
-        }*/
+        //Make goose angry by default
+        this.state=gooseState.ANGRY;
     }
 
     /**
@@ -157,7 +148,8 @@ public class Goose extends Character{
     @Override
     public void movement(float delta, Array<Entity> entities, Array<Building> buildings) {
         this.player= Main.player;
-        if (isMoving) {
+        //Follow player if moving and angry (angry upon spawn)
+        if (isMoving && state.equals(gooseState.ANGRY) ) {
             //final float speed = 1f;
             float X_diff = this.player.sprite.getX() - this.x;
             float Y_diff = this.player.sprite.getY() - this.y;
@@ -183,24 +175,41 @@ public class Goose extends Character{
             } else {
                 Yspeed*=Math.max(0,1-friction*delta/speed);
             }
-            if (Xspeed>speed)Xspeed=speed;
-            if (Yspeed>speed)Yspeed=speed;
-            if (Xspeed<-speed)Xspeed=-speed;
-            if (Yspeed<-speed)Yspeed=-speed;
-            float moveX=Xspeed*delta;
-            float moveY=Yspeed*delta;
-            this.translate(moveX,0);
-            if (checkOverlaps(entities,buildings)) {
-                this.translate(-moveX,0);
-                Xspeed=0;
+            capSpeed(delta);
+            tryMove(entities, buildings);
+        } else if (isMoving && this.state.equals(gooseState.HAPPY)){
+            wanderTimer -= delta;
+            if (wanderTimer <= 0) {
+                if (wandering) {
+                    Xspeed = 0;
+                    Yspeed = 0;
+                    wandering = false;
+                    wanderTimer = 1f + (float)(Math.random() * 3f);
+                } else {
+                    double angle = Math.random() * 2 * Math.PI;
+                    Xspeed = (float)(Math.cos(angle) * speed);
+                    Yspeed = (float)(Math.sin(angle) * speed);
+                    wandering = true;
+                    wanderTimer = 0.25f + (float)(Math.random() * 1.5f);
+                }
             }
-            this.translate(0,moveY);
-            if (checkOverlaps(entities,buildings)) {
-                this.translate(0,-moveY);
-                Yspeed=0;
-            }
+            capSpeed(delta);
+            tryMove(entities, buildings);
         }
         this.logic();
+    }
+
+    void tryMove(Array<Entity> entities, Array<Building> buildings) {
+        this.translate(moveX,0);
+        if (checkOverlaps(entities,buildings)) {
+            this.translate(-moveX,0);
+            Xspeed=0;
+        }
+        this.translate(0,moveY);
+        if (checkOverlaps(entities,buildings)) {
+            this.translate(0,-moveY);
+            Yspeed=0;
+        }
     }
 
     /**
@@ -217,15 +226,32 @@ public class Goose extends Character{
                 return true;
             }
         }
-        for (int i=0;i< entities.size;i++) {
-            Entity entity = entities.get(i);
-            if (entity==this) continue;
-            if (!entity.isSolid) continue;
-            if (entity.Overlaps(this.rectangle)) {
-                if (entity.getClass()==Player.class) {
-                    this.bitePlayer();
+        if (!this.state.equals(gooseState.HAPPY)) {
+            for (int i = 0; i < entities.size; i++) {
+                Entity entity = entities.get(i);
+                if (entity == this) continue;
+                if (!entity.isSolid) continue;
+                if (entity.Overlaps(this.rectangle)) {
+                    if (entity.getClass() == Player.class) {
+                        Player player = (Player) entity;
+                        if (this.state != gooseState.HAPPY) {
+                            if (player.hasSeeds) {
+                                //Set goose to happy
+                                this.state = gooseState.HAPPY;
+                                //Could play goose happy sound?
+                                //Set goose solid to false
+                                this.isSolid = false;
+                                //Reward player
+                                player.speed *= 2f;
+                                player.hasSeeds = false;
+                                this.instance.setSecondsRemaining(this.instance.getSecondsRemaining() + 30);
+                            } else {
+                                this.bitePlayer();
+                            }
+                        }
+                    }
+                    return true;
                 }
-                return true;
             }
         }
         return false;

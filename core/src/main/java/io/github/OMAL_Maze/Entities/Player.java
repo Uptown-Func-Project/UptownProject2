@@ -94,13 +94,7 @@ public class Player extends Character{
                 && !(Gdx.input.isKeyPressed(Input.Keys.DOWN)||Gdx.input.isKeyPressed(Input.Keys.S))) {
             Yspeed *= Math.max(0, 1 - friction * delta / speed);
         }
-        if (Xspeed>speed) Xspeed = speed;
-        if (Yspeed>speed) Yspeed = speed;
-        if (Xspeed<-speed) Xspeed = -speed;
-        if (Yspeed<-speed) Yspeed = -speed;
-
-        float moveX = Xspeed * delta;
-        float moveY = Yspeed * delta;
+        capSpeed(delta);
 
         this.sprite.translateX(moveX);
         Rectangle playerBounds = this.sprite.getBoundingRectangle();

@@ -282,6 +282,12 @@ public class Main extends ApplicationAdapter {
 
 
     }
+    public int getSecondsRemaining() {
+        return this.secondsRemaining;
+    }
+    public void setSecondsRemaining(int nSecondsRemaining) {
+        this.secondsRemaining=nSecondsRemaining;
+    }
     private void render(Entity entity) {
         if (entity.getVisible()) {
             entity.render(batch);
