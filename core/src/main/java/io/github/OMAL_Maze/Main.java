@@ -46,6 +46,7 @@ public class Main extends ApplicationAdapter {
     StartButtonT startT;
     Screen GameOverScreen;
     Screen TitleScreen;
+    Screen CongratsScreen; //will use the same quit and start button as game over screen
     //storing all buttons in an arraylist so they can be iterated through
     ArrayList<AbstractButton> buttons = new ArrayList<>(8);
 
@@ -66,6 +67,7 @@ public class Main extends ApplicationAdapter {
         viewport = new FitViewport(worldWidth, worldHeight);
         tileSize= worldWidth /22;
         font = new BitmapFont();
+        //font.scale(10);
         mazeData = MazeLoader.loadMaze("loadAssets/assets.json");
         instance = this;
         shapeRenderer = new ShapeRenderer();
@@ -91,7 +93,9 @@ public class Main extends ApplicationAdapter {
         startTimer();
         GameOverScreen = new Screen(batch, viewport, "GAME OVER.png");
         TitleScreen = new Screen (batch, viewport, "Title screen.png");
+        CongratsScreen = new Screen(batch, viewport, "Congratulations.png");
         TitleScreen.setActive(true);
+        //CongratsScreen.setActive(true); //CHANGE THIS BACK
 
     }
 
@@ -301,10 +305,29 @@ public class Main extends ApplicationAdapter {
                 GameOverScreen.setActive(false);
                 // loadMaze(1,40, 800);
                 startGame();
-
-
             }
-            //openSettings.makeActive();
+        }
+        if (CongratsScreen.getActive()){
+            CongratsScreen.render();
+            batch.begin();
+            //increasing font size
+            font.getData().setScale(5);
+            font.draw(batch, String.valueOf(secondsRemaining), 520, 500);
+            //returning font size to original
+            font.getData().setScale(1);
+            batch.end();
+            begin.makeActive();
+            quit.makeActive();
+            pause.makeInactive();
+            mute.makeInactive();
+            if (begin.isClicked(viewport)){
+                System.out.println("begin clicked and new maze loaded");
+                begin.makeInactive();
+                quit.makeInactive();
+                CongratsScreen.setActive(false);
+                // loadMaze(1,40, 800);
+                startGame();
+            }
         }
 
         batch.begin();
@@ -376,7 +399,7 @@ public class Main extends ApplicationAdapter {
         loadMaze(0,40,800);
 
         //startTimer();  //this meant it was in double time
-        secondsRemaining = 5;  //resets the time
+        secondsRemaining = 300;  //resets the time
         GameOverScreen.setActive(false);
         //draw(); //this continues to show the game over screen
     }
