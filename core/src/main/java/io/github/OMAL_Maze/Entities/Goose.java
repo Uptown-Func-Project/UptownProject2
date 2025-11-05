@@ -22,10 +22,13 @@ public class Goose extends Character{
     float biteTimer;
     Main instance;
     float solidTimer = 0.5f;
+    float soundTimer = 0f;
     private float wanderTimer = 0f;
     private boolean wandering=false;
     public Rectangle spawnTrigger;
     Boolean spawned;
+    Long soundID;
+    Sound gooseQuack;
     enum gooseState{
         IDLE,
         ANGRY,
@@ -57,6 +60,7 @@ public class Goose extends Character{
         this.bitPlayer=false;
         this.biteTimer=5f;
         this.createTrigger();
+        gooseQuack = Gdx.audio.newSound(Gdx.files.internal("Sounds/Geese.mp3"));
     }
 
     /**
@@ -72,17 +76,11 @@ public class Goose extends Character{
         this.isMoving=true;
         //Add a boolean to make this only happen once.
         this.spawned=true;
-        //play anrgy goose sound
+        //play angry goose sound
 
-        Sound GooseQuack = Gdx.audio.newSound(Gdx.files.internal("assets/Geese.mp3"));
-        GooseQuack.play();
-        try {
-        // Pause the main thread for 5 seconds
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            System.out.println("Thread interrupted");
-        }
-        GooseQuack.pause();
+        this.soundID = gooseQuack.play();
+        this.soundTimer=5f;
+        //GooseQuack.pause();
 
         //Make goose angry by default
         this.state=gooseState.ANGRY;
@@ -112,6 +110,14 @@ public class Goose extends Character{
         if (playerBounds.overlaps(this.spawnTrigger)&&(this.spawned==null || !this.spawned)) {
             this.show();
             Main.getInstance().decrementHiddenEventCounter();
+        }
+
+        if (this.soundTimer>0f) {
+            this.soundTimer-=delta;
+        } else {
+            if (this.soundID!=null) {
+                gooseQuack.stop(this.soundID);
+            }
         }
 
         if (bitPlayer) {

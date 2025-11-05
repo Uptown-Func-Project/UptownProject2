@@ -87,7 +87,6 @@ public class Main extends ApplicationAdapter {
         shapeRenderer = new ShapeRenderer();
 
         //Background music plays the entire time
-        BackgroundMusic = Gdx.audio.newSound(Gdx.files.internal("Sounds/Background.mp3"));
         //Debugging line below, Used to spawn at start of second level.
         //loadMaze(1, 40, 80);
         //the images of the buttons can be changed here
@@ -103,6 +102,7 @@ public class Main extends ApplicationAdapter {
     }
 
     public void startGame() {
+        BackgroundMusic = Gdx.audio.newSound(Gdx.files.internal("Sounds/Background.mp3"));
         long id = BackgroundMusic.play();
         BackgroundMusic.setLooping(id,true);
         loadMaze(0,40,800);
