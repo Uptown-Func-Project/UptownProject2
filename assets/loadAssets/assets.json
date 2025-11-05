@@ -701,8 +701,8 @@
         },
         {
           "type": "Seeds",
-          "x": 40,
-          "y": 40,
+          "x": 430,
+          "y": 460,
           "width": 20,
           "height": 20,
           "texturePath": "entityTextures/Seeds.png"
