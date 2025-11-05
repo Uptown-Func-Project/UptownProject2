@@ -68,6 +68,7 @@ public class Main extends ApplicationAdapter {
         mazeData = MazeLoader.loadMaze("loadAssets/assets.json");
         instance = this;
         shapeRenderer = new ShapeRenderer();
+
         //Background music plays the entire time
         BackgroundMusic = Gdx.audio.newSound(Gdx.files.internal("Sounds/Background.mp3"));
         //Debugging line below, Used to spawn at start of second level.
@@ -159,6 +160,8 @@ public class Main extends ApplicationAdapter {
 
     private void startTimer() {
         Timer.Task myTimerTask = new Timer.Task() {
+        Sound GameOverSound = Gdx.audio.newSound(Gdx.files.internal("Sounds/Gameover.mp3"));
+        boolean hasPlayed = false;
             @Override
             public void run() {
                 if (secondsRemaining > 0) {
@@ -172,9 +175,12 @@ public class Main extends ApplicationAdapter {
                     buildings.add(gameOverScreen);
                     //this.cancel();
 
-                    Sound GameOverSound = Gdx.audio.newSound(Gdx.files.internal("Sounds/Gameover.mp3"));
-                    GameOverSound.play();
-
+                    //pauses the background music in order to play the game over sound 
+                    if(!hasPlayed){
+                        hasPlayed=true;
+                        GameOverSound.play();
+                        BackgroundMusic.pause();
+                    }
                 }
             }
         };
