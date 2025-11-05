@@ -1,9 +1,4 @@
 package io.github.OMAL_Maze;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.utils.Timer;
-
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -12,23 +7,50 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+
+import io.github.OMAL_Maze.Buttons.AbstractButton;
+import io.github.OMAL_Maze.Buttons.BeginButton;
+import io.github.OMAL_Maze.Buttons.CloseSettingsButton;
+import io.github.OMAL_Maze.Buttons.OpenSettingsButton;
+import io.github.OMAL_Maze.Buttons.PauseButton;
+import io.github.OMAL_Maze.Buttons.QuitButton;
+import io.github.OMAL_Maze.Buttons.UnpauseButton;
+import io.github.OMAL_Maze.Entities.Character;
+import io.github.OMAL_Maze.Entities.Entity;
+import io.github.OMAL_Maze.Entities.EntityData;
+import io.github.OMAL_Maze.Entities.Goose;
+import io.github.OMAL_Maze.Entities.Player;
+import io.github.OMAL_Maze.Entities.Seeds;
+import io.github.OMAL_Maze.Map.Building;
+import io.github.OMAL_Maze.Map.BuildingData;
+import io.github.OMAL_Maze.Map.MazeData;
+import io.github.OMAL_Maze.Map.MazeLoader;
+import io.github.OMAL_Maze.Map.TriggerZone;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends ApplicationAdapter {
-    private int secondsRemaining = 5;
+    public static final float volume = 0;
+    private int secondsRemaining = 300;
+    private int badEventsRemaining = 1;
+    private int goodEventsRemaining = 1;
+    private int hiddenEventsRemaining = 1;
     private SpriteBatch batch;
     private BitmapFont font;
     private String timerText;
-    FitViewport viewport;
+    public FitViewport viewport;
     Texture backgroundTexture;
-    Array<Entity> entities;
+    public Array<Entity> entities;
     Array<Building> buildings;
     Array<TriggerZone> triggerZones;
-    static Player player;
+    public static Player player;
     public int tileSize;
     ShapeRenderer shapeRenderer; //for debugging, delete when necessary
     private float triggerCooldown = 0f;
@@ -67,16 +89,11 @@ public class Main extends ApplicationAdapter {
         viewport = new FitViewport(worldWidth, worldHeight);
         tileSize= worldWidth /22;
         font = new BitmapFont();
-        //font.scale(10);
         mazeData = MazeLoader.loadMaze("loadAssets/assets.json");
         instance = this;
         shapeRenderer = new ShapeRenderer();
-        //Background music plays the entire time
-        BackgroundMusic = Gdx.audio.newSound(Gdx.files.internal("Sounds/Background.mp3"));
-        long id = BackgroundMusic.play();
-        BackgroundMusic.setLooping(id,true);
 
-        loadMaze(0,40,800);
+        //Background music plays the entire time
         //Debugging line below, Used to spawn at start of second level.
         //loadMaze(1, 40, 80);
         //the images of the buttons can be changed here
@@ -130,10 +147,7 @@ public class Main extends ApplicationAdapter {
                     player = (Player) entity;
             }
             case "Character" ->
-                    entity = new Character(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture);
-            case "Item" -> {
-                //Item code needed. Deciding to add the class as seed possible
-            }
+                    entity = new io.github.OMAL_Maze.Entities.Character(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture);
             case "Goose" -> entity = new Goose(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(),
                     texture);
             case "Seeds" -> entity = new Seeds(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(),
@@ -170,6 +184,8 @@ public class Main extends ApplicationAdapter {
 
     private void startTimer() {
         Timer.Task myTimerTask = new Timer.Task() {
+        Sound GameOverSound = Gdx.audio.newSound(Gdx.files.internal("Sounds/Gameover.mp3"));
+        boolean hasPlayed = false;
             @Override
             public void run() {
                 if (secondsRemaining > 0) {
@@ -189,13 +205,28 @@ public class Main extends ApplicationAdapter {
 //                    openSettings.makeActive();
                     //this.cancel();
 
-                    Sound GameOverSound = Gdx.audio.newSound(Gdx.files.internal("Sounds/Gameover.mp3"));
-                    GameOverSound.play();
-
+                    //pauses the background music in order to play the game over sound
+                    if(!hasPlayed){
+                        hasPlayed=true;
+                        GameOverSound.play(volume);
+                        BackgroundMusic.pause();
+                    }
                 }
             }
         };
-        Timer.schedule(myTimerTask, 1f, 1f); // dealys the timer speed by 1 second
+        Timer.schedule(myTimerTask, 1f, 1f); // delays the timer speed by 1 second
+    }
+
+    public void decrementHiddenEventCounter(){
+        hiddenEventsRemaining=0;//set it to 0 instead of -- since the hidden event only happens once
+    }
+
+    public void decrementBadEventCounter(){
+        badEventsRemaining=0;
+    }
+
+    public void decrementGoodEventCounter(){
+        goodEventsRemaining=0;
     }
 
     @Override
@@ -266,6 +297,27 @@ public class Main extends ApplicationAdapter {
         for (Building building: buildings) {
             render(building);
         }
+        //text displaying how many of each event remains
+        font.draw(batch, "Events Remaining:", timerX +90, timerY);
+        font.draw(batch, "Good:" + goodEventsRemaining, timerX + 220, timerY);  //give goose seed
+        font.draw(batch, "Bad:" + badEventsRemaining, timerX + 300, timerY); //goose bites
+        font.draw(batch, "Hidden:" + hiddenEventsRemaining, timerX + 380, timerY);//goose appears
+        font.draw(batch, "Lives:" + player.hearts, timerX + 120, timerY-15);//lives remaining
+        //all buttons are initially inactive, making one button active for testing purposes
+        //pause.makeActive();
+        //begin.makeActive();
+
+        //for loop to go through all buttons to draw if needed
+        for(AbstractButton b:buttons){
+            //only draw if active
+            if (b.isActive()){
+                b.draw(batch);
+                // System.out.println("active");
+                if (b.isClicked(viewport)){
+                    System.out.println("clicked");
+                }
+            }
+        }
         batch.end();
 
         //making buttons active on the gameplay screen
@@ -278,7 +330,7 @@ public class Main extends ApplicationAdapter {
         /*for (TriggerZone zone : triggerZones) {
             shapeRenderer.rect(zone.bounds.x, zone.bounds.y, zone.bounds.width, zone.bounds.height);
         }*/
-        for (int i=0;i<entities.size;i++) {
+        /*for (int i=0;i<entities.size;i++) {
             Entity entity = entities.get(i);
             if (entity instanceof Goose goose) {
                 shapeRenderer.rect(
@@ -288,7 +340,7 @@ public class Main extends ApplicationAdapter {
                   goose.spawnTrigger.height
                 );
             }
-        }
+        }*/
         shapeRenderer.end();
 
         if (GameOverScreen.getActive()){
@@ -345,6 +397,12 @@ public class Main extends ApplicationAdapter {
         batch.end();
 
 
+    }
+    public int getSecondsRemaining() {
+        return this.secondsRemaining;
+    }
+    public void setSecondsRemaining(int nSecondsRemaining) {
+        this.secondsRemaining=nSecondsRemaining;
     }
     private void render(Entity entity) {
         if (entity.getVisible()) {

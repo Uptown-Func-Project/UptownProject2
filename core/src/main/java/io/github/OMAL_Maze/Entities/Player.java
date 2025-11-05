@@ -1,14 +1,16 @@
-package io.github.OMAL_Maze;
+package io.github.OMAL_Maze.Entities;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.Viewport;
+
+import io.github.OMAL_Maze.Main;
+import io.github.OMAL_Maze.Map.Building;
 
 public class Player extends Character{
     public int hearts;
@@ -93,13 +95,7 @@ public class Player extends Character{
                 && !(Gdx.input.isKeyPressed(Input.Keys.DOWN)||Gdx.input.isKeyPressed(Input.Keys.S))) {
             Yspeed *= Math.max(0, 1 - friction * delta / speed);
         }
-        if (Xspeed>speed) Xspeed = speed;
-        if (Yspeed>speed) Yspeed = speed;
-        if (Xspeed<-speed) Xspeed = -speed;
-        if (Yspeed<-speed) Yspeed = -speed;
-
-        float moveX = Xspeed * delta;
-        float moveY = Yspeed * delta;
+        capSpeed(delta);
 
         this.sprite.translateX(moveX);
         Rectangle playerBounds = this.sprite.getBoundingRectangle();
@@ -165,5 +161,6 @@ public class Player extends Character{
             System.out.println("Bit again at 0 hearts. Game should maybe end here.");
         }
         // else: game over
+        Main.getInstance().decrementBadEventCounter();
     }
 }

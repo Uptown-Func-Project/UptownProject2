@@ -1,4 +1,6 @@
-package io.github.OMAL_Maze;
+package io.github.OMAL_Maze.Map;
+import io.github.OMAL_Maze.Entities.EntityData;
+
 import java.util.List;
 import java.util.Map;
 

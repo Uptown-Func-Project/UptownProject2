@@ -1,16 +1,15 @@
-package io.github.OMAL_Maze;
+package io.github.OMAL_Maze.Buttons;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 /**
  * PauseButton class extends AbstractButton and inherits all the methods and attributes.
- * MakeActive and MakeInactive are inherrited and should be used to control when
+ * MakeActive and MakeInactive are inherited and should be used to control when
  * the buttons are displayed.
  */
 public class PauseButton extends AbstractButton{
 
     /**
-     * Consrtuctor for PauseButton inheritted from AbstractButton.
+     * Constructor for PauseButton inherited from AbstractButton.
      * @param image the file of the image to represent the button
      */
     public PauseButton(FileHandle image) {
@@ -19,4 +18,9 @@ public class PauseButton extends AbstractButton{
         super.y = 350;
         super.message = "Pause";
     }
+    @Override
+    public void dispose() {
+
+    }
+
 }

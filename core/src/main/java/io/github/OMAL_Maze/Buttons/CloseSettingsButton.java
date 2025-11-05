@@ -1,16 +1,15 @@
-package io.github.OMAL_Maze;
+package io.github.OMAL_Maze.Buttons;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 /**
  * CloseSettingsButton class extends AbstractButton and inherits all the methods and attributes.
- * MakeActive and MakeInactive are inherrited and should be used to control when
+ * MakeActive and MakeInactive are inherited and should be used to control when
  * the buttons are displayed.
  */
 public class CloseSettingsButton extends AbstractButton{
 
     /**
-     * Consrtuctor for CloseSettingsButton inheritted from AbstractButton.
+     * Constructor for CloseSettingsButton inherited from AbstractButton.
      * @param image the file of the image to represent the button
      */
     public CloseSettingsButton(FileHandle image){
@@ -18,6 +17,10 @@ public class CloseSettingsButton extends AbstractButton{
         super.x = 200;
         super.y = 200;
         super.message = "Close";
+    }
+    @Override
+    public void dispose() {
+
     }
 }
 

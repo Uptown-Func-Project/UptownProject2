@@ -1,4 +1,4 @@
-package io.github.OMAL_Maze;
+package io.github.OMAL_Maze.Map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;

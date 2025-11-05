@@ -5,6 +5,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 //each button will need the visuals associated with it to also be displayed
@@ -22,6 +23,10 @@ public abstract class AbstractButton {
     int x, y;
     String message;
 
+    /**
+     * Constructor that each subclass implements
+     * @param image is the image representing the button
+     */
     public AbstractButton(FileHandle image) {
         //texture = new Texture(Gdx.files.internal("button.png"));
         this.texture = new Texture(image);
@@ -79,7 +84,7 @@ public abstract class AbstractButton {
      * @param viewport the FitViewport that is holding the information on the screen
      * @return true if the button has been clicked, false if not
      */
-    boolean isClicked(FitViewport viewport) {
+    public boolean isClicked(Viewport viewport) {
         boolean clicked = false;
         int locationX;
         int locationY;
@@ -92,8 +97,6 @@ public abstract class AbstractButton {
             if (click.x >= x && click.x <= x+getWidth()){
                 if (click.y >= y && click.y <= y+getHeight()){
                     clicked = true;
-                    //the below line is a test
-                    //main.render();
                     System.out.println(message);
                 }
             }
@@ -101,5 +104,5 @@ public abstract class AbstractButton {
         return clicked;
     }
 
-    //protected abstract void dispose();
+    public abstract void dispose();
 }
