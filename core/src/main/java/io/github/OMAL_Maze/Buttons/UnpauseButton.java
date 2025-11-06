@@ -14,7 +14,7 @@ public class UnpauseButton extends AbstractButton{
      */
     public UnpauseButton(FileHandle image){
         super(image);
-        super.x = 0;
+        super.x = 300;
         super.y = 200;
         super.message = "unpause button";
     }

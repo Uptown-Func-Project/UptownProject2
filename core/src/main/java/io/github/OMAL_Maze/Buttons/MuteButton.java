@@ -15,7 +15,7 @@ public class MuteButton extends AbstractButton{
     public MuteButton(FileHandle image){
         super(image);
         super.x = 750;
-        super.y = 830;
+        super.y = 850;
         super.message = "mute button";
 
 

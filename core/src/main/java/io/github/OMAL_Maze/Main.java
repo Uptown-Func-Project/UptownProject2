@@ -62,6 +62,8 @@ public class Main extends ApplicationAdapter {
     Screen GameOverScreen;
     Screen TitleScreen;
     Screen CongratsScreen; //will use the same quit and start button as game over screen
+    Screen PauseScreen;
+    int pauseSecondsRemaining;
     //storing all buttons in an arraylist so they can be iterated through
     ArrayList<AbstractButton> buttons = new ArrayList<>(6);
 
@@ -92,9 +94,9 @@ public class Main extends ApplicationAdapter {
         //the images of the buttons can be changed here
         begin = new BeginButton(Gdx.files.internal("startNew.png"));
         quit = new QuitButton(Gdx.files.internal("quitNew.png"));
-        pause = new PauseButton(Gdx.files.internal("button.png"));
-        unpause = new UnpauseButton(Gdx.files.internal("button.png"));
-        mute = new MuteButton(Gdx.files.internal("button.png"));
+        pause = new PauseButton(Gdx.files.internal("greenbutton.png"));
+        unpause = new UnpauseButton(Gdx.files.internal("resumebutton.png"));
+        mute = new MuteButton(Gdx.files.internal("greenbutton.png"));
         startT = new StartButtonT(Gdx.files.internal("startNew.png"));
         //adding all buttons to the arraylist in one go
         Collections.addAll(buttons, begin, quit, pause, unpause, mute, startT);
@@ -102,6 +104,7 @@ public class Main extends ApplicationAdapter {
         GameOverScreen = new Screen(batch, viewport, "GAME OVER.png");
         TitleScreen = new Screen (batch, viewport, "Title screen.png");
         CongratsScreen = new Screen(batch, viewport, "Congratulations.png");
+        PauseScreen = new Screen(batch, viewport, "pausescreen.png");
         TitleScreen.setActive(true);
         //CongratsScreen.setActive(true); //CHANGE THIS BACK
 
@@ -179,17 +182,16 @@ public class Main extends ApplicationAdapter {
         boolean hasPlayed = false;
             @Override
             public void run() {
-                System.out.println(secondsRemaining);
                 if (secondsRemaining > 0) {
                     secondsRemaining--;
                     int minutes = secondsRemaining / 60;
                     int seconds = secondsRemaining % 60;
                     timerText = String.format("Time: %02d:%02d", minutes, seconds);
                 } else {  //won't enter this loop
-                    //Gdx.app.exit();
+                    Gdx.app.exit();
                     timerText = "Time: 00:00";
                     System.out.println("timer is 0");
-                        GameOverScreen.setActive(true);
+                    GameOverScreen.setActive(true);
 
                     //pauses the background music in order to play the game over sound
                     if(!hasPlayed){
@@ -220,6 +222,15 @@ public class Main extends ApplicationAdapter {
         //System.out.println("render method");
         if (TitleScreen.getActive()){
             TitleScreenLogic();
+        }
+        else if(PauseScreen.getActive()){
+            PauseScreenLogic();
+        }
+        else if(CongratsScreen.getActive()){
+            CongratsScreenLogic();
+        }
+        else if (GameOverScreen.getActive()){
+            GameOverScreenLogic();
         }
         else {
             input();
@@ -289,6 +300,7 @@ public class Main extends ApplicationAdapter {
         font.draw(batch, "Bad:" + badEventsRemaining, timerX + 300, timerY); //goose bites
         font.draw(batch, "Hidden:" + hiddenEventsRemaining, timerX + 380, timerY);//goose appears
         font.draw(batch, "Lives:" + player.hearts, timerX + 120, timerY-15);//lives remaining
+
         //all buttons are initially inactive, making one button active for testing purposes
         //pause.makeActive();
         //begin.makeActive();
@@ -304,6 +316,9 @@ public class Main extends ApplicationAdapter {
                 }
             }
         }
+        //displaying tet after buttons so it appears ontop of buttons
+        font.draw(batch, "Mute", 780, 850);
+        font.draw(batch, "Pause", 650, 850);
         batch.end();
 
         //making buttons active on the gameplay screen
@@ -329,46 +344,8 @@ public class Main extends ApplicationAdapter {
         }*/
         shapeRenderer.end();
 
-        if (GameOverScreen.getActive()){
-            //Gdx.app.exit(); //remove this!!
-            System.out.println("game over screen is active");
-            GameOverScreen.render(); //need to stop displaying the map
-            //displaying the correct buttons on game over screen
-            begin.makeActive();
-            quit.makeActive();
-            pause.makeInactive();
-            mute.makeInactive();
-            if (begin.isClicked(viewport)){
-                System.out.println("begin clicked and new maze loaded");
-                begin.makeInactive();
-                quit.makeInactive();
-                GameOverScreen.setActive(false);
-                // loadMaze(1,40, 800);
-                startGame();
-            }
-        }
-        if (CongratsScreen.getActive()){
-            CongratsScreen.render();
-            batch.begin();
-            //increasing font size
-            font.getData().setScale(5);
-            font.draw(batch, String.valueOf(secondsRemaining), 520, 500);
-            //returning font size to original
-            font.getData().setScale(1);
-            batch.end();
-            begin.makeActive();
-            quit.makeActive();
-            pause.makeInactive();
-            mute.makeInactive();
-            if (begin.isClicked(viewport)){
-                System.out.println("begin clicked and new maze loaded");
-                begin.makeInactive();
-                quit.makeInactive();
-                CongratsScreen.setActive(false);
-                // loadMaze(1,40, 800);
-                startGame();
-            }
-        }
+
+
 
         batch.begin();
         //for loop to go through all buttons to draw if needed
@@ -381,6 +358,10 @@ public class Main extends ApplicationAdapter {
                     System.out.println("clicked");
                 }
             }
+        }
+        if(pause.isClicked(viewport)){  //what happens when the pause is clicked
+            PauseScreen.setActive(true);
+            pauseSecondsRemaining = secondsRemaining;
         }
         batch.end();
 
@@ -445,7 +426,7 @@ public class Main extends ApplicationAdapter {
         loadMaze(0,40,800);
 
         //startTimer();  //this meant it was in double time
-        secondsRemaining = 5;  //resets the time
+        secondsRemaining = 300;  //resets the time
         GameOverScreen.setActive(false);
         //draw(); //this continues to show the game over screen
     }
@@ -464,6 +445,62 @@ public class Main extends ApplicationAdapter {
             startT.makeInactive();
             pause.makeActive();
             mute.makeActive();
+            startGame();
+        }
+    }
+    public void PauseScreenLogic(){
+        secondsRemaining = pauseSecondsRemaining;
+        PauseScreen.render();
+        unpause.makeActive();
+        batch.begin();
+        unpause.draw(batch);
+        batch.end();
+
+        if (unpause.isClicked(viewport)){
+            PauseScreen.setActive(false);
+            unpause.makeInactive();
+            pause.makeActive();
+            mute.makeActive();
+            //need to add in the logic of restarting the game
+        }
+    }
+    public void CongratsScreenLogic(){
+        CongratsScreen.render();
+        batch.begin();
+        //increasing font size
+        font.getData().setScale(5);
+        font.draw(batch, String.valueOf(secondsRemaining), 520, 500);
+        //returning font size to original
+        font.getData().setScale(1);
+        batch.end();
+        begin.makeActive();
+        quit.makeActive();
+        pause.makeInactive();
+        mute.makeInactive();
+        if (begin.isClicked(viewport)){
+            System.out.println("begin clicked and new maze loaded");
+            begin.makeInactive();
+            quit.makeInactive();
+            CongratsScreen.setActive(false);
+            // loadMaze(1,40, 800);
+            startGame();
+        }
+    }
+    public void GameOverScreenLogic(){
+        //Gdx.app.exit(); //remove this!!
+        System.out.println("game over screen is active");
+        GameOverScreen.render(); //need to stop displaying the map
+        //displaying the correct buttons on game over screen
+        begin.makeActive();
+        quit.makeActive();
+        pause.makeInactive();
+        mute.makeInactive();
+        if (begin.isClicked(viewport)){
+            System.out.println("begin clicked and new maze loaded");
+            begin.makeInactive();
+            quit.makeInactive();
+            GameOverScreen.setActive(false);
+            // loadMaze(1,40, 800);
             startGame();
         }
     }
