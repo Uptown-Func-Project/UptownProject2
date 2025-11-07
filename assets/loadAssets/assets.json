@@ -539,14 +539,6 @@
           "width": 23,
           "height": 30,
           "texturePath": "entityTextures/player_A.png"
-        },
-        {
-          "type": "Seeds",
-          "x": 40,
-          "y": 40,
-          "width": 20,
-          "height": 20,
-          "texturePath": "entityTextures/Seeds.png"
         }
       ],
       "buildings": [
@@ -706,6 +698,14 @@
           "width": 23,
           "height": 30,
           "texturePath": "entityTextures/player_A.png"
+        },
+        {
+          "type": "Seeds",
+          "x": 430,
+          "y": 460,
+          "width": 20,
+          "height": 20,
+          "texturePath": "entityTextures/Seeds.png"
         }
       ],
       "buildings": [],

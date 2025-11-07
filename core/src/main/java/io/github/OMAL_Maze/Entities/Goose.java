@@ -6,7 +6,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
-
+import com.badlogic.gdx.audio.Sound;
+import io.github.OMAL_Maze.Map.Building;
 import io.github.OMAL_Maze.Main;
 import io.github.OMAL_Maze.Map.Building;
 
@@ -22,10 +23,13 @@ public class Goose extends Character{
     float biteTimer;
     Main instance;
     float solidTimer = 0.5f;
+    float soundTimer = 0f;
     private float wanderTimer = 0f;
     private boolean wandering=false;
     public Rectangle spawnTrigger;
     Boolean spawned;
+    Long soundID;
+    Sound gooseQuack;
     enum gooseState{
         IDLE,
         ANGRY,
@@ -57,6 +61,7 @@ public class Goose extends Character{
         this.bitPlayer=false;
         this.biteTimer=5f;
         this.createTrigger();
+        gooseQuack = Gdx.audio.newSound(Gdx.files.internal("Sounds/Geese.mp3"));
     }
 
     /**
@@ -74,15 +79,9 @@ public class Goose extends Character{
         this.spawned=true;
         //play anrgy goose sound
 
-        Sound GooseQuack = Gdx.audio.newSound(Gdx.files.internal("assets/Geese.mp3"));
-        GooseQuack.play(Main.volume);
-        try {
-        // Pause the main thread for 5 seconds
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            System.out.println("Thread interrupted");
-        }
-        GooseQuack.pause();
+        this.soundID = gooseQuack.play();
+        this.soundTimer=5f;
+        //GooseQuack.pause();
 
         //Make goose angry by default
         this.state=gooseState.ANGRY;
@@ -112,6 +111,14 @@ public class Goose extends Character{
         if (playerBounds.overlaps(this.spawnTrigger)&&(this.spawned==null || !this.spawned)) {
             this.show();
             Main.getInstance().decrementHiddenEventCounter();
+        }
+
+        if (this.soundTimer>0f) {
+            this.soundTimer-=delta;
+        } else {
+            if (this.soundID!=null) {
+                gooseQuack.stop(this.soundID);
+            }
         }
 
         if (bitPlayer) {
@@ -254,7 +261,6 @@ public class Goose extends Character{
                             if (player.hasSeeds) {
                                 //Set goose to happy
                                 this.state = gooseState.HAPPY;
-                                Main.getInstance().decrementGoodEventCounter();
                                 //Could play goose happy sound?
                                 //Set goose solid to false
                                 this.isSolid = false;
