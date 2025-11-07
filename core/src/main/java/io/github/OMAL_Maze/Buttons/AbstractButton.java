@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 
 //each button will need the visuals associated with it to also be displayed
 
@@ -19,8 +20,9 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 public abstract class AbstractButton {
     private Texture texture;
     boolean active = false;
-    int x, y;
-    String message;
+    protected int x;
+    protected int y;
+    protected String message;
 
     /**
      * Constructor that each subclass implements
@@ -63,6 +65,7 @@ public abstract class AbstractButton {
         return y;
     }
 
+
     //draws the button to the screen
     public void draw(SpriteBatch batch){
         batch.draw(texture, x,y);
@@ -79,8 +82,8 @@ public abstract class AbstractButton {
     }
 
     /**
-     * Checks if the button has been clicked in the boundries of the image.
-     * @param viewport the FitViewport that is holding the imformaton on the screen
+     * Checks if the button has been clicked in the boundaries of the image.
+     * @param viewport the FitViewport that is holding the information on the screen
      * @return true if the button has been clicked, false if not
      */
     public boolean isClicked(Viewport viewport) {

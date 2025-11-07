@@ -20,7 +20,8 @@ public class Screen{
     protected Sprite backgroundSprite;
     protected ArrayList<AbstractButton> buttons;
     private SpriteBatch batch;
-    private Viewport viewport; // will handle screen scaling / resizing 
+    private Viewport viewport; // will handle screen scaling / resizing
+    protected Boolean active;
 /**
  * Constructs a new {@code Screen} instance
  * @param batch         the {@link SpriteBatch} used for drawing
@@ -33,6 +34,7 @@ public class Screen{
         this.backgroundTexture = new Texture(Gdx.files.internal(backgroundPath));
         this.backgroundSprite = new Sprite(backgroundTexture);
         this.buttons = new ArrayList<>();
+        this.active = false;
         setupBackground();
     }
 /**
@@ -59,7 +61,7 @@ public class Screen{
             for (AbstractButton b : buttons) {
                 if (b.isActive()){
                     b.draw(batch);
-                    if (b.isClicked(viewport)){{
+                    if (b.isClicked((FitViewport) viewport)){{
                         handleButtonClick(b);
                     }}
                 }
@@ -83,7 +85,16 @@ public class Screen{
             backgroundTexture.dispose();
         }
         if (buttons != null){
-            for (AbstractButton b : buttons) b.dispose();
+            // was dispose but changed to makeInactive
+            for (AbstractButton b : buttons) b.makeInactive();
         }
+    }
+
+    //get and set for active
+    public boolean getActive(){
+        return active;
+    }
+    public void setActive(Boolean state){
+        active = state;
     }
 }    

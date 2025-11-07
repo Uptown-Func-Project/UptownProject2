@@ -14,8 +14,8 @@ public class OpenSettingsButton extends AbstractButton{
      */
     public OpenSettingsButton(FileHandle image){
         super(image);
-        super.x = 0;
-        super.y = 0;
+        super.x = 300;
+        super.y = 200;
         super.message = "Open Settings";
     }
     @Override

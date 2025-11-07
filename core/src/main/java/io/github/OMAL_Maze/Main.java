@@ -3,6 +3,7 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -15,13 +16,8 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
+import io.github.OMAL_Maze.Buttons.*;
 import io.github.OMAL_Maze.Buttons.AbstractButton;
-import io.github.OMAL_Maze.Buttons.BeginButton;
-import io.github.OMAL_Maze.Buttons.CloseSettingsButton;
-import io.github.OMAL_Maze.Buttons.OpenSettingsButton;
-import io.github.OMAL_Maze.Buttons.PauseButton;
-import io.github.OMAL_Maze.Buttons.QuitButton;
-import io.github.OMAL_Maze.Buttons.UnpauseButton;
 import io.github.OMAL_Maze.Entities.Character;
 import io.github.OMAL_Maze.Entities.Entity;
 import io.github.OMAL_Maze.Entities.EntityData;
@@ -36,8 +32,7 @@ import io.github.OMAL_Maze.Map.TriggerZone;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends ApplicationAdapter {
-    //volume added in order to set to 0
-    public static final float volume = 3;
+    public static float volume = 5;
     private int secondsRemaining = 300;
     private int badEventsRemaining = 1;
     private int goodEventsRemaining = 1;
@@ -59,15 +54,22 @@ public class Main extends ApplicationAdapter {
 
     BeginButton begin;
     QuitButton quit;
-    CloseSettingsButton closeSettings;
-    OpenSettingsButton openSettings;
     PauseButton pause;
     UnpauseButton unpause;
+    MuteButton mute;
+    //add in new button here!!!!!
+    StartButtonT startT;
+    Screen GameOverScreen;
+    Screen TitleScreen;
+    Screen CongratsScreen; //will use the same quit and start button as game over screen
+    Screen PauseScreen;
+    int pauseSecondsRemaining;
     //storing all buttons in an arraylist so they can be iterated through
     ArrayList<AbstractButton> buttons = new ArrayList<>(6);
 
     //Sounds
     Sound BackgroundMusic;
+    long backgroundMusicid;
 
     public Main() {
         instance = this;
@@ -91,23 +93,22 @@ public class Main extends ApplicationAdapter {
         //Debugging line below, Used to spawn at start of second level.
         //loadMaze(1, 40, 80);
         //the images of the buttons can be changed here
-        //begin = new BeginButton(Gdx.files.internal("button.png"));
-        //quit = new QuitButton(Gdx.files.internal("button.png"));
-        //closeSettings = new CloseSettingsButton(Gdx.files.internal("button.png"));
-        //openSettings = new OpenSettingsButton(Gdx.files.internal("button.png"));
-        //pause = new PauseButton(Gdx.files.internal("button.png"));
-        //unpause = new UnpauseButton(Gdx.files.internal("button.png"));
+        begin = new BeginButton(Gdx.files.internal("startNew.png"));
+        quit = new QuitButton(Gdx.files.internal("quitNew.png"));
+        pause = new PauseButton(Gdx.files.internal("greenbutton.png"));
+        unpause = new UnpauseButton(Gdx.files.internal("resumebutton.png"));
+        mute = new MuteButton(Gdx.files.internal("greenbutton.png"));
+        startT = new StartButtonT(Gdx.files.internal("startNew.png"));
         //adding all buttons to the arraylist in one go
-        //Collections.addAll(buttons, begin, quit, closeSettings, openSettings, pause, unpause);
-        startGame();
-    }
-
-    public void startGame() {
-        BackgroundMusic = Gdx.audio.newSound(Gdx.files.internal("Sounds/Background.mp3"));
-        long id = BackgroundMusic.play(volume);
-        BackgroundMusic.setLooping(id,true);
-        loadMaze(0,40,800);
+        Collections.addAll(buttons, begin, quit, pause, unpause, mute, startT);
         startTimer();
+        GameOverScreen = new Screen(batch, viewport, "GAME OVER.png");
+        TitleScreen = new Screen (batch, viewport, "Title screen.png");
+        CongratsScreen = new Screen(batch, viewport, "Congratulations.png");
+        PauseScreen = new Screen(batch, viewport, "pausescreen.png");
+        TitleScreen.setActive(true);
+        //CongratsScreen.setActive(true); //CHANGE THIS BACK
+
     }
 
     private Array<Entity> createEntities(MazeData.LevelData level) {
@@ -177,6 +178,10 @@ public class Main extends ApplicationAdapter {
     }
 
     private void startTimer() {
+        //background music loops the entire time
+        Sound BackgroundMusic = Gdx.audio.newSound(Gdx.files.internal("Background.mp3"));
+        long id = BackgroundMusic.play(volume);
+        BackgroundMusic.setLooping(id, true);
         Timer.Task myTimerTask = new Timer.Task() {
         Sound GameOverSound = Gdx.audio.newSound(Gdx.files.internal("Sounds/Gameover.mp3"));
         boolean hasPlayed = false;
@@ -187,13 +192,13 @@ public class Main extends ApplicationAdapter {
                     int minutes = secondsRemaining / 60;
                     int seconds = secondsRemaining % 60;
                     timerText = String.format("Time: %02d:%02d", minutes, seconds);
-                } else {
+                } else {  //won't enter this loop
+                   // Gdx.app.exit();
                     timerText = "Time: 00:00";
-                    Building gameOverScreen = new Building(0,0,900,1000,new Texture("buildingTextures/GAME OVER.png"));
-                    buildings.add(gameOverScreen);
-                    //this.cancel();
+                    //System.out.println("timer is 0");
+                    GameOverScreen.setActive(true);
 
-                    //pauses the background music in order to play the game over sound 
+                    //pauses the background music in order to play the game over sound
                     if(!hasPlayed){
                         hasPlayed=true;
                         GameOverSound.play(volume);
@@ -225,9 +230,25 @@ public class Main extends ApplicationAdapter {
 
     @Override
     public void render() {
-        input();
-        logic();
-        draw();
+        //System.out.println("render method");
+        if (TitleScreen.getActive()){
+            TitleScreenLogic();
+        }
+        else if(PauseScreen.getActive()){
+            PauseScreenLogic();
+        }
+        else if(CongratsScreen.getActive()){
+            CongratsScreenLogic();
+        }
+        else if (GameOverScreen.getActive()){
+            //System.out.println("game over screen!!!!!!!");
+            GameOverScreenLogic();
+        }
+        else {
+            input();
+            logic();
+            draw();
+        }
     }
 
     private void input() {
@@ -291,9 +312,7 @@ public class Main extends ApplicationAdapter {
         font.draw(batch, "Bad:" + badEventsRemaining, timerX + 300, timerY); //goose bites
         font.draw(batch, "Hidden:" + hiddenEventsRemaining, timerX + 380, timerY);//goose appears
         font.draw(batch, "Lives:" + player.hearts, timerX + 120, timerY-15);//lives remaining
-        //all buttons are initially inactive, making one button active for testing purposes
-        //pause.makeActive();
-        //begin.makeActive();
+
 
         //for loop to go through all buttons to draw if needed
         for(AbstractButton b:buttons){
@@ -307,6 +326,10 @@ public class Main extends ApplicationAdapter {
             }
         }
         batch.end();
+
+        //making buttons active on the gameplay screen
+        pause.makeActive();
+        mute.makeActive();
 
         shapeRenderer.setProjectionMatrix(viewport.getCamera().combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
@@ -326,6 +349,34 @@ public class Main extends ApplicationAdapter {
             }
         }*/
         shapeRenderer.end();
+        batch.begin();
+        //for loop to go through all buttons to draw if needed
+        for(AbstractButton b:buttons){
+            //only draw if active
+            if (b.isActive()){
+                b.draw(batch);
+                // System.out.println("active");
+                if (b.isClicked(viewport)){
+                    System.out.println("clicked");
+                }
+            }
+        }
+        if(pause.isClicked(viewport)){  //what happens when the pause is clicked
+            PauseScreen.setActive(true);
+            pauseSecondsRemaining = secondsRemaining;
+        }
+        if(mute.isClicked(viewport)){
+            //BackgroundMusic.stop();
+            //volume = 0;
+            //PauseMusic();
+            //Sound BackgroundMusic = Gdx.audio.newSound(Gdx.files.internal("Background.mp3"));
+            //backgroundMusicid = BackgroundMusic.play();
+            //BackgroundMusic.pause();
+            //add in getting rid of the music
+        }
+        font.draw(batch, "Mute", 780, 870);
+        font.draw(batch, "Pause", 650, 870);
+        batch.end();
 
 
     }
@@ -384,5 +435,109 @@ public class Main extends ApplicationAdapter {
         batch.dispose();
         font.dispose();
         shapeRenderer.dispose();
+    }
+
+    public void startGame(){
+        //goes to first maze and resets character and seeds
+        loadMaze(0,40,800);
+
+        //startTimer();  //this meant it was in double time
+        secondsRemaining = 5;  //resets the time
+        GameOverScreen.setActive(false);
+        //draw(); //this continues to show the game over screen
+    }
+
+    /**
+     * Drawing the title screen and controlling what happens when the button is clicked.
+     */
+    public void TitleScreenLogic(){
+        TitleScreen.render();
+        startT.makeActive();
+        mute.makeActive();
+        batch.begin();
+        startT.draw(batch);
+        batch.end();
+//        if(mute.isClicked(viewport)){
+//            //BackgroundMusic.pause();
+//        }
+        if (startT.isClicked(viewport)){
+            TitleScreen.setActive(false);
+            startT.makeInactive();
+            pause.makeActive();
+            mute.makeActive();
+            startGame();
+        }
+    }
+    public void PauseScreenLogic(){
+        secondsRemaining = pauseSecondsRemaining;
+        PauseScreen.render();
+        unpause.makeActive();
+        quit.makeActive();
+        batch.begin();
+        unpause.draw(batch);
+        quit.draw(batch);
+        batch.end();
+        if (quit.isClicked(viewport)){
+            Gdx.app.exit();
+        }
+        if (unpause.isClicked(viewport)){
+            PauseScreen.setActive(false);
+            unpause.makeInactive();
+            quit.makeInactive();
+            pause.makeActive();
+            mute.makeActive();
+            //need to add in the logic of restarting the game
+        }
+    }
+    public void CongratsScreenLogic(){
+        CongratsScreen.render();
+        batch.begin();
+        //increasing font size
+        font.getData().setScale(5);
+        font.draw(batch, String.valueOf(secondsRemaining), 520, 500);
+        //returning font size to original
+        font.getData().setScale(1);
+        begin.makeActive();
+        quit.makeActive();
+        begin.draw(batch);
+        quit.draw(batch);
+        pause.makeInactive();
+        mute.makeInactive();
+        if (quit.isClicked(viewport)){
+            Gdx.app.exit();
+        }
+        if (begin.isClicked(viewport)){
+            System.out.println("begin clicked and new maze loaded");
+            begin.makeInactive();
+            quit.makeInactive();
+            CongratsScreen.setActive(false);
+            // loadMaze(1,40, 800);
+            startGame();
+        }
+    }
+    public void GameOverScreenLogic(){
+        //Gdx.app.exit(); //remove this!!
+        //System.out.println("game over screen is active");
+        GameOverScreen.render(); //need to stop displaying the map
+        //displaying the correct buttons on game over screen
+        begin.makeActive();
+        quit.makeActive();
+        batch.begin();
+        begin.draw(batch);
+        quit.draw(batch);
+        batch.end();
+        pause.makeInactive();
+        mute.makeInactive();
+        if (quit.isClicked(viewport)){
+            Gdx.app.exit();
+        }
+        if (begin.isClicked(viewport)){
+            System.out.println("begin clicked and new maze loaded");
+            begin.makeInactive();
+            quit.makeInactive();
+            GameOverScreen.setActive(false);
+            // loadMaze(1,40, 800);
+            startGame();
+        }
     }
 }

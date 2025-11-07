@@ -1,3 +1,4 @@
+
 package io.github.OMAL_Maze.Buttons;
 
 import com.badlogic.gdx.Gdx;
@@ -10,16 +11,21 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
  * MakeActive and MakeInactive are inherrited and should be used to control when
  * the buttons are displayed.
  */
-public class BeginButton extends AbstractButton{
+public class StartButtonT extends AbstractButton{
     /**
-     * Constructor for BeginButton inherited from AbstractButton.
+     * Consrtuctor for BeginButton inheritted from AbstractButton.
      * @param image the file of the image to represent the button
      */
-    public BeginButton(FileHandle image){
-       super(image);
-        super.x = 200;
-        super.y = 150;
-        super.message = "begin button";
+    public StartButtonT(FileHandle image){
+        super(image);
+        super.x = 350;
+        super.y = 50;
+        super.message = "start button title screen";
+    }
+
+    @Override
+    public void dispose() {
+
     }
 
     boolean isClicked(FitViewport viewport) {
@@ -43,10 +49,4 @@ public class BeginButton extends AbstractButton{
         }
         return clicked;
     }
-
-    @Override
-    public void dispose() {
-
-    }
-
 }
