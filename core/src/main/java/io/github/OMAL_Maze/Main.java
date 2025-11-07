@@ -4,6 +4,7 @@ import java.util.Collections;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -32,7 +33,7 @@ import io.github.OMAL_Maze.Map.TriggerZone;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends ApplicationAdapter {
-    public static final float volume = 0;
+    public static final float volume = 5;
     private int secondsRemaining = 300;
     private int badEventsRemaining = 1;
     private int goodEventsRemaining = 1;
@@ -177,6 +178,10 @@ public class Main extends ApplicationAdapter {
     }
 
     private void startTimer() {
+        //background music loops the entire time
+        Sound BackgroundMusic = Gdx.audio.newSound(Gdx.files.internal("Background.mp3"));
+        long id = BackgroundMusic.play(volume);
+        BackgroundMusic.setLooping(id, true);
         Timer.Task myTimerTask = new Timer.Task() {
         Sound GameOverSound = Gdx.audio.newSound(Gdx.files.internal("Sounds/Gameover.mp3"));
         boolean hasPlayed = false;
@@ -188,9 +193,9 @@ public class Main extends ApplicationAdapter {
                     int seconds = secondsRemaining % 60;
                     timerText = String.format("Time: %02d:%02d", minutes, seconds);
                 } else {  //won't enter this loop
-                    Gdx.app.exit();
+                   // Gdx.app.exit();
                     timerText = "Time: 00:00";
-                    System.out.println("timer is 0");
+                    //System.out.println("timer is 0");
                     GameOverScreen.setActive(true);
 
                     //pauses the background music in order to play the game over sound
@@ -477,9 +482,10 @@ public class Main extends ApplicationAdapter {
         font.draw(batch, String.valueOf(secondsRemaining), 520, 500);
         //returning font size to original
         font.getData().setScale(1);
-        batch.end();
         begin.makeActive();
         quit.makeActive();
+        begin.draw(batch);
+        quit.draw(batch);
         pause.makeInactive();
         mute.makeInactive();
         if (quit.isClicked(viewport)){
@@ -496,11 +502,15 @@ public class Main extends ApplicationAdapter {
     }
     public void GameOverScreenLogic(){
         //Gdx.app.exit(); //remove this!!
-        System.out.println("game over screen is active");
+        //System.out.println("game over screen is active");
         GameOverScreen.render(); //need to stop displaying the map
         //displaying the correct buttons on game over screen
         begin.makeActive();
         quit.makeActive();
+        batch.begin();
+        begin.draw(batch);
+        quit.draw(batch);
+        batch.end();
         pause.makeInactive();
         mute.makeInactive();
         if (quit.isClicked(viewport)){
