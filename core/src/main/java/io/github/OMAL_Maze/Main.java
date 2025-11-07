@@ -33,7 +33,7 @@ import io.github.OMAL_Maze.Map.TriggerZone;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends ApplicationAdapter {
-    public static final float volume = 5;
+    public static float volume = 5;
     private int secondsRemaining = 300;
     private int badEventsRemaining = 1;
     private int goodEventsRemaining = 1;
@@ -70,6 +70,7 @@ public class Main extends ApplicationAdapter {
 
     //Sounds
     Sound BackgroundMusic;
+    long backgroundMusicid;
 
     public Main() {
         instance = this;
@@ -235,6 +236,7 @@ public class Main extends ApplicationAdapter {
             CongratsScreenLogic();
         }
         else if (GameOverScreen.getActive()){
+            //System.out.println("game over screen!!!!!!!");
             GameOverScreenLogic();
         }
         else {
@@ -306,9 +308,6 @@ public class Main extends ApplicationAdapter {
         font.draw(batch, "Hidden:" + hiddenEventsRemaining, timerX + 380, timerY);//goose appears
         font.draw(batch, "Lives:" + player.hearts, timerX + 120, timerY-15);//lives remaining
 
-        //all buttons are initially inactive, making one button active for testing purposes
-        //pause.makeActive();
-        //begin.makeActive();
 
         //for loop to go through all buttons to draw if needed
         for(AbstractButton b:buttons){
@@ -321,9 +320,6 @@ public class Main extends ApplicationAdapter {
                 }
             }
         }
-        //displaying tet after buttons so it appears ontop of buttons
-        font.draw(batch, "Mute", 780, 850);
-        font.draw(batch, "Pause", 650, 850);
         batch.end();
 
         //making buttons active on the gameplay screen
@@ -348,10 +344,6 @@ public class Main extends ApplicationAdapter {
             }
         }*/
         shapeRenderer.end();
-
-
-
-
         batch.begin();
         //for loop to go through all buttons to draw if needed
         for(AbstractButton b:buttons){
@@ -368,6 +360,17 @@ public class Main extends ApplicationAdapter {
             PauseScreen.setActive(true);
             pauseSecondsRemaining = secondsRemaining;
         }
+        if(mute.isClicked(viewport)){
+            //BackgroundMusic.stop();
+            //volume = 0;
+            //PauseMusic();
+            //Sound BackgroundMusic = Gdx.audio.newSound(Gdx.files.internal("Background.mp3"));
+            //backgroundMusicid = BackgroundMusic.play();
+            //BackgroundMusic.pause();
+            //add in getting rid of the music
+        }
+        font.draw(batch, "Mute", 780, 870);
+        font.draw(batch, "Pause", 650, 870);
         batch.end();
 
 
@@ -442,9 +445,13 @@ public class Main extends ApplicationAdapter {
     public void TitleScreenLogic(){
         TitleScreen.render();
         startT.makeActive();
+        mute.makeActive();
         batch.begin();
         startT.draw(batch);
         batch.end();
+//        if(mute.isClicked(viewport)){
+//            //BackgroundMusic.pause();
+//        }
         if (startT.isClicked(viewport)){
             TitleScreen.setActive(false);
             startT.makeInactive();
