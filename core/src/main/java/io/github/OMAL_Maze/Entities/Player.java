@@ -162,7 +162,8 @@ public class Player extends Character{
             //Slow down player.
             this.speed*=0.8f;
         } else {
-            System.out.println("Bit again at 0 hearts. Game should maybe end here.");
+            Building gameOverScreen = new Building(0,0,900,1000,new Texture("buildingTextures/GAME OVER.png"));
+            Main.buildings.add(gameOverScreen);
         }
         // else: game over
         Main.getInstance().decrementBadEventCounter();

@@ -48,7 +48,7 @@ public class Main extends ApplicationAdapter {
     public FitViewport viewport;
     Texture backgroundTexture;
     public Array<Entity> entities;
-    Array<Building> buildings;
+    public static Array<Building> buildings;
     Array<TriggerZone> triggerZones;
     public static Player player;
     public int tileSize;
