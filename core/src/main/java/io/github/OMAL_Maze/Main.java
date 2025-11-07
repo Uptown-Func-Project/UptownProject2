@@ -1,6 +1,5 @@
 package io.github.OMAL_Maze;
 import java.util.ArrayList;
-import java.util.Collections;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -44,7 +43,7 @@ public class Main extends ApplicationAdapter {
     public FitViewport viewport;
     Texture backgroundTexture;
     public Array<Entity> entities;
-    Array<Building> buildings;
+    public static Array<Building> buildings;
     Array<TriggerZone> triggerZones;
     public static Player player;
     public int tileSize;
@@ -210,15 +209,21 @@ public class Main extends ApplicationAdapter {
         };
         Timer.schedule(myTimerTask, 1f, 1f); // delays the timer speed by 1 second
     }
-
+    /**
+     * sets the hidden event counter to 0
+     */
     public void decrementHiddenEventCounter(){
         hiddenEventsRemaining=0;//set it to 0 instead of -- since the hidden event only happens once
     }
-
+    /**
+     * sets the bad event counter to 0
+     */
     public void decrementBadEventCounter(){
         badEventsRemaining=0;
     }
-
+    /**
+     * sets the good event counter to 0
+     */
     public void decrementGoodEventCounter(){
         goodEventsRemaining=0;
     }
@@ -301,7 +306,7 @@ public class Main extends ApplicationAdapter {
         for (Building building: buildings) {
             render(building);
         }
-        //text displaying how many of each event remains
+ //text displaying how many of each event remains
         font.draw(batch, "Events Remaining:", timerX +90, timerY);
         font.draw(batch, "Good:" + goodEventsRemaining, timerX + 220, timerY);  //give goose seed
         font.draw(batch, "Bad:" + badEventsRemaining, timerX + 300, timerY); //goose bites
@@ -399,10 +404,12 @@ public class Main extends ApplicationAdapter {
         //Clear all previous buildings, entities, and trigger zones
         //These will be null upon first use of the function (initialization)
         boolean seedCheck = false;
+        int currenthearts=3;
         if (buildings!=null) buildings.clear();
         if (triggerZones!=null) triggerZones.clear();
         if (entities!=null) {
             if (player.hasSeeds) seedCheck = true;
+            currenthearts=player.getHearts();
             entities.clear();
         }
         //Level int is 1 behind naming convention, add 1 when loading.
@@ -415,6 +422,7 @@ public class Main extends ApplicationAdapter {
         triggerZones = createTriggerZones(currentLevel);
         player.sprite.setPosition(spawnPointX,spawnPointY);
         player.hasSeeds=seedCheck;
+        player.hearts=currenthearts;
     }
 
     @Override

@@ -11,7 +11,11 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import io.github.OMAL_Maze.Main;
 import io.github.OMAL_Maze.Map.Building;
-
+/**
+ * the player class which extends the {@link Character} class
+ * Can pickup items
+ * Has hearts(lives)
+ */
 public class Player extends Character{
     public int hearts;
     static Sound itemPickup;
@@ -151,6 +155,9 @@ public class Player extends Character{
         this.logic();
 
     }
+    public int  getHearts(){
+        return hearts;
+    }
 
     public void decreaseHearts(){
         if (hearts > 0){
@@ -158,7 +165,8 @@ public class Player extends Character{
             //Slow down player.
             this.speed*=0.8f;
         } else {
-            System.out.println("Bit again at 0 hearts. Game should maybe end here.");
+            Building gameOverScreen = new Building(0,0,900,1000,new Texture("buildingTextures/GAME OVER.png"));
+            Main.buildings.add(gameOverScreen);
         }
         // else: game over
         Main.getInstance().decrementBadEventCounter();

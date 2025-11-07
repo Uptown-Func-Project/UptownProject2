@@ -6,7 +6,9 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 
-
+/**
+ * The base class for all entities in the game
+ */
 public class Entity {
     Rectangle rectangle;
     int x;
