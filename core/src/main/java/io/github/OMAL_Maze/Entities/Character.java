@@ -7,7 +7,7 @@ import com.badlogic.gdx.utils.Array;
 import io.github.OMAL_Maze.Map.Building;
 /**
  * represents a character which extends the {@link Entity} class
- * 
+ * has movement and speed
  */
 public class Character extends Entity {
     float speed;

@@ -6,8 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.audio.Sound;
-import io.github.OMAL_Maze.Map.Building;
+
 import io.github.OMAL_Maze.Main;
 import io.github.OMAL_Maze.Map.Building;
 
@@ -263,6 +262,7 @@ public class Goose extends Character{
                                 this.state = gooseState.HAPPY;
                                 //Could play goose happy sound?
                                 //Set goose solid to false
+                                Main.getInstance().decrementGoodEventCounter();
                                 this.isSolid = false;
                                 //Reward player
                                 player.speed *= 2f;

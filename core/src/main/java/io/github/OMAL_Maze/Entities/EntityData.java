@@ -1,5 +1,7 @@
 package io.github.OMAL_Maze.Entities;
-
+/**
+ * contains the data and getter methods for entity data
+ */
 public class EntityData {
     private String type;
     private int x;

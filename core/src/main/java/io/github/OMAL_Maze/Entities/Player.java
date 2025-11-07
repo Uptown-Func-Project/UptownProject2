@@ -11,7 +11,11 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import io.github.OMAL_Maze.Main;
 import io.github.OMAL_Maze.Map.Building;
-
+/**
+ * the player class which extends the {@link Character} class
+ * Can pickup items
+ * Has hearts(lives)
+ */
 public class Player extends Character{
     public int hearts;
     static Sound itemPickup;

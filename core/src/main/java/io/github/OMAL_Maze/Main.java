@@ -1,11 +1,5 @@
 package io.github.OMAL_Maze;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.utils.Timer;
-
 import java.util.ArrayList;
-import java.util.Collections;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -16,14 +10,11 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
-
+import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import io.github.OMAL_Maze.Buttons.*;
-import io.github.OMAL_Maze.Entities.*;
+
 import io.github.OMAL_Maze.Buttons.AbstractButton;
 import io.github.OMAL_Maze.Buttons.BeginButton;
 import io.github.OMAL_Maze.Buttons.CloseSettingsButton;
@@ -32,7 +23,6 @@ import io.github.OMAL_Maze.Buttons.PauseButton;
 import io.github.OMAL_Maze.Buttons.QuitButton;
 import io.github.OMAL_Maze.Buttons.UnpauseButton;
 import io.github.OMAL_Maze.Entities.Character;
-import io.github.OMAL_Maze.Map.*;
 import io.github.OMAL_Maze.Entities.Entity;
 import io.github.OMAL_Maze.Entities.EntityData;
 import io.github.OMAL_Maze.Entities.Goose;
@@ -214,15 +204,21 @@ public class Main extends ApplicationAdapter {
         };
         Timer.schedule(myTimerTask, 1f, 1f); // delays the timer speed by 1 second
     }
-    
+    /**
+     * sets the hidden event counter to 0
+     */
     public void decrementHiddenEventCounter(){
         hiddenEventsRemaining=0;//set it to 0 instead of -- since the hidden event only happens once
     }
-
+    /**
+     * sets the bad event counter to 0
+     */
     public void decrementBadEventCounter(){
         badEventsRemaining=0;
     }
-
+    /**
+     * sets the good event counter to 0
+     */
     public void decrementGoodEventCounter(){
         goodEventsRemaining=0;
     }
