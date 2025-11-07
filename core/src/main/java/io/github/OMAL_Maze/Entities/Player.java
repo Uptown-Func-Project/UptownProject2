@@ -155,6 +155,9 @@ public class Player extends Character{
         this.logic();
 
     }
+    public int  getHearts(){
+        return hearts;
+    }
 
     public void decreaseHearts(){
         if (hearts > 0){

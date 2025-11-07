@@ -353,10 +353,12 @@ public class Main extends ApplicationAdapter {
         //Clear all previous buildings, entities, and trigger zones
         //These will be null upon first use of the function (initialization)
         boolean seedCheck = false;
+        int currenthearts=3;
         if (buildings!=null) buildings.clear();
         if (triggerZones!=null) triggerZones.clear();
         if (entities!=null) {
             if (player.hasSeeds) seedCheck = true;
+            currenthearts=player.getHearts();
             entities.clear();
         }
         //Level int is 1 behind naming convention, add 1 when loading.
@@ -369,6 +371,7 @@ public class Main extends ApplicationAdapter {
         triggerZones = createTriggerZones(currentLevel);
         player.sprite.setPosition(spawnPointX,spawnPointY);
         player.hasSeeds=seedCheck;
+        player.hearts=currenthearts;
     }
 
     @Override
