@@ -65,6 +65,7 @@ public abstract class AbstractButton {
         return y;
     }
 
+
     //draws the button to the screen
     public void draw(SpriteBatch batch){
         batch.draw(texture, x,y);

@@ -426,7 +426,7 @@ public class Main extends ApplicationAdapter {
         loadMaze(0,40,800);
 
         //startTimer();  //this meant it was in double time
-        secondsRemaining = 300;  //resets the time
+        secondsRemaining = 5;  //resets the time
         GameOverScreen.setActive(false);
         //draw(); //this continues to show the game over screen
     }
@@ -452,13 +452,18 @@ public class Main extends ApplicationAdapter {
         secondsRemaining = pauseSecondsRemaining;
         PauseScreen.render();
         unpause.makeActive();
+        quit.makeActive();
         batch.begin();
         unpause.draw(batch);
+        quit.draw(batch);
         batch.end();
-
+        if (quit.isClicked(viewport)){
+            Gdx.app.exit();
+        }
         if (unpause.isClicked(viewport)){
             PauseScreen.setActive(false);
             unpause.makeInactive();
+            quit.makeInactive();
             pause.makeActive();
             mute.makeActive();
             //need to add in the logic of restarting the game
@@ -477,6 +482,9 @@ public class Main extends ApplicationAdapter {
         quit.makeActive();
         pause.makeInactive();
         mute.makeInactive();
+        if (quit.isClicked(viewport)){
+            Gdx.app.exit();
+        }
         if (begin.isClicked(viewport)){
             System.out.println("begin clicked and new maze loaded");
             begin.makeInactive();
@@ -495,6 +503,9 @@ public class Main extends ApplicationAdapter {
         quit.makeActive();
         pause.makeInactive();
         mute.makeInactive();
+        if (quit.isClicked(viewport)){
+            Gdx.app.exit();
+        }
         if (begin.isClicked(viewport)){
             System.out.println("begin clicked and new maze loaded");
             begin.makeInactive();

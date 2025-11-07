@@ -14,14 +14,13 @@ public class UnpauseButton extends AbstractButton{
      */
     public UnpauseButton(FileHandle image){
         super(image);
-        super.x = 300;
-        super.y = 200;
+        super.x = 200;
+        super.y = 150;
         super.message = "unpause button";
     }
     @Override
     public void dispose() {
 
     }
-
 }
 
