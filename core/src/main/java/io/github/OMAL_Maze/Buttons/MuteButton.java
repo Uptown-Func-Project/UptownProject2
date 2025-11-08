@@ -12,8 +12,11 @@ import io.github.OMAL_Maze.Main;
  * the buttons are displayed.
  */
 public class MuteButton extends AbstractButton{
+    //Time delay between muting the game. Without this, clicks can be registered multiple times.
+    float changeTime = 0.5f;
+    boolean muted = false;
     /**
-     * Consrtuctor for BeginButton inheritted from AbstractButton.
+     * Constructor for BeginButton inherited from AbstractButton.
      * @param image the file of the image to represent the button
      */
     public MuteButton(FileHandle image){
@@ -21,12 +24,45 @@ public class MuteButton extends AbstractButton{
         super.x = 750;
         super.y = 850;
         super.message = "mute button";
-        Main instance = Main.getInstance();
+    }
+
+    /**
+     * Checks if the button has been clicked in the boundaries of the image.
+     * @param viewport the FitViewport that is holding the information on the screen
+     * @return true if the button has been clicked, false if not
+     */
+    @Override
+    public boolean isClicked(Viewport viewport) {
+        boolean clicked = super.isClicked(viewport);
+        float delta = Gdx.graphics.getDeltaTime();
+        this.changeTime -= delta;
+        if (clicked && changeTime<=0f){
+            //Sets volume to 0 by default. If already muted, volume is returned to 100f (100%)
+            float nVolume = 0f;
+            if (!muted) {
+                Main.getInstance().setVolume(nVolume);
+                muted = true;
+            } else {
+                nVolume = 100f;
+                Main.getInstance().setVolume(nVolume);
+                muted = false;
+            }
+            changeTime = 0.5f;
+        }
+        return clicked;
     }
 
     @Override
     public void dispose() {
 
+    }
+
+    public String getMutedStr() {
+        if (!muted) {
+            return "Mute";
+        } else {
+            return "Unmute";
+        }
     }
 
 }

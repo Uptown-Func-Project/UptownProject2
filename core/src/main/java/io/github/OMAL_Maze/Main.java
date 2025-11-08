@@ -1,5 +1,6 @@
 package io.github.OMAL_Maze;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -32,7 +33,7 @@ import io.github.OMAL_Maze.Map.TriggerZone;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends ApplicationAdapter {
-    public static float volume = 5;
+    public float volume = 5;
     private int secondsRemaining = 300;
     private int badEventsRemaining = 1;
     private int goodEventsRemaining = 1;
@@ -69,7 +70,7 @@ public class Main extends ApplicationAdapter {
 
     //Sounds
     Sound BackgroundMusic;
-    long backgroundMusicid;
+    long backgroundMusicID;
 
     public Main() {
         instance = this;
@@ -179,9 +180,9 @@ public class Main extends ApplicationAdapter {
 
     private void startTimer() {
         //background music loops the entire time
-        Sound BackgroundMusic = Gdx.audio.newSound(Gdx.files.internal("Background.mp3"));
-        long id = BackgroundMusic.play(volume);
-        BackgroundMusic.setLooping(id, true);
+        BackgroundMusic = Gdx.audio.newSound(Gdx.files.internal("Background.mp3"));
+        backgroundMusicID = BackgroundMusic.play(volume);
+        BackgroundMusic.setLooping(backgroundMusicID, true);
         Timer.Task myTimerTask = new Timer.Task() {
         Sound GameOverSound = Gdx.audio.newSound(Gdx.files.internal("Sounds/Gameover.mp3"));
         boolean hasPlayed = false;
@@ -226,6 +227,13 @@ public class Main extends ApplicationAdapter {
      */
     public void decrementGoodEventCounter(){
         goodEventsRemaining=0;
+    }
+
+    public float getVolume() {
+        return volume;
+    }
+    public void setVolume(float nVolume) {
+        this.volume = nVolume;
     }
 
     @Override
@@ -321,7 +329,7 @@ public class Main extends ApplicationAdapter {
                 b.draw(batch);
                 // System.out.println("active");
                 if (b.isClicked(viewport)){
-                    System.out.println("clicked");
+                    System.out.println(b.getClass().toString() + "clicked innit");
                 }
             }
         }
@@ -366,15 +374,12 @@ public class Main extends ApplicationAdapter {
             pauseSecondsRemaining = secondsRemaining;
         }
         if(mute.isClicked(viewport)){
-            //BackgroundMusic.stop();
-            //volume = 0;
-            //PauseMusic();
-            //Sound BackgroundMusic = Gdx.audio.newSound(Gdx.files.internal("Background.mp3"));
-            //backgroundMusicid = BackgroundMusic.play();
-            //BackgroundMusic.pause();
-            //add in getting rid of the music
+            //Keep playing music but the volume will be set to 0.
+            BackgroundMusic.stop(backgroundMusicID);
+            backgroundMusicID = BackgroundMusic.play(volume);
+            BackgroundMusic.setLooping(backgroundMusicID, true);
         }
-        font.draw(batch, "Mute", 780, 870);
+        font.draw(batch, mute.getMutedStr(), 770, 870);
         font.draw(batch, "Pause", 650, 870);
         batch.end();
 
@@ -397,7 +402,12 @@ public class Main extends ApplicationAdapter {
         }
     }
     private void changeLevel(int newMaze, int spawnPointX, int spawnPointY) {
-        loadMaze(newMaze, spawnPointX, spawnPointY);
+        //Specific implementation for winning, rather than making a redundant win hitbox
+        if (newMaze==4) {
+            GameOverScreen.setActive(true);
+        } else {
+            loadMaze(newMaze, spawnPointX, spawnPointY);
+        }
     }
 
     private void loadMaze(int maze, int spawnPointX, int spawnPointY) {
@@ -442,7 +452,7 @@ public class Main extends ApplicationAdapter {
         loadMaze(0,40,800);
 
         //startTimer();  //this meant it was in double time
-        secondsRemaining = 5;  //resets the time
+        secondsRemaining = 300;  //resets the time
         GameOverScreen.setActive(false);
         //draw(); //this continues to show the game over screen
     }
@@ -516,7 +526,6 @@ public class Main extends ApplicationAdapter {
         }
     }
     public void GameOverScreenLogic(){
-        //Gdx.app.exit(); //remove this!!
         //System.out.println("game over screen is active");
         GameOverScreen.render(); //need to stop displaying the map
         //displaying the correct buttons on game over screen

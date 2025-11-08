@@ -662,7 +662,18 @@
         }
       ],
       "buildings": [],
-      "triggerZones": []
+      "triggerZones": [
+        {
+          "x": 800,
+          "y": 40,
+          "width": 20,
+          "height": 20,
+          "targetMaze": 4,
+          "spawnPointX": 0,
+          "spawnPointY": 0,
+          "fromMaze": 2
+        }
+      ]
     },
     "level_4": {
       "backgroundImage": "screenTextures/maze4.png",
