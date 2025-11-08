@@ -25,15 +25,11 @@ import io.github.OMAL_Maze.Entities.EntityData;
 import io.github.OMAL_Maze.Entities.Goose;
 import io.github.OMAL_Maze.Entities.Player;
 import io.github.OMAL_Maze.Entities.Seeds;
-import io.github.OMAL_Maze.Map.Building;
-import io.github.OMAL_Maze.Map.BuildingData;
-import io.github.OMAL_Maze.Map.MazeData;
-import io.github.OMAL_Maze.Map.MazeLoader;
-import io.github.OMAL_Maze.Map.TriggerZone;
+import io.github.OMAL_Maze.Map.*;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends ApplicationAdapter {
-    public float volume = 5;
+    public float volume = 100f;
     private int secondsRemaining = 300;
     private int badEventsRemaining = 1;
     private int goodEventsRemaining = 1;
@@ -69,8 +65,8 @@ public class Main extends ApplicationAdapter {
     ArrayList<AbstractButton> buttons = new ArrayList<>(6);
 
     //Sounds
-    Sound BackgroundMusic;
-    long backgroundMusicID;
+    Sound backgroundSound;
+    BackgroundMusic backgroundMusic;
 
     public Main() {
         instance = this;
@@ -89,6 +85,8 @@ public class Main extends ApplicationAdapter {
         mazeData = MazeLoader.loadMaze("loadAssets/assets.json");
         instance = this;
         shapeRenderer = new ShapeRenderer();
+        backgroundSound = Gdx.audio.newSound(Gdx.files.internal("Background.mp3"));
+        backgroundMusic = new BackgroundMusic(backgroundSound);
 
         //Background music plays the entire time
         //Debugging line below, Used to spawn at start of second level.
@@ -109,6 +107,7 @@ public class Main extends ApplicationAdapter {
         PauseScreen = new Screen(batch, viewport, "pausescreen.png");
         TitleScreen.setActive(true);
         //CongratsScreen.setActive(true); //CHANGE THIS BACK
+
 
     }
 
@@ -179,10 +178,7 @@ public class Main extends ApplicationAdapter {
     }
 
     private void startTimer() {
-        //background music loops the entire time
-        BackgroundMusic = Gdx.audio.newSound(Gdx.files.internal("Background.mp3"));
-        backgroundMusicID = BackgroundMusic.play(volume);
-        BackgroundMusic.setLooping(backgroundMusicID, true);
+        //Start looping background music. Looping done in class.
         Timer.Task myTimerTask = new Timer.Task() {
         Sound GameOverSound = Gdx.audio.newSound(Gdx.files.internal("Sounds/Gameover.mp3"));
         boolean hasPlayed = false;
@@ -198,12 +194,12 @@ public class Main extends ApplicationAdapter {
                     timerText = "Time: 00:00";
                     //System.out.println("timer is 0");
                     GameOverScreen.setActive(true);
+                    backgroundMusic.stop();
 
                     //pauses the background music in order to play the game over sound
                     if(!hasPlayed){
                         hasPlayed=true;
                         GameOverSound.play(volume);
-                        BackgroundMusic.pause();
                     }
                 }
             }
@@ -229,9 +225,10 @@ public class Main extends ApplicationAdapter {
         goodEventsRemaining=0;
     }
 
-    public float getVolume() {
-        return volume;
-    }
+    /**
+     * Setter for the game volume.
+     * @param nVolume float: The new volume value
+     */
     public void setVolume(float nVolume) {
         this.volume = nVolume;
     }
@@ -322,29 +319,38 @@ public class Main extends ApplicationAdapter {
         font.draw(batch, "Lives:" + player.hearts, timerX + 120, timerY-15);//lives remaining
 
 
+        //making buttons active on the gameplay screen
+        pause.makeActive();
+        mute.makeActive();
+
         //for loop to go through all buttons to draw if needed
         for(AbstractButton b:buttons){
             //only draw if active
             if (b.isActive()){
                 b.draw(batch);
-                // System.out.println("active");
+                //Empty statement. Calls the isClicked function for functionality.
                 if (b.isClicked(viewport)){
-                    System.out.println(b.getClass().toString() + "clicked innit");
+                    if (b==mute) {
+                        backgroundMusic.changeVolume(volume);
+                    } else if (b==pause) {
+                        PauseScreen.setActive(true);
+                        backgroundMusic.pause();
+                        pauseSecondsRemaining = secondsRemaining;
+                    }
+                    //System.out.println(b.getClass().toString() + "clicked");
                 }
             }
         }
-        batch.end();
 
-        //making buttons active on the gameplay screen
-        pause.makeActive();
-        mute.makeActive();
 
-        shapeRenderer.setProjectionMatrix(viewport.getCamera().combined);
+        //Optional code to render the trigger zones. Commented out unless needed for debugging
+        /*shapeRenderer.setProjectionMatrix(viewport.getCamera().combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(Color.RED);
-        /*for (TriggerZone zone : triggerZones) {
+        for (TriggerZone zone : triggerZones) {
             shapeRenderer.rect(zone.bounds.x, zone.bounds.y, zone.bounds.width, zone.bounds.height);
         }*/
+        //Uses the same renderer to show the goose spawn zone
         /*for (int i=0;i<entities.size;i++) {
             Entity entity = entities.get(i);
             if (entity instanceof Goose goose) {
@@ -355,30 +361,18 @@ public class Main extends ApplicationAdapter {
                   goose.spawnTrigger.height
                 );
             }
-        }*/
-        shapeRenderer.end();
-        batch.begin();
-        //for loop to go through all buttons to draw if needed
-        for(AbstractButton b:buttons){
-            //only draw if active
-            if (b.isActive()){
-                b.draw(batch);
-                // System.out.println("active");
-                if (b.isClicked(viewport)){
-                    System.out.println("clicked");
-                }
-            }
         }
-        if(pause.isClicked(viewport)){  //what happens when the pause is clicked
+        shapeRenderer.end();*/
+
+        /*if(pause.isClicked(viewport)){  //what happens when the pause is clicked
             PauseScreen.setActive(true);
+            backgroundMusic.pause();
             pauseSecondsRemaining = secondsRemaining;
-        }
-        if(mute.isClicked(viewport)){
+        }*/
+        /*if(mute.isClicked(viewport)){
             //Keep playing music but the volume will be set to 0.
-            BackgroundMusic.stop(backgroundMusicID);
-            backgroundMusicID = BackgroundMusic.play(volume);
-            BackgroundMusic.setLooping(backgroundMusicID, true);
-        }
+            backgroundMusic.changeVolume(volume);
+        }*/
         font.draw(batch, mute.getMutedStr(), 770, 870);
         font.draw(batch, "Pause", 650, 870);
         batch.end();
@@ -454,6 +448,7 @@ public class Main extends ApplicationAdapter {
         //startTimer();  //this meant it was in double time
         secondsRemaining = 300;  //resets the time
         GameOverScreen.setActive(false);
+        backgroundMusic.start(volume);
         //draw(); //this continues to show the game over screen
     }
 
@@ -492,6 +487,7 @@ public class Main extends ApplicationAdapter {
         }
         if (unpause.isClicked(viewport)){
             PauseScreen.setActive(false);
+            backgroundMusic.resume();
             unpause.makeInactive();
             quit.makeInactive();
             pause.makeActive();
