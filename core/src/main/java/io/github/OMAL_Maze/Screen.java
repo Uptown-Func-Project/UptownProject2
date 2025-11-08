@@ -13,7 +13,6 @@ import io.github.OMAL_Maze.Buttons.AbstractButton;
 /**
  * Screen Class - lays out the basic framework for how each screen will function once called
  * 
- * 
  */
 public class Screen{
     protected Texture backgroundTexture; // will hold the image file (pause_background)

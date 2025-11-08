@@ -176,7 +176,9 @@ public class Main extends ApplicationAdapter {
         }
         return result;
     }
-
+    /**
+     * startTimer method is responsible for the in-built game timer functionality
+     */
     private void startTimer() {
         //Start looping background music. Looping done in class.
         Timer.Task myTimerTask = new Timer.Task() {
@@ -186,18 +188,15 @@ public class Main extends ApplicationAdapter {
             public void run() {
                 if (secondsRemaining > 0) {
                     secondsRemaining--;
-                    int minutes = secondsRemaining / 60;
+                    int minutes = secondsRemaining / 60;        
                     int seconds = secondsRemaining % 60;
-                    timerText = String.format("Time: %02d:%02d", minutes, seconds);
-                } else {  //won't enter this loop
-                   // Gdx.app.exit();
+                    timerText = String.format("Time: %02d:%02d", minutes, seconds);     // formats the time into min:sec
+                } else {  
                     timerText = "Time: 00:00";
-                    //System.out.println("timer is 0");
-                    GameOverScreen.setActive(true);
+                    GameOverScreen.setActive(true);         // once timer hits zero Game Over screen is displayed
                     backgroundMusic.stop();
 
-                    //pauses the background music in order to play the game over sound
-                    if(!hasPlayed){
+                    if(!hasPlayed){                               // pauses the background music in order to play the game over sound
                         hasPlayed=true;
                         GameOverSound.play(volume);
                     }
@@ -311,12 +310,12 @@ public class Main extends ApplicationAdapter {
         for (Building building: buildings) {
             render(building);
         }
- //text displaying how many of each event remains
+        //text displaying how many of each event remains
         font.draw(batch, "Events Remaining:", timerX +90, timerY);
         font.draw(batch, "Good:" + goodEventsRemaining, timerX + 220, timerY);  //give goose seed
-        font.draw(batch, "Bad:" + badEventsRemaining, timerX + 300, timerY); //goose bites
-        font.draw(batch, "Hidden:" + hiddenEventsRemaining, timerX + 380, timerY);//goose appears
-        font.draw(batch, "Lives:" + player.hearts, timerX + 120, timerY-15);//lives remaining
+        font.draw(batch, "Bad:" + badEventsRemaining, timerX + 300, timerY);    //goose bites
+        font.draw(batch, "Hidden:" + hiddenEventsRemaining, timerX + 380, timerY);  //goose appears
+        font.draw(batch, "Lives:" + player.hearts, timerX + 120, timerY-15);    //lives remaining
 
 
         //making buttons active on the gameplay screen
