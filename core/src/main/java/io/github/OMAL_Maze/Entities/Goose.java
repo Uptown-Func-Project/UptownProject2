@@ -261,9 +261,9 @@ public class Goose extends Character{
                                 //Set goose to happy
                                 this.state = gooseState.HAPPY;
                                 //Could play goose happy sound?
-                                //Set goose solid to false
                                 Main.getInstance().decrementGoodEventCounter();
-                                this.isSolid = false;
+                                //Set goose solid to false. Commenting this out so that the player has to get the seeds.
+                                //this.isSolid = false;
                                 //Reward player
                                 player.speed *= 2f;
                                 player.hasSeeds = false;

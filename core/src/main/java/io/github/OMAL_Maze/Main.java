@@ -68,12 +68,24 @@ public class Main extends ApplicationAdapter {
     Sound backgroundSound;
     BackgroundMusic backgroundMusic;
 
+    /**
+     * Main class called in the lwjgl launcher.
+     */
     public Main() {
         instance = this;
     }
+
+    /**
+     * Getter method so that the current instance can be interacted with.
+     * @return Current game instance including all variable states.
+     */
     public static Main getInstance() {
         return instance;
     }
+
+    /**
+     * Creates the sprite batch, buttons, screens and other needed variables.
+     */
     @Override
     public void create() {
         batch = new SpriteBatch();
@@ -106,11 +118,13 @@ public class Main extends ApplicationAdapter {
         CongratsScreen = new Screen(batch, viewport, "Congratulations.png");
         PauseScreen = new Screen(batch, viewport, "pausescreen.png");
         TitleScreen.setActive(true);
-        //CongratsScreen.setActive(true); //CHANGE THIS BACK
-
-
     }
 
+    /**
+     * Spawns the entities from the maze data object for each level.
+     * @param level The LevelData object for each level
+     * @return The array of entities in the current map
+     */
     private Array<Entity> createEntities(MazeData.LevelData level) {
         Array<Entity> result = new Array<>();
         for (EntityData entityData: level.getEntities()) {
@@ -118,22 +132,32 @@ public class Main extends ApplicationAdapter {
             String entityType = entityData.getType();
             Entity entity = getEntity(entityData, entityType, texture);
             result.add(entity);
-            //System.out.println("Spawned new entity of type "+entityData.getType()+" at location ("+
-            //        entityData.getX()+","+entityData.getY()+") with texture "+entityData.getTexturePath());
         }
         return result;
     }
+
+    /**
+     * Creates the trigger zones to change level based on the map data.
+     * @param level Contains the level data.
+     * @return Array of trigger zone objects.
+     */
     private Array<TriggerZone> createTriggerZones(MazeData.LevelData level) {
         Array<TriggerZone> result = new Array<>();
         for (TriggerZone triggerZone: level.getTriggerZones()) {
             triggerZone.bounds = new Rectangle(triggerZone.x, triggerZone.y, triggerZone.width, triggerZone.height);
             result.add(triggerZone);
-            //System.out.println("Added new triggerzone with target maze "+triggerZone.targetMaze);
         }
         return result;
 
     }
 
+    /**
+     * Creates an entity of a specific type using the level data.
+     * @param entityData Location, dimensions, and texture for the entity.
+     * @param entityType String value with the class name.
+     * @param texture Texture object for the entity.
+     * @return The entity object with its own subclass.
+     */
     private static Entity getEntity(EntityData entityData, String entityType, Texture texture) {
         Entity entity = null;
         switch (entityType) {
@@ -154,8 +178,12 @@ public class Main extends ApplicationAdapter {
         return entity;
     }
 
+    /**
+     * Spawns the buildings and walls from the maze data object for each level.
+     * @param level The LevelData object for each level
+     * @return The array of buildings/walls in the current map
+     */
     private Array<Building> createBuildings(MazeData.LevelData level) {
-        //Add some stuff for walls innit
         Array<Building> result = new Array<>();
         for (BuildingData buildingData: level.getBuildings()) {
             Building building = new Building(buildingData.getX(), buildingData.getY(), buildingData.getWidth(),
@@ -188,10 +216,10 @@ public class Main extends ApplicationAdapter {
             public void run() {
                 if (secondsRemaining > 0) {
                     secondsRemaining--;
-                    int minutes = secondsRemaining / 60;        
+                    int minutes = secondsRemaining / 60;
                     int seconds = secondsRemaining % 60;
                     timerText = String.format("Time: %02d:%02d", minutes, seconds);     // formats the time into min:sec
-                } else {  
+                } else {
                     timerText = "Time: 00:00";
                     GameOverScreen.setActive(true);         // once timer hits zero Game Over screen is displayed
                     backgroundMusic.stop();
@@ -232,9 +260,11 @@ public class Main extends ApplicationAdapter {
         this.volume = nVolume;
     }
 
+    /**
+     * Renders the respective screen.
+     */
     @Override
     public void render() {
-        //System.out.println("render method");
         if (TitleScreen.getActive()){
             TitleScreenLogic();
         }
@@ -245,7 +275,6 @@ public class Main extends ApplicationAdapter {
             CongratsScreenLogic();
         }
         else if (GameOverScreen.getActive()){
-            //System.out.println("game over screen!!!!!!!");
             GameOverScreenLogic();
         }
         else {
@@ -255,6 +284,9 @@ public class Main extends ApplicationAdapter {
         }
     }
 
+    /**
+     * Handles user input by calling entity movement functions.
+     */
     private void input() {
         float delta = Gdx.graphics.getDeltaTime(); // retrieve the current delta
         for (int i=0;i<entities.size;i++) {
@@ -265,6 +297,9 @@ public class Main extends ApplicationAdapter {
         }
     }
 
+    /**
+     * General logic for the game. Used to check for game level trigger zones.
+     */
     private void logic() {
         triggerCooldown -= Gdx.graphics.getDeltaTime();
         if (triggerCooldown < 0) triggerCooldown = 0;
@@ -283,6 +318,9 @@ public class Main extends ApplicationAdapter {
         }
     }
 
+    /**
+     * Sets background to black initially before rendering all text, buttons, entities, and buildings.
+     */
     private void draw() {
         ScreenUtils.clear(Color.BLACK);
         viewport.apply();
@@ -296,6 +334,7 @@ public class Main extends ApplicationAdapter {
             if (entity==null) continue;
             render(entity);
         }
+        //Specific timer location
         float timerX = (float) tileSize /2;
         float timerY = worldHeight -((float) tileSize /2)+15;
         if (timerText!=null) {
@@ -336,7 +375,6 @@ public class Main extends ApplicationAdapter {
                         backgroundMusic.pause();
                         pauseSecondsRemaining = secondsRemaining;
                     }
-                    //System.out.println(b.getClass().toString() + "clicked");
                 }
             }
         }
@@ -372,37 +410,70 @@ public class Main extends ApplicationAdapter {
             //Keep playing music but the volume will be set to 0.
             backgroundMusic.changeVolume(volume);
         }*/
+        //Draws the text for the mute button and the pause button
         font.draw(batch, mute.getMutedStr(), 770, 870);
         font.draw(batch, "Pause", 650, 870);
         batch.end();
-
-
     }
+
+    /**
+     * Getter method to get the number of seconds left
+     * @return the current value of the timer "secondsRemaining"
+     */
     public int getSecondsRemaining() {
         return this.secondsRemaining;
     }
+
+    /**
+     * Sets the timer to a new value. Used when the goose rewards the player for grabbing the seeds.
+     * @param nSecondsRemaining the new value for the timer.
+     */
     public void setSecondsRemaining(int nSecondsRemaining) {
         this.secondsRemaining=nSecondsRemaining;
     }
+
+    /**
+     * Renders an entity if its visible attribute is set to true
+     * @param entity entity object to render
+     */
     private void render(Entity entity) {
         if (entity.getVisible()) {
             entity.render(batch);
         }
     }
+
+    /**
+     * Renders a building if its visible attribute is set to true
+     * @param building building object to render
+     */
     private void render(Building building) {
         if (building.getVisible()) {
             building.render(batch);
         }
     }
+
+    /**
+     * Changes the level, called from the trigger boxes.
+     * Has a single case for ending the game/winning.
+     * @param newMaze index of the new maze.
+     * @param spawnPointX horizontal location of the player to spawn at.
+     * @param spawnPointY vertical location of the player to spawn at.
+     */
     private void changeLevel(int newMaze, int spawnPointX, int spawnPointY) {
         //Specific implementation for winning, rather than making a redundant win hitbox
         if (newMaze==4) {
-            GameOverScreen.setActive(true);
+            CongratsScreen.setActive(true);
         } else {
             loadMaze(newMaze, spawnPointX, spawnPointY);
         }
     }
 
+    /**
+     * Loads the maze based on its index and loads the assets for that maze.
+     * @param maze index of the maze (0-3 in the case of V1).
+     * @param spawnPointX horizontal location of the player to spawn at.
+     * @param spawnPointY vertical location of the player to spawn at.
+     */
     private void loadMaze(int maze, int spawnPointX, int spawnPointY) {
         //Clear all previous buildings, entities, and trigger zones
         //These will be null upon first use of the function (initialization)
@@ -417,22 +488,32 @@ public class Main extends ApplicationAdapter {
         }
         //Level int is 1 behind naming convention, add 1 when loading.
         MazeData.LevelData currentLevel = mazeData.getLevel("level_"+(maze+1));
-        //Recreate all level
+        //Recreate the level background texture
         backgroundTexture = new Texture(currentLevel.getBackgroundImage());
 
+        //Spawn the entities and buildings (Walls usually)
         entities = createEntities(currentLevel);
         buildings = createBuildings(currentLevel);
         triggerZones = createTriggerZones(currentLevel);
+        //Set start values for the player
         player.sprite.setPosition(spawnPointX,spawnPointY);
         player.hasSeeds=seedCheck;
         player.hearts=currenthearts;
     }
 
+    /**
+     * Resizes the screen viewport. Used by standard libgdx, not needed to change.
+     * @param width the new width in pixels
+     * @param height the new height in pixels
+     */
     @Override
     public void resize(int width, int height) {
         viewport.update(909, 909, true); // true centers the camera
     }
 
+    /**
+     * Disposes batches and fonts when the application is destroyed.
+     */
     @Override
     public void dispose() {
         batch.dispose();
@@ -440,14 +521,23 @@ public class Main extends ApplicationAdapter {
         shapeRenderer.dispose();
     }
 
+    /**
+     * Starts the game by loading the map assets and setting some variables back to their initial values.
+     */
     public void startGame(){
-        //goes to first maze and resets character and seeds
+        //Goes to first maze and resets character and seeds
         loadMaze(0,40,800);
 
-        //startTimer();  //this meant it was in double time
+        //Set timer back to 5 minutes.
         secondsRemaining = 300;  //resets the time
+        //Remove the Game Over screen if it exists.
         GameOverScreen.setActive(false);
+        //Starts the background music, uses the object for this
         backgroundMusic.start(volume);
+        //Reset values for the events.
+        this.badEventsRemaining = 1;
+        this.goodEventsRemaining = 1;
+        this.hiddenEventsRemaining = 1;
         //draw(); //this continues to show the game over screen
     }
 
@@ -461,9 +551,6 @@ public class Main extends ApplicationAdapter {
         batch.begin();
         startT.draw(batch);
         batch.end();
-//        if(mute.isClicked(viewport)){
-//            //BackgroundMusic.pause();
-//        }
         if (startT.isClicked(viewport)){
             TitleScreen.setActive(false);
             startT.makeInactive();
@@ -472,6 +559,10 @@ public class Main extends ApplicationAdapter {
             startGame();
         }
     }
+
+    /**
+     * Renders the pause screen and causes the buttons to function.
+     */
     public void PauseScreenLogic(){
         secondsRemaining = pauseSecondsRemaining;
         PauseScreen.render();
@@ -494,6 +585,9 @@ public class Main extends ApplicationAdapter {
             //need to add in the logic of restarting the game
         }
     }
+    /**
+     * Renders the congratulations screen and causes the buttons to function.
+     */
     public void CongratsScreenLogic(){
         CongratsScreen.render();
         batch.begin();
@@ -512,16 +606,16 @@ public class Main extends ApplicationAdapter {
             Gdx.app.exit();
         }
         if (begin.isClicked(viewport)){
-            System.out.println("begin clicked and new maze loaded");
             begin.makeInactive();
             quit.makeInactive();
             CongratsScreen.setActive(false);
-            // loadMaze(1,40, 800);
             startGame();
         }
     }
+    /**
+     * Renders the game over screen and causes the buttons to function.
+     */
     public void GameOverScreenLogic(){
-        //System.out.println("game over screen is active");
         GameOverScreen.render(); //need to stop displaying the map
         //displaying the correct buttons on game over screen
         begin.makeActive();
@@ -536,11 +630,9 @@ public class Main extends ApplicationAdapter {
             Gdx.app.exit();
         }
         if (begin.isClicked(viewport)){
-            System.out.println("begin clicked and new maze loaded");
             begin.makeInactive();
             quit.makeInactive();
             GameOverScreen.setActive(false);
-            // loadMaze(1,40, 800);
             startGame();
         }
     }
