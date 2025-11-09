@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
@@ -26,7 +27,7 @@ import io.github.OMAL_Maze.Entities.Player;
 import io.github.OMAL_Maze.Entities.Seeds;
 import io.github.OMAL_Maze.Map.*;
 
-/** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
+/** {@link ApplicationListener} implementation shared by all platforms. */
 public class Main extends ApplicationAdapter {
     public float volume = 100f;
     private int secondsRemaining = 300;
@@ -165,7 +166,7 @@ public class Main extends ApplicationAdapter {
                     player = (Player) entity;
             }
             case "Character" ->
-                    entity = new io.github.OMAL_Maze.Entities.Character(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture);
+                    entity = new Character(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture);
             case "Goose" -> entity = new Goose(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(),
                     texture);
             case "Seeds" -> entity = new Seeds(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(),
@@ -483,12 +484,13 @@ public class Main extends ApplicationAdapter {
         //These will be null upon first use of the function (initialization)
         boolean seedCheck = false;
         int currenthearts=3;
-        float speed= player.speed;
+        float speed = 150f;
         if (buildings!=null) buildings.clear();
         if (triggerZones!=null) triggerZones.clear();
         if (entities!=null) {
             if (player.hasSeeds) seedCheck = true;
             currenthearts=player.getHearts();
+            speed=player.speed;
             if (maze==0) {
                 currenthearts=3;
             }
