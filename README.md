@@ -5,7 +5,7 @@ The player must escape the maze within 5 minutes, if they want to win the game, 
 
 ## How to find the game
 
-Download the JAR file from the [OMAL](https://octopusmissingaleg.github.io/OctopusMissingALegWebsite/)) official website, and you are ready to go!
+Download the JAR file from the [OMAL](https://octopusmissingaleg.github.io/OctopusMissingALegWebsite/) official website, and you are ready to go!
 
 ## Credits
 
