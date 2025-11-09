@@ -127,7 +127,7 @@ public class Main extends ApplicationAdapter {
     private Array<Entity> createEntities(MazeData.LevelData level) {
         Array<Entity> result = new Array<>();
         for (EntityData entityData: level.getEntities()) {
-            Texture texture = new Texture(entityData.getTexturePath());
+            Texture texture = new Texture(Gdx.files.internal(entityData.getTexturePath()));
             String entityType = entityData.getType();
             Entity entity = getEntity(entityData, entityType, texture);
             result.add(entity);
@@ -186,7 +186,7 @@ public class Main extends ApplicationAdapter {
         Array<Building> result = new Array<>();
         for (BuildingData buildingData: level.getBuildings()) {
             Building building = new Building(buildingData.getX(), buildingData.getY(), buildingData.getWidth(),
-                    buildingData.getHeight(), new Texture(buildingData.getTexturePath()));
+                    buildingData.getHeight(), new Texture(Gdx.files.internal(buildingData.getTexturePath())));
             result.add(building);
         }
         int[][] walls = level.getWalls();
@@ -195,7 +195,7 @@ public class Main extends ApplicationAdapter {
                 if (walls[i][j]==1) {
                     int x = j*tileSize;
                     int y = (walls.length - 1 - i)*tileSize;
-                    Building wall = new Building(x,y,tileSize,tileSize, new Texture("buildingTextures/wallMaybe.png"));
+                    Building wall = new Building(x,y,tileSize,tileSize, new Texture(Gdx.files.internal("buildingTextures/wallMaybe.png")));
                     wall.setVisible(false);
                     result.add(wall);
                 }
@@ -492,7 +492,7 @@ public class Main extends ApplicationAdapter {
         //Level int is 1 behind naming convention, add 1 when loading.
         MazeData.LevelData currentLevel = mazeData.getLevel("level_"+(maze+1));
         //Recreate the level background texture
-        backgroundTexture = new Texture(currentLevel.getBackgroundImage());
+        backgroundTexture = new Texture(Gdx.files.internal(currentLevel.getBackgroundImage()));
 
         //Spawn the entities and buildings (Walls usually)
         entities = createEntities(currentLevel);
