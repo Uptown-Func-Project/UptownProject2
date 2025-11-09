@@ -49,36 +49,52 @@ public abstract class AbstractButton {
         return texture;
     }
 
+    /**
+     * Getter method for the width of the button
+     * @return width in pixels
+     */
     public int getWidth(){
         return texture.getWidth();
     }
 
+    /**
+     * Getter method for the height of the button
+     * @return height in pixels
+     */
     public int getHeight(){
         return texture.getHeight();
     }
 
+    /**
+     * Getter method for the horizontal position of the button
+     * @return horizontal position in pixels
+     */
     public int getX() {
         return x;
     }
 
+    /**
+     * Getter method for the vertical position of the button
+     * @return vertical position in pixels
+     */
     public int getY() {
         return y;
     }
 
 
-    //draws the button to the screen
+    /**
+     * Draws the button to the screen
+     * @param batch the SpriteBatch object used to render the button
+     */
     public void draw(SpriteBatch batch){
         batch.draw(texture, x,y);
     }
 
-    //makes the button active
-    public void makeActive() {
-        active = true;
-    }
-
-    //makes the button inactive
-    public void makeInactive() {
-        active = false;
+    /**
+     * Setter method for active
+     */
+    public void setActive(boolean nActive) {
+        active = nActive;
     }
 
     /**
@@ -88,13 +104,9 @@ public abstract class AbstractButton {
      */
     public boolean isClicked(Viewport viewport) {
         boolean clicked = false;
-        int locationX;
-        int locationY;
         if (Gdx.input.isTouched()) {
             //changes location of click to the viewport to scale the point
             Vector2 click = viewport.unproject(new Vector2(Gdx.input.getX(),Gdx.input.getY()));
-            locationX = Gdx.input.getX();
-            locationY = Gdx.graphics.getHeight() - Gdx.input.getY();
 
             if (click.x >= x && click.x <= x+getWidth()){
                 if (click.y >= y && click.y <= y+getHeight()){

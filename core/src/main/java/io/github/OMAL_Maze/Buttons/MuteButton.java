@@ -28,8 +28,8 @@ public class MuteButton extends AbstractButton{
 
     /**
      * Checks if the button has been clicked in the boundaries of the image.
-     * @param viewport the FitViewport that is holding the information on the screen
-     * @return true if the button has been clicked, false if not
+     * @param viewport the FitViewport that is holding the information on the screen.
+     * @return true if the button has been clicked, false if not.
      */
     @Override
     public boolean isClicked(Viewport viewport) {
@@ -57,6 +57,10 @@ public class MuteButton extends AbstractButton{
 
     }
 
+    /**
+     * Function to generate the string for the mute button display.
+     * @return The string "Mute" or "Unmute".
+     */
     public String getMutedStr() {
         if (!muted) {
             return "Mute";

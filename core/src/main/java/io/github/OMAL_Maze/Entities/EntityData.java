@@ -1,6 +1,7 @@
 package io.github.OMAL_Maze.Entities;
 /**
- * contains the data and getter methods for entity data
+ * Contains the data and getter methods for entity data.
+ * These will not be seen as assigned due to the JSON implementation used however they are given values.
  */
 public class EntityData {
     private String type;
@@ -11,6 +12,7 @@ public class EntityData {
 
     private String texturePath;
 
+    //Getter methods for all the values.
     public String getType() { return type; }
     public int getX() { return x; }
     public int getY() { return y; }

@@ -21,24 +21,24 @@ public class Character extends Entity {
     public Character(int x, int y, int width, int height, Texture entityTexture) {
         super(x,y,width,height,entityTexture);
     }
+
     /**
-    *This is a reuse of the Overlaps function for readability.
-     * @param bounds the rectangle object of a different Entity.
-    */
-    public boolean Collides(Rectangle bounds) {
-        return Overlaps(bounds);
-    }
-    @Override
-    public void logic() {
-        //Checking collision. Entities can call this method from super.
-    }
+     * Handles the movement of each character. Overridden in each implementation.
+     * @param delta Time since the last frame. Used for timers.
+     * @param entities Array of entities
+     * @param buildings Array of buildings
+     */
     public void movement(float delta, Array<Entity> entities, Array<Building> buildings) {}
+
+    /**
+     * Uses the speed attribute to cap the character's current velocity
+     * @param delta Time since the last frame.
+     */
     public void capSpeed(float delta) {
         if (Xspeed>speed) Xspeed = speed;
         if (Yspeed>speed) Yspeed = speed;
         if (Xspeed<-speed) Xspeed = -speed;
         if (Yspeed<-speed) Yspeed = -speed;
-
         moveX = Xspeed * delta;
         moveY = Yspeed * delta;
     }

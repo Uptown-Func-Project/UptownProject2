@@ -1,30 +1,27 @@
+
 package io.github.OMAL_Maze.Buttons;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 
 /**
  * BeginButton class extends AbstractButton and inherits all the methods and attributes.
- * SetActive are inherited and should be used to control when
+ * MakeActive and MakeInactive are inherited and should be used to control when
  * the buttons are displayed.
  */
-public class BeginButton extends AbstractButton{
+public class StartButton extends AbstractButton{
     /**
      * Constructor for BeginButton inherited from AbstractButton.
      * @param image the file of the image to represent the button
      */
-    public BeginButton(FileHandle image){
-       super(image);
-        super.x = 200;
-        super.y = 150;
-        super.message = "begin button";
+    public StartButton(FileHandle image){
+        super(image);
+        super.x = 350;
+        super.y = 50;
+        super.message = "start button title screen";
     }
 
     @Override
     public void dispose() {
 
     }
-
 }

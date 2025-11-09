@@ -85,7 +85,7 @@ public class Screen{
         }
         if (buttons != null){
             // was dispose but changed to makeInactive
-            for (AbstractButton b : buttons) b.makeInactive();
+            for (AbstractButton b : buttons) b.setActive(false);
         }
     }
 

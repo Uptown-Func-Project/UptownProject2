@@ -4,7 +4,6 @@ import java.util.Collections;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -55,12 +54,12 @@ public class Main extends ApplicationAdapter {
     UnpauseButton unpause;
     MuteButton mute;
     //add in new button here!!!!!
-    StartButtonT startT;
+    StartButton start;
     Screen GameOverScreen;
     Screen TitleScreen;
     Screen CongratsScreen; //will use the same quit and start button as game over screen
     Screen PauseScreen;
-    int pauseSecondsRemaining;
+    boolean secondsDecreasing = false;
     //storing all buttons in an arraylist so they can be iterated through
     ArrayList<AbstractButton> buttons = new ArrayList<>(6);
 
@@ -97,26 +96,26 @@ public class Main extends ApplicationAdapter {
         mazeData = MazeLoader.loadMaze("loadAssets/assets.json");
         instance = this;
         shapeRenderer = new ShapeRenderer();
-        backgroundSound = Gdx.audio.newSound(Gdx.files.internal("Background.mp3"));
+        backgroundSound = Gdx.audio.newSound(Gdx.files.internal("Sounds/Background.mp3"));
         backgroundMusic = new BackgroundMusic(backgroundSound);
 
         //Background music plays the entire time
         //Debugging line below, Used to spawn at start of second level.
         //loadMaze(1, 40, 80);
         //the images of the buttons can be changed here
-        begin = new BeginButton(Gdx.files.internal("startNew.png"));
-        quit = new QuitButton(Gdx.files.internal("quitNew.png"));
-        pause = new PauseButton(Gdx.files.internal("greenbutton.png"));
-        unpause = new UnpauseButton(Gdx.files.internal("resumebutton.png"));
-        mute = new MuteButton(Gdx.files.internal("greenbutton.png"));
-        startT = new StartButtonT(Gdx.files.internal("startNew.png"));
+        begin = new BeginButton(Gdx.files.internal("buttonTextures/startNew.png"));
+        quit = new QuitButton(Gdx.files.internal("buttonTextures/quitNew.png"));
+        pause = new PauseButton(Gdx.files.internal("buttonTextures/greenbutton.png"));
+        unpause = new UnpauseButton(Gdx.files.internal("buttonTextures/resumebutton.png"));
+        mute = new MuteButton(Gdx.files.internal("buttonTextures/greenbutton.png"));
+        start = new StartButton(Gdx.files.internal("buttonTextures/startNew.png"));
         //adding all buttons to the arraylist in one go
-        Collections.addAll(buttons, begin, quit, pause, unpause, mute, startT);
+        Collections.addAll(buttons, begin, quit, pause, unpause, mute, start);
         startTimer();
-        GameOverScreen = new Screen(batch, viewport, "GAME OVER.png");
-        TitleScreen = new Screen (batch, viewport, "Title screen.png");
-        CongratsScreen = new Screen(batch, viewport, "Congratulations.png");
-        PauseScreen = new Screen(batch, viewport, "pausescreen.png");
+        GameOverScreen = new Screen(batch, viewport, "screenTextures/GAME OVER.png");
+        TitleScreen = new Screen (batch, viewport, "screenTextures/Title screen.png");
+        CongratsScreen = new Screen(batch, viewport, "screenTextures/Congratulations.png");
+        PauseScreen = new Screen(batch, viewport, "screenTextures/pausescreen.png");
         TitleScreen.setActive(true);
     }
 
@@ -210,21 +209,23 @@ public class Main extends ApplicationAdapter {
     private void startTimer() {
         //Start looping background music. Looping done in class.
         Timer.Task myTimerTask = new Timer.Task() {
-        Sound GameOverSound = Gdx.audio.newSound(Gdx.files.internal("Sounds/Gameover.mp3"));
-        boolean hasPlayed = false;
+            final Sound GameOverSound = Gdx.audio.newSound(Gdx.files.internal("Sounds/Gameover.mp3"));
+            boolean hasPlayed = false;
             @Override
             public void run() {
                 if (secondsRemaining > 0) {
-                    secondsRemaining--;
+                    if (secondsDecreasing) secondsRemaining--;
                     int minutes = secondsRemaining / 60;
                     int seconds = secondsRemaining % 60;
-                    timerText = String.format("Time: %02d:%02d", minutes, seconds);     // formats the time into min:sec
+                    // formats the time into min:sec
+                    timerText = String.format("Time: %02d:%02d", minutes, seconds);
                 } else {
                     timerText = "Time: 00:00";
-                    GameOverScreen.setActive(true);         // once timer hits zero Game Over screen is displayed
+                    // once timer hits zero Game Over screen is displayed
+                    GameOverScreen.setActive(true);
                     backgroundMusic.stop();
-
-                    if(!hasPlayed){                               // pauses the background music in order to play the game over sound
+                    // pauses the background music in order to play the game over sound
+                    if(!hasPlayed) {
                         hasPlayed=true;
                         GameOverSound.play(volume);
                     }
@@ -282,6 +283,17 @@ public class Main extends ApplicationAdapter {
             logic();
             draw();
         }
+    }
+
+    /**
+     * Ends the game.
+     * Needed for when the goose bites the player too many times.
+     */
+    public void gameOver() {
+        final Sound GameOverSound = Gdx.audio.newSound(Gdx.files.internal("Sounds/Gameover.mp3"));
+        GameOverScreen.setActive(true);
+        backgroundMusic.stop();
+        GameOverSound.play(volume);
     }
 
     /**
@@ -358,8 +370,8 @@ public class Main extends ApplicationAdapter {
 
 
         //making buttons active on the gameplay screen
-        pause.makeActive();
-        mute.makeActive();
+        pause.setActive(true);
+        mute.setActive(true);
 
         //for loop to go through all buttons to draw if needed
         for(AbstractButton b:buttons){
@@ -373,7 +385,7 @@ public class Main extends ApplicationAdapter {
                     } else if (b==pause) {
                         PauseScreen.setActive(true);
                         backgroundMusic.pause();
-                        pauseSecondsRemaining = secondsRemaining;
+                        secondsDecreasing=false;
                     }
                 }
             }
@@ -401,15 +413,6 @@ public class Main extends ApplicationAdapter {
         }
         shapeRenderer.end();*/
 
-        /*if(pause.isClicked(viewport)){  //what happens when the pause is clicked
-            PauseScreen.setActive(true);
-            backgroundMusic.pause();
-            pauseSecondsRemaining = secondsRemaining;
-        }*/
-        /*if(mute.isClicked(viewport)){
-            //Keep playing music but the volume will be set to 0.
-            backgroundMusic.changeVolume(volume);
-        }*/
         //Draws the text for the mute button and the pause button
         font.draw(batch, mute.getMutedStr(), 770, 870);
         font.draw(batch, "Pause", 650, 870);
@@ -530,6 +533,7 @@ public class Main extends ApplicationAdapter {
 
         //Set timer back to 5 minutes.
         secondsRemaining = 300;  //resets the time
+        secondsDecreasing=true;
         //Remove the Game Over screen if it exists.
         GameOverScreen.setActive(false);
         //Starts the background music, uses the object for this
@@ -545,17 +549,18 @@ public class Main extends ApplicationAdapter {
      * Drawing the title screen and controlling what happens when the button is clicked.
      */
     public void TitleScreenLogic(){
+        secondsDecreasing = false;
         TitleScreen.render();
-        startT.makeActive();
-        mute.makeActive();
+        start.setActive(true);
+        mute.setActive(true);
         batch.begin();
-        startT.draw(batch);
+        start.draw(batch);
         batch.end();
-        if (startT.isClicked(viewport)){
+        if (start.isClicked(viewport)){
             TitleScreen.setActive(false);
-            startT.makeInactive();
-            pause.makeActive();
-            mute.makeActive();
+            start.setActive(false);
+            pause.setActive(true);
+            mute.setActive(true);
             startGame();
         }
     }
@@ -564,10 +569,10 @@ public class Main extends ApplicationAdapter {
      * Renders the pause screen and causes the buttons to function.
      */
     public void PauseScreenLogic(){
-        secondsRemaining = pauseSecondsRemaining;
+        secondsDecreasing = false;
         PauseScreen.render();
-        unpause.makeActive();
-        quit.makeActive();
+        unpause.setActive(true);
+        quit.setActive(true);
         batch.begin();
         unpause.draw(batch);
         quit.draw(batch);
@@ -578,10 +583,10 @@ public class Main extends ApplicationAdapter {
         if (unpause.isClicked(viewport)){
             PauseScreen.setActive(false);
             backgroundMusic.resume();
-            unpause.makeInactive();
-            quit.makeInactive();
-            pause.makeActive();
-            mute.makeActive();
+            unpause.setActive(false);
+            quit.setActive(false);
+            pause.setActive(true);
+            mute.setActive(true);
             //need to add in the logic of restarting the game
         }
     }
@@ -596,18 +601,18 @@ public class Main extends ApplicationAdapter {
         font.draw(batch, String.valueOf(secondsRemaining), 520, 500);
         //returning font size to original
         font.getData().setScale(1);
-        begin.makeActive();
-        quit.makeActive();
+        begin.setActive(true);
+        quit.setActive(true);
         begin.draw(batch);
         quit.draw(batch);
-        pause.makeInactive();
-        mute.makeInactive();
+        pause.setActive(false);
+        mute.setActive(false);
         if (quit.isClicked(viewport)){
             Gdx.app.exit();
         }
         if (begin.isClicked(viewport)){
-            begin.makeInactive();
-            quit.makeInactive();
+            begin.setActive(false);
+            quit.setActive(false);
             CongratsScreen.setActive(false);
             startGame();
         }
@@ -618,20 +623,20 @@ public class Main extends ApplicationAdapter {
     public void GameOverScreenLogic(){
         GameOverScreen.render(); //need to stop displaying the map
         //displaying the correct buttons on game over screen
-        begin.makeActive();
-        quit.makeActive();
+        begin.setActive(true);
+        quit.setActive(true);
         batch.begin();
         begin.draw(batch);
         quit.draw(batch);
         batch.end();
-        pause.makeInactive();
-        mute.makeInactive();
+        pause.setActive(false);
+        mute.setActive(false);
         if (quit.isClicked(viewport)){
             Gdx.app.exit();
         }
         if (begin.isClicked(viewport)){
-            begin.makeInactive();
-            quit.makeInactive();
+            begin.setActive(false);
+            quit.setActive(false);
             GameOverScreen.setActive(false);
             startGame();
         }

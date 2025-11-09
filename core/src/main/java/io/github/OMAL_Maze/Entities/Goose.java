@@ -69,29 +69,19 @@ public class Goose extends Character{
      */
     public void show(){
         //"Spawn goose" by moving it to right spawn point
-        this.setPos(11*this.instance.tileSize,14*this.instance.tileSize+16);
+        this.sprite.setX(11*this.instance.tileSize);
+        this.sprite.setY(14*this.instance.tileSize+16);
         //Make goose visible
         this.visible=true;
         //Start goose moving
         this.isMoving=true;
         //Add a boolean to make this only happen once.
         this.spawned=true;
-        //play anrgy goose sound
-
+        //play angry goose sound
         this.soundID = gooseQuack.play();
         this.soundTimer=5f;
-        //GooseQuack.pause();
-
         //Make goose angry by default
         this.state=gooseState.ANGRY;
-    }
-
-    /**
-     * Unused so far.
-     */
-    public void hide(){
-        visible = false;
-        state = gooseState.IDLE;
     }
 
     /**
@@ -115,6 +105,7 @@ public class Goose extends Character{
         if (this.soundTimer>0f) {
             this.soundTimer-=delta;
         } else {
+            //If the sound is playing, and it shouldn't be, stop the sound.
             if (this.soundID!=null) {
                 gooseQuack.stop(this.soundID);
             }
@@ -129,6 +120,7 @@ public class Goose extends Character{
             if (this.biteTimer>0f) {
                 this.biteTimer -= delta;
             } else {
+                //Once the player has been bitten, and the cooldown ends, the goose can bite the player again.
                 this.bitPlayer = false;
                 this.biteTimer = 5f;
                 this.isMoving=true;
@@ -149,6 +141,7 @@ public class Goose extends Character{
      * When not attacking, the goose becomes an entity that can be moved past.
      */
     public void bitePlayer(){
+        //Lower the player's hearts by 1 and stop moving for 5 seconds.
         player.decreaseHearts();
         isMoving = false;
         this.bitPlayer=true;
@@ -171,13 +164,15 @@ public class Goose extends Character{
         this.player= Main.player;
         //Follow player if moving and angry (angry upon spawn)
         if (isMoving && state.equals(gooseState.ANGRY) ) {
-            //final float speed = 1f;
-            float X_diff = this.player.sprite.getX() - this.x;
-            float Y_diff = this.player.sprite.getY() - this.y;
+            //Determines the difference between the player and the goose to get the distance.
+            float X_diff = this.player.sprite.getX() - this.sprite.getX();
+            float Y_diff = this.player.sprite.getY() - this.sprite.getY();
             double distance = Math.sqrt((Math.pow(X_diff, 2) + Math.pow(Y_diff, 2)));
+            //Returns if the goose is already at the player. This avoids divide by 0 exceptions.
             if (distance==0) return;
             double unitVector_x=X_diff/distance;
             double unitVector_y=Y_diff/distance;
+            //Accelerate in the direction of the player horizontally.
             if (unitVector_x > 0) {
                 Xspeed+=accelerate*delta;
                 if (Xspeed<0) Xspeed*=0.25f;
@@ -187,6 +182,7 @@ public class Goose extends Character{
             } else {
                 Xspeed*=Math.max(0,1-friction*delta/speed);
             }
+            //Accelerate in the direction of the player vertically.
             if (unitVector_y > 0) {
                 Yspeed+=accelerate*delta;
                 if (Yspeed<0) Yspeed*=0.25f;
@@ -196,17 +192,23 @@ public class Goose extends Character{
             } else {
                 Yspeed*=Math.max(0,1-friction*delta/speed);
             }
+            //Call capSpeed to ensure the goose isn't moving too fast.
             capSpeed(delta);
+            //Call try move to attempt to move based on the current speed.
             tryMove(entities, buildings);
         } else if (isMoving && this.state.equals(gooseState.HAPPY)){
+            //The goose is happy after being given seeds and can now wander around.
             wanderTimer -= delta;
+            //A timer is used to ensure the goose doesn't look jittery or change directions too often.
             if (wanderTimer <= 0) {
                 if (wandering) {
+                    //If recently wandering, stand still for a small amount of time.
                     Xspeed = 0;
                     Yspeed = 0;
                     wandering = false;
                     wanderTimer = 1f + (float)(Math.random() * 3f);
                 } else {
+                    //If not wandered recently, start to wander around for a small amount of time.
                     double angle = Math.random() * 2 * Math.PI;
                     Xspeed = (float)(Math.cos(angle) * speed);
                     Yspeed = (float)(Math.sin(angle) * speed);
@@ -214,24 +216,31 @@ public class Goose extends Character{
                     wanderTimer = 0.25f + (float)(Math.random() * 1.5f);
                 }
             }
+            //Call capSpeed to ensure the goose isn't moving too fast.
             capSpeed(delta);
+            //Attempt to move based on the current speed.
             tryMove(entities, buildings);
         }
+        //Call the logic function to execute any logic such as out of bounds or other overlapping.
         this.logic();
     }
 
-    void tryMove(Array<Entity> entities, Array<Building> buildings) {
-        this.translate(moveX,0);
+    /**
+     * Attempts to move using the current move values and if a collision is detected, the goose cannot move there.
+     * @param entities Array of the current map entities.
+     * @param buildings Array of the current map buildings.
+     */
+    private void tryMove(Array<Entity> entities, Array<Building> buildings) {
+        this.sprite.translate(moveX,0);
         if (checkOverlaps(entities,buildings)) {
-            this.translate(-moveX,0);
+            this.sprite.translate(-moveX,0);
             Xspeed=0;
         }
-        this.translate(0,moveY);
+        this.sprite.translate(0,moveY);
         if (checkOverlaps(entities,buildings)) {
-            this.translate(0,-moveY);
+            this.sprite.translate(0,-moveY);
             Yspeed=0;
         }
-        this.logic();
     }
 
     /**
@@ -244,17 +253,22 @@ public class Goose extends Character{
     private boolean checkOverlaps(Array<Entity> entities, Array<Building> buildings) {
         for (int i=0;i< buildings.size;i++) {
             Building building=buildings.get(i);
-            if (building.Overlaps(this.rectangle)) {
+            if (building.Overlaps(this.sprite.getBoundingRectangle())) {
                 return true;
             }
         }
+        //The goose will only overlap if it isn't happy.
         if (!this.state.equals(gooseState.HAPPY)) {
+            //Iterate through each entity.
             for (int i = 0; i < entities.size; i++) {
                 Entity entity = entities.get(i);
+                //Do not compare the entity to itself.
                 if (entity == this) continue;
+                //Do not check for overlaps if the entity isn't solid and therefore doesn't collide.
                 if (!entity.isSolid) continue;
-                if (entity.Overlaps(this.rectangle)) {
+                if (entity.Overlaps(this.sprite.getBoundingRectangle())) {
                     if (entity.getClass() == Player.class) {
+                        //Collision with the player has specific behaviour and so is compared using the class.
                         Player player = (Player) entity;
                         if (this.state != gooseState.HAPPY) {
                             if (player.hasSeeds) {
@@ -269,6 +283,7 @@ public class Goose extends Character{
                                 player.hasSeeds = false;
                                 this.instance.setSecondsRemaining(this.instance.getSecondsRemaining() + 30);
                             } else {
+                                //Bite player if the player doesn't bring the goose seeds.
                                 this.bitePlayer();
                             }
                         }
@@ -278,35 +293,6 @@ public class Goose extends Character{
             }
         }
         return false;
-    }
-
-    /**
-     * Sets the position of the entity. Makes sure to update relevant values.
-     * Required function as this.x and this.y don't always sync with the rectangle or sprite.
-     * @param newX The new X location as a float value.
-     * @param newY The new Y location as a float value.
-     */
-    private void setPos(float newX, float newY) {
-        this.x=(int)newX;
-        this.y=(int)newY;
-        this.rectangle.x=newX;
-        this.rectangle.y=newY;
-        this.sprite.setX(newX);
-        this.sprite.setY(newY);
-    }
-
-    /**
-     * Translates the position of the goose.
-     * This function is required to sync all values used for the position.
-     * @param distX The distance to move in the X axis as a float value.
-     * @param distY The distance to move in the Y axis as a float value.
-     */
-    private void translate(float distX, float distY) {
-        this.sprite.translate(distX,distY);
-        this.x=(int)this.sprite.getX();
-        this.y=(int)this.sprite.getY();
-        this.rectangle.x=this.sprite.getX();
-        this.rectangle.y=this.sprite.getY();
     }
 
     /**
