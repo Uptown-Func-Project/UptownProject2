@@ -9,7 +9,7 @@ import io.github.OMAL_Maze.Map.Building;
  * has movement and speed
  */
 public class Character extends Entity {
-    float speed;
+    public float speed;
     float accelerate;
     float friction;
     float Xspeed = 0;

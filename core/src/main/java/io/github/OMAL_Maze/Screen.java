@@ -50,7 +50,6 @@ public class Screen{
  */
     public void render(){
         batch.setProjectionMatrix(viewport.getCamera().combined);
-        batch.begin();
 
         if (backgroundSprite != null) {
             backgroundSprite.draw(batch);
@@ -67,7 +66,6 @@ public class Screen{
 
             }
         }
-        batch.end();
     }
 
     protected void handleButtonClick(AbstractButton b) {

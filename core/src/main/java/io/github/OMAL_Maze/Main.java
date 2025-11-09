@@ -465,6 +465,7 @@ public class Main extends ApplicationAdapter {
     private void changeLevel(int newMaze, int spawnPointX, int spawnPointY) {
         //Specific implementation for winning, rather than making a redundant win hitbox
         if (newMaze==4) {
+            secondsDecreasing=false;
             CongratsScreen.setActive(true);
         } else {
             loadMaze(newMaze, spawnPointX, spawnPointY);
@@ -482,11 +483,15 @@ public class Main extends ApplicationAdapter {
         //These will be null upon first use of the function (initialization)
         boolean seedCheck = false;
         int currenthearts=3;
+        float speed= player.speed;
         if (buildings!=null) buildings.clear();
         if (triggerZones!=null) triggerZones.clear();
         if (entities!=null) {
             if (player.hasSeeds) seedCheck = true;
             currenthearts=player.getHearts();
+            if (maze==0) {
+                currenthearts=3;
+            }
             entities.clear();
         }
         //Level int is 1 behind naming convention, add 1 when loading.
@@ -502,6 +507,7 @@ public class Main extends ApplicationAdapter {
         player.sprite.setPosition(spawnPointX,spawnPointY);
         player.hasSeeds=seedCheck;
         player.hearts=currenthearts;
+        player.speed=speed;
     }
 
     /**
@@ -537,6 +543,7 @@ public class Main extends ApplicationAdapter {
         //Remove the Game Over screen if it exists.
         GameOverScreen.setActive(false);
         //Starts the background music, uses the object for this
+        backgroundMusic.stop();
         backgroundMusic.start(volume);
         //Reset values for the events.
         this.badEventsRemaining = 1;
@@ -550,10 +557,10 @@ public class Main extends ApplicationAdapter {
      */
     public void TitleScreenLogic(){
         secondsDecreasing = false;
+        batch.begin();
         TitleScreen.render();
         start.setActive(true);
         mute.setActive(true);
-        batch.begin();
         start.draw(batch);
         batch.end();
         if (start.isClicked(viewport)){
@@ -569,11 +576,11 @@ public class Main extends ApplicationAdapter {
      * Renders the pause screen and causes the buttons to function.
      */
     public void PauseScreenLogic(){
+        batch.begin();
         secondsDecreasing = false;
         PauseScreen.render();
         unpause.setActive(true);
         quit.setActive(true);
-        batch.begin();
         unpause.draw(batch);
         quit.draw(batch);
         batch.end();
@@ -582,6 +589,7 @@ public class Main extends ApplicationAdapter {
         }
         if (unpause.isClicked(viewport)){
             PauseScreen.setActive(false);
+            secondsDecreasing=true;
             backgroundMusic.resume();
             unpause.setActive(false);
             quit.setActive(false);
@@ -594,8 +602,8 @@ public class Main extends ApplicationAdapter {
      * Renders the congratulations screen and causes the buttons to function.
      */
     public void CongratsScreenLogic(){
-        CongratsScreen.render();
         batch.begin();
+        CongratsScreen.render();
         //increasing font size
         font.getData().setScale(5);
         font.draw(batch, String.valueOf(secondsRemaining), 520, 500);
@@ -605,6 +613,7 @@ public class Main extends ApplicationAdapter {
         quit.setActive(true);
         begin.draw(batch);
         quit.draw(batch);
+        batch.end();
         pause.setActive(false);
         mute.setActive(false);
         if (quit.isClicked(viewport)){
@@ -621,11 +630,11 @@ public class Main extends ApplicationAdapter {
      * Renders the game over screen and causes the buttons to function.
      */
     public void GameOverScreenLogic(){
+        batch.begin();
         GameOverScreen.render(); //need to stop displaying the map
         //displaying the correct buttons on game over screen
         begin.setActive(true);
         quit.setActive(true);
-        batch.begin();
         begin.draw(batch);
         quit.draw(batch);
         batch.end();
