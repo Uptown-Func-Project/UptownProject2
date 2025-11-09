@@ -4,6 +4,10 @@ import io.github.OMAL_Maze.Entities.EntityData;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Class to store the data of the maze and its levels so that each level can be loaded.
+ * This may read as unassigned but the data is loaded into this class from the JSON implementation.
+ */
 public class MazeData {
     private Map<String, LevelData> levels;
 
@@ -24,6 +28,10 @@ public class MazeData {
         this.levels=levels;
     }
 
+    /**
+     * Class to store the data of each level so that it can be spawned.
+     * This will read as unassigned but the data is loaded into this class from the JSON implementation.
+     */
     public static class LevelData {
         private String backgroundImage;
         private int[][] walls;
