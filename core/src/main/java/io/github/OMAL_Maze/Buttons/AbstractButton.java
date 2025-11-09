@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 
 //each button will need the visuals associated with it to also be displayed
 
@@ -18,7 +17,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
  * message is the message to be displayed for testing purposes
  */
 public abstract class AbstractButton {
-    private Texture texture;
+    private final Texture texture;
     boolean active = false;
     protected int x;
     protected int y;

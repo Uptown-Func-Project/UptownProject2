@@ -158,7 +158,7 @@ public class Main extends ApplicationAdapter {
      * @return The entity object with its own subclass.
      */
     private static Entity getEntity(EntityData entityData, String entityType, Texture texture) {
-        Entity entity = null;
+        Entity entity;
         switch (entityType) {
             case "Player" -> {
                     entity = new Player(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture);
