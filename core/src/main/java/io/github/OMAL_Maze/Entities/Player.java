@@ -116,7 +116,14 @@ public class Player extends Character{
      * @param buildings Array of buildings
      */
     @Override
+    
     public void movement(float delta, Array<Entity> entities, Array<Building> buildings) {
+        //batswing
+        if (hasBat){
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
+            swingBat();
+        }
+    }
         //If either right arrow or D is pressed, move right.
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D)) {
             Xspeed += accelerate * delta;
@@ -203,13 +210,17 @@ public class Player extends Character{
         return collisionX;
     }
 
+    
     /**
      * Getter method for the player hearts.
      */
     public int getHearts(){
         return hearts;
     }
+    public void swingBat(){
+        //Swing bat logic to be implemented
 
+    }
     /**
      * Decreases the player's hearts. This value ranges from 0-3 and once all 3 hearts/lives have been taken, the game ends.
      */
