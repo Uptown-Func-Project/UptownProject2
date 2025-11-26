@@ -29,15 +29,14 @@ public class Player extends Character{
      * @param width width of the player in pixels.
      * @param height height of the player in pixels.
      * @param entityTexture Texture object for the player sprite.
-     * @param healthPoints current health points of the player.
-     * @param maxHealthPoints maximum health points of the player.
+
      */
     public Player(int x, int y, int width, int height, Texture entityTexture) {
         super(x,y,width,height, entityTexture);
         this.visible = true;
         this.hearts = 3;
         this.hasSeeds = false;
-        this.hasBat = false;
+        this.hasBat = true;
         this.speed=150f;
         this.accelerate=800f;
         this.friction=4000f;
@@ -120,8 +119,8 @@ public class Player extends Character{
     public void movement(float delta, Array<Entity> entities, Array<Building> buildings) {
         //batswing
         if (hasBat){
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
-            swingBat();
+        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)){
+            swingBat(entities);
         }
     }
         //If either right arrow or D is pressed, move right.
@@ -217,9 +216,22 @@ public class Player extends Character{
     public int getHearts(){
         return hearts;
     }
-    public void swingBat(){
-        //Swing bat logic to be implemented
+    public void swingBat(Array<Entity> entities){
+        for (int i = 0; i < entities.size; i++) {
+                Entity entity = entities.get(i);
+                //Do not compare the entity to itself.
+                if (entity == this) continue;
+                //Do not check for overlaps if the entity isn't solid and therefore doesn't collide.
+                if (!entity.isSolid) continue;
+                if (entity.Overlaps(this.sprite.getBoundingRectangle())) {
+                    if (entity.getClass() == Goose.class) {
+                        //Collision with the player has specific behaviour and so is compared using the class.
+                        Goose goose = (Goose) entity;
+                        goose.decreaseHealthPoints();}
+        
 
+    }
+}
     }
     /**
      * Decreases the player's hearts. This value ranges from 0-3 and once all 3 hearts/lives have been taken, the game ends.

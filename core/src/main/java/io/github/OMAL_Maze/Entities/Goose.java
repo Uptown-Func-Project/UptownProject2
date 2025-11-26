@@ -29,6 +29,7 @@ public class Goose extends Character{
     Boolean spawned;
     Long soundID;
     Sound gooseQuack;
+    public int healthPoints;
     enum gooseState{
         IDLE,
         ANGRY,
@@ -59,6 +60,7 @@ public class Goose extends Character{
         this.instance = Main.getInstance();
         this.bitPlayer=false;
         this.biteTimer=5f;
+        this.healthPoints=1;
         this.createTrigger();
         gooseQuack = Gdx.audio.newSound(Gdx.files.internal("Sounds/Geese.mp3"));
     }
@@ -294,7 +296,23 @@ public class Goose extends Character{
         }
         return false;
     }
-
+    //getter for health points
+    public int getHealthPoints(){
+        return healthPoints;
+    }
+    //decreaser for health points
+    public void decreaseHealthPoints(){
+        if (healthPoints > 0){
+            healthPoints--;
+        }
+        if (healthPoints == 0){
+            //goose dies
+            this.visible = false;
+            this.isMoving = false;
+            this.isSolid = false;
+            Main.getInstance().decrementGoodEventCounter();
+        }
+    }
     /**
      * Creates the trigger area for spawning the goose.
      * These values are hardcoded for level 2, however different functionality should be used if any other goose is used in the future.
