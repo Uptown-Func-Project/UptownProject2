@@ -18,7 +18,7 @@ public class Character extends Entity {
     float moveX;
 
 
-    public Character(int x, int y, int width, int height, Texture entityTexture, int healthPoints, int maxHealthPoints) {
+    public Character(int x, int y, int width, int height, Texture entityTexture) {
         super(x,y,width,height,entityTexture);
     }
 

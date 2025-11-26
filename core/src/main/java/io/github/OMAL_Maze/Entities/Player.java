@@ -32,8 +32,8 @@ public class Player extends Character{
      * @param healthPoints current health points of the player.
      * @param maxHealthPoints maximum health points of the player.
      */
-    public Player(int x, int y, int width, int height, Texture entityTexture, int healthPoints, int maxHealthPoints) {
-        super(x,y,width,height, entityTexture,healthPoints,maxHealthPoints);
+    public Player(int x, int y, int width, int height, Texture entityTexture) {
+        super(x,y,width,height, entityTexture);
         this.visible = true;
         this.hearts = 3;
         this.hasSeeds = false;

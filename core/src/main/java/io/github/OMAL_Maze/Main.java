@@ -172,13 +172,13 @@ public class Main extends ApplicationAdapter {
         Entity entity;
         switch (entityType) {
             case "Player" -> {
-                    entity = new Player(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture,3,3);
+                    entity = new Player(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture);
                     player = (Player) entity;
             }
             case "Character" ->
-                    entity = new Character(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture,3,3);
+                    entity = new Character(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture);
             case "Goose" -> entity = new Goose(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(),
-                    texture,3,3);
+                    texture);
             case "Seeds" -> entity = new Seeds(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(),
                     texture);
             default ->
