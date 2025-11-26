@@ -29,9 +29,11 @@ public class Player extends Character{
      * @param width width of the player in pixels.
      * @param height height of the player in pixels.
      * @param entityTexture Texture object for the player sprite.
+     * @param healthPoints current health points of the player.
+     * @param maxHealthPoints maximum health points of the player.
      */
-    public Player(int x, int y, int width, int height, Texture entityTexture) {
-        super(x,y,width,height, entityTexture);
+    public Player(int x, int y, int width, int height, Texture entityTexture, int healthPoints, int maxHealthPoints) {
+        super(x,y,width,height, entityTexture,healthPoints,maxHealthPoints);
         this.visible = true;
         this.hearts = 3;
         this.hasSeeds = false;

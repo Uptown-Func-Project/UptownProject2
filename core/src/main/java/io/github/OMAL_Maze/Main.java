@@ -17,15 +17,25 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
-import io.github.OMAL_Maze.Buttons.*;
 import io.github.OMAL_Maze.Buttons.AbstractButton;
+import io.github.OMAL_Maze.Buttons.BeginButton;
+import io.github.OMAL_Maze.Buttons.MuteButton;
+import io.github.OMAL_Maze.Buttons.PauseButton;
+import io.github.OMAL_Maze.Buttons.QuitButton;
+import io.github.OMAL_Maze.Buttons.StartButton;
+import io.github.OMAL_Maze.Buttons.UnpauseButton;
 import io.github.OMAL_Maze.Entities.Character;
 import io.github.OMAL_Maze.Entities.Entity;
 import io.github.OMAL_Maze.Entities.EntityData;
 import io.github.OMAL_Maze.Entities.Goose;
 import io.github.OMAL_Maze.Entities.Player;
 import io.github.OMAL_Maze.Entities.Seeds;
-import io.github.OMAL_Maze.Map.*;
+import io.github.OMAL_Maze.Map.BackgroundMusic;
+import io.github.OMAL_Maze.Map.Building;
+import io.github.OMAL_Maze.Map.BuildingData;
+import io.github.OMAL_Maze.Map.MazeData;
+import io.github.OMAL_Maze.Map.MazeLoader;
+import io.github.OMAL_Maze.Map.TriggerZone;
 
 /** {@link ApplicationListener} implementation shared by all platforms. */
 public class Main extends ApplicationAdapter {
@@ -162,13 +172,13 @@ public class Main extends ApplicationAdapter {
         Entity entity;
         switch (entityType) {
             case "Player" -> {
-                    entity = new Player(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture);
+                    entity = new Player(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture,3,3);
                     player = (Player) entity;
             }
             case "Character" ->
-                    entity = new Character(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture);
+                    entity = new Character(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture,3,3);
             case "Goose" -> entity = new Goose(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(),
-                    texture);
+                    texture,3,3);
             case "Seeds" -> entity = new Seeds(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(),
                     texture);
             default ->
