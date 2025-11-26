@@ -20,6 +20,7 @@ public class Player extends Character{
     public int hearts;
     static Sound itemPickup;
     public boolean hasSeeds;
+    public boolean hasBat;
 
     /**
      * Spawns a player entity and sets the default values for hearts, seeds, speed, acceleration, and friction.
@@ -34,6 +35,7 @@ public class Player extends Character{
         this.visible = true;
         this.hearts = 3;
         this.hasSeeds = false;
+        this.hasBat = false;
         this.speed=150f;
         this.accelerate=800f;
         this.friction=4000f;
@@ -73,6 +75,29 @@ public class Player extends Character{
                         //seeds pickup sound
                         itemPickup = Gdx.audio.newSound(Gdx.files.internal("Sounds/ItemPickup.mp3"));
                         if (this.hasSeeds) {
+                            itemPickup.play();
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+        if (!this.hasBat) {
+            //picking up bat
+            for(int i=0; i < entities.size; i++) {
+                Entity entity = entities.get(i);
+                if(entity instanceof Bat) {
+                    //getting bounding box
+                    Rectangle playerBounds = sprite.getBoundingRectangle();
+                    Rectangle batBounds = entity.sprite.getBoundingRectangle();
+
+                    //checking bounding box
+                    if (playerBounds.overlaps(batBounds)) {
+                        entities.removeIndex(i);
+                        this.hasBat = true;
+                        //bat pickup sound
+                        itemPickup = Gdx.audio.newSound(Gdx.files.internal("Sounds/ItemPickup.mp3"));
+                        if (this.hasBat) {
                             itemPickup.play();
                         }
                         break;
