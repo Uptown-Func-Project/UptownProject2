@@ -9,12 +9,13 @@ dependencies {
   api "com.badlogicgames.gdx:gdx:$gdxVersion"
   implementation 'com.google.code.gson:gson:2.10.1'
 
+}
+
   plugins {
   // java-library plugin for API/impl separation.
   id 'java-library'
   // Use the JaCoCo plugin to calculate code coverage
   id 'jacoco'
-}
 
   if(enableGraalNative == 'true') {
     implementation "io.github.berstanio:gdx-svmhelper-annotations:$graalHelperVersion"
