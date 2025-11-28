@@ -88,6 +88,7 @@ public class Main extends ApplicationAdapter {
      */
     @Override
     public void create() {
+        
         batch = new SpriteBatch();
         int worldWidth = 880;
         int worldHeight = 880;
