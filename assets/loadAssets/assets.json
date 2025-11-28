@@ -1,6 +1,6 @@
 {
     "level_1": {
-      "backgroundImage": "screenTextures/maze1redone (2) (2).png",
+      "backgroundImage": "screenTextures/maze1.png",
       "walls": [
         [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
         [1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
@@ -46,6 +46,16 @@
           "targetMaze": 1,
           "spawnPointX": 40,
           "spawnPointY": 80,
+          "fromMaze": 0
+        },
+        {
+          "x": 570,
+          "y": 530,
+          "width": 20,
+          "height": 20,
+          "targetMaze": 4,
+          "spawnPointX": 760,
+          "spawnPointY": 5,
           "fromMaze": 0
         }
       ]
@@ -116,6 +126,16 @@
           "spawnPointX": 0,
           "spawnPointY": 800,
           "fromMaze": 1
+        },
+        {
+          "x": 0,
+          "y": 45,
+          "width": 20,
+          "height": 20,
+          "targetMaze": 0,
+          "spawnPointX": 860,
+          "spawnPointY": 50,
+          "fromMaze": 1
         }
       ]
     },
@@ -162,9 +182,19 @@
           "y": 40,
           "width": 20,
           "height": 20,
-          "targetMaze": 4,
+          "targetMaze": 10,
           "spawnPointX": 0,
           "spawnPointY": 0,
+          "fromMaze": 2
+        },
+        {
+          "x": 0,
+          "y": 805,
+          "width": 20,
+          "height": 20,
+          "targetMaze": 1,
+          "spawnPointX": 860,
+          "spawnPointY": 810,
           "fromMaze": 2
         }
       ]
@@ -228,7 +258,7 @@
       ]
     },
         "level_5": {
-      "backgroundImage": "screenTextures/cs building again.png",
+      "backgroundImage": "screenTextures/cs building.png",
       "walls": [
         [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
         [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
@@ -248,13 +278,33 @@
         [1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1],
         [1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1],
         [1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1],
-        [1,1,0,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1],
-        [1,1,0,0,0,1,1,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1],
-        [1,1,1,1,0,0,0,0,0,1,1,1,1,0,1,1,1,1,1,1,1,1],
-        [1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1]
-
-
-        
+        [1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1],
+        [1,1,1,1,1,1,1,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1],
+        [1,1,1,1,1,1,1,1,0,1,1,1,1,0,1,1,1,1,1,1,1,1],
+        [1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+      ],
+      "entities": [
+        {
+          "type": "Player",
+          "x": 40,
+          "y": 40,
+          "width": 23,
+          "height": 30,
+          "texturePath": "entityTextures/player_A.png"
+        }
+      ],
+      "buildings": [],
+      "triggerZones": [
+        {
+          "x": 820,
+          "y": 0,
+          "width": 20,
+          "height": 20,
+          "targetMaze": 0,
+          "spawnPointX": 560,
+          "spawnPointY": 560,
+          "fromMaze": 4
+        }
       ]
     }
 }

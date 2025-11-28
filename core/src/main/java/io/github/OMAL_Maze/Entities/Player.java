@@ -56,6 +56,9 @@ public class Player extends Character{
         // Clamp x to values between 0 and worldWidth
         sprite.setX(MathUtils.clamp(sprite.getX(), 0, worldWidth-playerWidth));
         sprite.setY(MathUtils.clamp(sprite.getY(),0,worldHeight-playerHeight));
+        
+        // TODO remove this - freddie
+        System.out.println(sprite.getX() + " x, " + sprite.getY() + " y");
 
         if (!this.hasSeeds) {
             //picking up seeds
