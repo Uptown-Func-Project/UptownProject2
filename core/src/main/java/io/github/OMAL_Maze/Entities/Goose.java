@@ -154,7 +154,7 @@ public class Goose extends Character{
             tryMove(entities, buildings);
 
             // Smoothly decay velocities (game-feel)
-            float decayRate = 8f; // higher = quicker stop
+            float decayRate = 4f; // higher = quicker stop
             Xspeed = MathUtils.lerp(Xspeed, 0f, decayRate * delta);
             Yspeed = MathUtils.lerp(Yspeed, 0f, decayRate * delta);
 

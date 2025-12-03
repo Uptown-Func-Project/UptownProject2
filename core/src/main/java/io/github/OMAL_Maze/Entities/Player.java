@@ -21,7 +21,7 @@ public class Player extends Character{
     static Sound itemPickup;
     public boolean hasSeeds;
     public boolean hasBat;
-    public float knockbackForce = 200f; //how hard the impact is
+    public float knockbackForce = 100000f; //how hard the impact is
 
     private float swingTimer = 0f;
     private float swingDuration = 0.18f;
