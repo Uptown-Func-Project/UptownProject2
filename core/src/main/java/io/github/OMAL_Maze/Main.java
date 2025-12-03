@@ -17,15 +17,25 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
-import io.github.OMAL_Maze.Buttons.*;
 import io.github.OMAL_Maze.Buttons.AbstractButton;
+import io.github.OMAL_Maze.Buttons.BeginButton;
+import io.github.OMAL_Maze.Buttons.MuteButton;
+import io.github.OMAL_Maze.Buttons.PauseButton;
+import io.github.OMAL_Maze.Buttons.QuitButton;
+import io.github.OMAL_Maze.Buttons.StartButton;
+import io.github.OMAL_Maze.Buttons.UnpauseButton;
 import io.github.OMAL_Maze.Entities.Character;
 import io.github.OMAL_Maze.Entities.Entity;
 import io.github.OMAL_Maze.Entities.EntityData;
 import io.github.OMAL_Maze.Entities.Goose;
 import io.github.OMAL_Maze.Entities.Player;
 import io.github.OMAL_Maze.Entities.Seeds;
-import io.github.OMAL_Maze.Map.*;
+import io.github.OMAL_Maze.Map.BackgroundMusic;
+import io.github.OMAL_Maze.Map.Building;
+import io.github.OMAL_Maze.Map.BuildingData;
+import io.github.OMAL_Maze.Map.MazeData;
+import io.github.OMAL_Maze.Map.MazeLoader;
+import io.github.OMAL_Maze.Map.TriggerZone;
 
 /** {@link ApplicationListener} implementation shared by all platforms. */
 public class Main extends ApplicationAdapter {
@@ -465,7 +475,7 @@ public class Main extends ApplicationAdapter {
      */
     private void changeLevel(int newMaze, int spawnPointX, int spawnPointY) {
         //Specific implementation for winning, rather than making a redundant win hitbox
-        if (newMaze==4) {
+        if (newMaze==10) { // TODO will need to make this higher - freddie
             secondsDecreasing=false;
             CongratsScreen.setActive(true);
         } else {
