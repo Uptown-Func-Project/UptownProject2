@@ -24,6 +24,7 @@ import io.github.OMAL_Maze.Buttons.PauseButton;
 import io.github.OMAL_Maze.Buttons.QuitButton;
 import io.github.OMAL_Maze.Buttons.StartButton;
 import io.github.OMAL_Maze.Buttons.UnpauseButton;
+import io.github.OMAL_Maze.Entities.Bat;
 import io.github.OMAL_Maze.Entities.Character;
 import io.github.OMAL_Maze.Entities.Entity;
 import io.github.OMAL_Maze.Entities.EntityData;
@@ -53,6 +54,8 @@ public class Main extends ApplicationAdapter {
     public static Array<Building> buildings;
     Array<TriggerZone> triggerZones;
     public static Player player;
+    public static Bat bat; 
+
     public int tileSize;
     ShapeRenderer shapeRenderer; //for debugging, delete when necessary
     private float triggerCooldown = 0f;
@@ -105,6 +108,10 @@ public class Main extends ApplicationAdapter {
         tileSize= worldWidth /22;
         font = new BitmapFont();
         mazeData = MazeLoader.loadMaze("loadAssets/assets.json");
+        Texture batTexture = new Texture(Gdx.files.internal("buildingTextures/CS_Building.png")); //placeholder
+        bat = new Bat(0, 0, tileSize, tileSize, batTexture);
+        //entities.add(bat); 
+        
         instance = this;
         shapeRenderer = new ShapeRenderer();
         backgroundSound = Gdx.audio.newSound(Gdx.files.internal("Sounds/Background.mp3"));
@@ -292,6 +299,7 @@ public class Main extends ApplicationAdapter {
         else {
             input();
             logic();
+            bat.logic();
             draw();
         }
     }
@@ -356,6 +364,16 @@ public class Main extends ApplicationAdapter {
             Entity entity = entities.get(i);
             if (entity==null) continue;
             render(entity);
+        }
+        
+
+        if (bat.visible) {
+                batch.draw(
+                bat.texture,
+                bat.sprite.getX(),
+                bat.sprite.getY(),
+                tileSize, tileSize
+            );
         }
         //Specific timer location
         float timerX = (float) tileSize /2;
@@ -520,6 +538,7 @@ public class Main extends ApplicationAdapter {
         player.hasSeeds=seedCheck;
         player.hearts=currenthearts;
         player.speed=speed;
+        entities.add(bat);
     }
 
     /**

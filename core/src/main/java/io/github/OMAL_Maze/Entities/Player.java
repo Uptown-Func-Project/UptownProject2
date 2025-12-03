@@ -21,6 +21,13 @@ public class Player extends Character{
     static Sound itemPickup;
     public boolean hasSeeds;
     public boolean hasBat;
+    public float knockbackForce = 200f; //how hard the impact is
+
+    private float swingTimer = 0f;
+    private float swingDuration = 0.18f;
+    private boolean swinging = false;
+    public Bat batSwingEffect;
+
 
     /**
      * Spawns a player entity and sets the default values for hearts, seeds, speed, acceleration, and friction.
@@ -118,11 +125,15 @@ public class Player extends Character{
     
     public void movement(float delta, Array<Entity> entities, Array<Building> buildings) {
         //batswing
-        if (hasBat){
-        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)){
-            swingBat(entities);
-        }
-    }
+        
+        if (hasBat && Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+    swinging = true;
+    swingTimer = swingDuration;
+    batHitGeese(entities, delta);
+}
+
+
+    
         //If either right arrow or D is pressed, move right.
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D)) {
             Xspeed += accelerate * delta;
@@ -178,6 +189,14 @@ public class Player extends Character{
         }
         //Now that the entity has moved, call the logic function.
         this.logic();
+        delta = Gdx.graphics.getDeltaTime();
+        float frameDelta = Gdx.graphics.getDeltaTime();
+        if (swinging) {
+            swingTimer -= frameDelta;
+            if (swingTimer <= 0) {
+                swinging = false;
+    }
+}
 
     }
 
@@ -216,23 +235,49 @@ public class Player extends Character{
     public int getHearts(){
         return hearts;
     }
-    public void swingBat(Array<Entity> entities){
-        for (int i = 0; i < entities.size; i++) {
-                Entity entity = entities.get(i);
-                //Do not compare the entity to itself.
-                if (entity == this) continue;
-                //Do not check for overlaps if the entity isn't solid and therefore doesn't collide.
-                if (!entity.isSolid) continue;
-                if (entity.Overlaps(this.sprite.getBoundingRectangle())) {
-                    if (entity.getClass() == Goose.class) {
-                        //Collision with the player has specific behaviour and so is compared using the class.
-                        Goose goose = (Goose) entity;
-                        goose.decreaseHealthPoints();}
-        
+    private void batHitGeese(Array<Entity> entities, float delta) {
+    float dirX = 0f;
+    float dirY = 0f;
 
+    if (Math.abs(Xspeed) > Math.abs(Yspeed)) {
+        dirX = Math.signum(Xspeed);
+    } else {
+        dirY = Math.signum(Yspeed);
+    }
+
+    if (dirX == 0 && dirY == 0) {
+        dirX = 1f;
+    }
+
+    if (batSwingEffect != null) {
+        batSwingEffect.swingAt(sprite.getX(), sprite.getY(), dirX, dirY);
+    }
+
+    float hitDistance = 26f;
+    float hitSize = 34f;
+
+    Rectangle attackBox = new Rectangle(
+            sprite.getX() + sprite.getWidth() / 2 - hitSize / 2,
+            sprite.getY() + sprite.getHeight() / 2 - hitSize / 2,
+            hitSize,
+            hitSize
+    );
+
+    attackBox.x += dirX * hitDistance;
+    attackBox.y += dirY * hitDistance;
+
+    for (Entity entity : entities) {
+        if (entity instanceof Goose && entity.getVisible()) {
+            Goose goose = (Goose) entity;
+            if (goose.Overlaps(attackBox)) {
+                goose.decreaseHealthPoints();
+                goose.applyExternalVelocity(dirX * knockbackForce, dirY * knockbackForce);
+            }
+        }
     }
 }
-    }
+
+
     /**
      * Decreases the player's hearts. This value ranges from 0-3 and once all 3 hearts/lives have been taken, the game ends.
      */
