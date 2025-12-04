@@ -268,6 +268,7 @@ public class Main extends ApplicationAdapter {
      * Setter for the game volume.
      * @param nVolume float: The new volume value
      */
+
     public void setVolume(float nVolume) {
         this.volume = nVolume;
     }
