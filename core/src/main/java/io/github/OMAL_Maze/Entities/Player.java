@@ -301,7 +301,7 @@ public class Player extends Character{
         if (hearts > 1){
             //If the player still has hearts left, slow down the player and decrease the value.
             hearts--;
-            this.speed*=0.75f;
+            this.speed*=2f;
         } else {
             //If the player doesn't have any hearts left, call the function to end the game.
             Main.getInstance().gameOver();
