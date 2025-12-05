@@ -29,6 +29,7 @@ import io.github.OMAL_Maze.Entities.Entity;
 import io.github.OMAL_Maze.Entities.EntityData;
 import io.github.OMAL_Maze.Entities.Goose;
 import io.github.OMAL_Maze.Entities.Player;
+import io.github.OMAL_Maze.Entities.Professor;
 import io.github.OMAL_Maze.Entities.Seeds;
 import io.github.OMAL_Maze.Map.BackgroundMusic;
 import io.github.OMAL_Maze.Map.Building;
@@ -175,6 +176,8 @@ public class Main extends ApplicationAdapter {
                     entity = new Player(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture);
                     player = (Player) entity;
             }
+            case "Professor" ->
+                    entity = new Professor(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture);
             case "Character" ->
                     entity = new Character(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture);
             case "Goose" -> entity = new Goose(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(),

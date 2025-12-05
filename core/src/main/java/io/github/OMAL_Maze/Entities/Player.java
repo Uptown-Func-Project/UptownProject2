@@ -20,6 +20,8 @@ public class Player extends Character{
     public int hearts;
     static Sound itemPickup;
     public boolean hasSeeds;
+    public boolean hasGoodDegree;
+    public boolean hasBadDegree;
 
     /**
      * Spawns a player entity and sets the default values for hearts, seeds, speed, acceleration, and friction.
@@ -34,6 +36,8 @@ public class Player extends Character{
         this.visible = true;
         this.hearts = 3;
         this.hasSeeds = false;
+        this.hasGoodDegree = false;
+        this.hasBadDegree = false;
         this.speed=150f;
         this.accelerate=800f;
         this.friction=4000f;

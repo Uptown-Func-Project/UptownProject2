@@ -303,6 +303,15 @@
           "width": 23,
           "height": 30,
           "texturePath": "entityTextures/player_A.png"
+        },
+
+        {
+          "type": "Professor",
+          "x": 432,
+          "y": 480,
+          "width": 30,
+          "height": 45,
+          "texturePath": "entityTextures/professor.png"
         }
       ],
       "buildings": [],
