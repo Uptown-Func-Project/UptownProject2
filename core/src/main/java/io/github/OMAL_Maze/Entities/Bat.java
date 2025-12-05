@@ -6,11 +6,13 @@ public class Bat extends Entity {
     public float lifetime = 0f;
     public boolean visible = false;
     public Texture texture;
+    
 
 
     public Bat(int x, int y, int width, int height, Texture entityTexture){
     super(x,y,width,height,entityTexture);
     this.texture = entityTexture; 
+    
     isSolid = false;
 }
 
@@ -35,6 +37,7 @@ public class Bat extends Entity {
 
     visible = true;
     lifetime = 0.12f;
+
 }
 
 

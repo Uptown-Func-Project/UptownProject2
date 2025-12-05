@@ -21,6 +21,7 @@ public class Player extends Character{
     static Sound itemPickup;
     public boolean hasSeeds;
     public boolean hasBat;
+    private Animation swingAnim;
     public float knockbackForce = 100000f; //how hard the impact is
 
     private float swingTimer = 0f;
@@ -47,6 +48,8 @@ public class Player extends Character{
         this.speed=150f;
         this.accelerate=800f;
         this.friction=4000f;
+        this.swingAnim = new Animation(0.05, 4);
+        this.swingAnim.setLooping(true);
     }
 
     /**
@@ -124,12 +127,14 @@ public class Player extends Character{
     @Override
     
     public void movement(float delta, Array<Entity> entities, Array<Building> buildings) {
-        //batswing
+        //batswing float 
         
         if (hasBat && Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
     swinging = true;
     swingTimer = swingDuration;
     batHitGeese(entities, delta);
+    
+    
 }
 
 
@@ -192,11 +197,15 @@ public class Player extends Character{
         delta = Gdx.graphics.getDeltaTime();
         float frameDelta = Gdx.graphics.getDeltaTime();
         if (swinging) {
+            swingAnim.update(frameDelta);
             swingTimer -= frameDelta;
             if (swingTimer <= 0) {
                 swinging = false;
     }
 }
+        else {
+            swingAnim.reset();
+        }
 
     }
 
@@ -227,11 +236,18 @@ public class Player extends Character{
         }
         return collisionX;
     }
+    public int getPlayerX(){ 
+        return (int)this.sprite.getX();
 
-    
+    }
+    public int getPlayerY(){ 
+        return (int)this.sprite.getY();
+
+    }
     /**
      * Getter method for the player hearts.
      */
+    
     public int getHearts(){
         return hearts;
     }
@@ -293,4 +309,5 @@ public class Player extends Character{
         //Decrease the counter that the main game uses for the bad events as this is a bad event.
         Main.getInstance().decrementBadEventCounter();
     }
+    public int getAnimationFrame() { return swingAnim.getCurrentFrame(); }
 }

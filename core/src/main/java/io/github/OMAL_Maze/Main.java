@@ -50,6 +50,7 @@ public class Main extends ApplicationAdapter {
     private String timerText;
     public FitViewport viewport;
     Texture backgroundTexture;
+    Texture batts;
     public Array<Entity> entities;
     public static Array<Building> buildings;
     Array<TriggerZone> triggerZones;
@@ -108,8 +109,8 @@ public class Main extends ApplicationAdapter {
         tileSize= worldWidth /22;
         font = new BitmapFont();
         mazeData = MazeLoader.loadMaze("loadAssets/assets.json");
-        Texture batTexture = new Texture(Gdx.files.internal("buildingTextures/CS_Building.png")); //placeholder
-        bat = new Bat(0, 0, tileSize, tileSize, batTexture);
+        Texture batts = new Texture(Gdx.files.internal("entityTextures/batss.png")); //placeholder
+        bat = new Bat(0, 0, tileSize, tileSize, batts);
         //entities.add(bat); 
         
         instance = this;
@@ -367,14 +368,19 @@ public class Main extends ApplicationAdapter {
         }
         
 
-        if (bat.visible) {
-                batch.draw(
-                bat.texture,
-                bat.sprite.getX(),
-                bat.sprite.getY(),
-                tileSize, tileSize
-            );
-        }
+        //if (bat.visible) {
+          //      batch.draw(
+            //    bat.texture,
+              //  bat.sprite.getX(),
+                //bat.sprite.getY(),
+                //tileSize, tileSize
+          //  );
+        //}
+        batts = new Texture(Gdx.files.internal("entityTextures/batss.png"));
+        batts.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        //battest
+        drawAnimatedEntity(batch, batts, player.getPlayerX()+30, player.getPlayerY()+15, player.getAnimationFrame(), true);
+
         //Specific timer location
         float timerX = (float) tileSize /2;
         float timerY = worldHeight -((float) tileSize /2)+15;
@@ -473,7 +479,23 @@ public class Main extends ApplicationAdapter {
             entity.render(batch);
         }
     }
+    private void drawAnimatedEntity(SpriteBatch batch, Texture sheet, float px, float py, int frame, boolean facingRight) {
 
+        int row = frame / 2;
+        int col = frame % 2;
+
+        int srcX = col * 32;
+        int srcY = row * 32;
+
+        float drawX = px - 32 / 2f;
+        float drawY = py - 32 / 2f;
+
+        if (facingRight) {
+            batch.draw(sheet, drawX, drawY, 32, 32, srcX, srcY, 32, 32, false, false);
+        } else {
+            batch.draw(sheet, drawX + 32, drawY, -32, 32, srcX, srcY, 32, 32, false, false);
+        }
+    }
     /**
      * Renders a building if its visible attribute is set to true
      * @param building building object to render
