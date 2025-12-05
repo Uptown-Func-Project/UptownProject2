@@ -20,6 +20,7 @@ public class Player extends Character{
     public int hearts;
     static Sound itemPickup;
     public boolean hasSeeds;
+    public int coins;
 
     /**
      * Spawns a player entity and sets the default values for hearts, seeds, speed, acceleration, and friction.
@@ -34,6 +35,7 @@ public class Player extends Character{
         this.visible = true;
         this.hearts = 3;
         this.hasSeeds = false;
+        this.coins = 0;
         this.speed=150f;
         this.accelerate=800f;
         this.friction=4000f;
@@ -58,28 +60,42 @@ public class Player extends Character{
         sprite.setY(MathUtils.clamp(sprite.getY(),0,worldHeight-playerHeight));
         
         // TODO remove this - freddie
-        System.out.println(sprite.getX() + " x, " + sprite.getY() + " y");
+        // System.out.println(sprite.getX() + " x, " + sprite.getY() + " y");
 
-        if (!this.hasSeeds) {
-            //picking up seeds
-            for(int i=0; i < entities.size; i++) {
-                Entity entity = entities.get(i);
-                if(entity instanceof Seeds) {
-                    //getting bounding box
-                    Rectangle playerBounds = sprite.getBoundingRectangle();
-                    Rectangle seedBounds = entity.sprite.getBoundingRectangle();
 
-                    //checking bounding box
-                    if (playerBounds.overlaps(seedBounds)) {
-                        entities.removeIndex(i);
-                        this.hasSeeds = true;
-                        //seeds pickup sound
-                        itemPickup = Gdx.audio.newSound(Gdx.files.internal("Sounds/ItemPickup.mp3"));
-                        if (this.hasSeeds) {
-                            itemPickup.play();
-                        }
-                        break;
+        //picking up seeds and coins
+        for(int i=0; i < entities.size; i++) {
+            Entity entity = entities.get(i);
+            if(entity instanceof Seeds) {
+                //getting bounding box
+                Rectangle playerBounds = sprite.getBoundingRectangle();
+                Rectangle seedBounds = entity.sprite.getBoundingRectangle();
+
+                //checking bounding box
+                if (playerBounds.overlaps(seedBounds)) {
+                    entities.removeIndex(i);
+                    this.hasSeeds = true;
+                    //seeds pickup sound
+                    itemPickup = Gdx.audio.newSound(Gdx.files.internal("Sounds/ItemPickup.mp3"));
+                    if (this.hasSeeds) {
+                        itemPickup.play();
                     }
+                    break;
+                }
+            }
+            else if(entity instanceof Coin) {
+                //getting bounding box
+                Rectangle playerBounds = sprite.getBoundingRectangle();
+                Rectangle coinBounds = entity.sprite.getBoundingRectangle();
+
+                //checking bounding box
+                if (playerBounds.overlaps(coinBounds)) {
+                    entities.removeIndex(i);
+                    this.coins ++;
+                    System.out.println(this.coins);
+                    //seeds pickup sound
+                    itemPickup = Gdx.audio.newSound(Gdx.files.internal("Sounds/ItemPickup.mp3"));
+                    break;
                 }
             }
         }
@@ -184,6 +200,10 @@ public class Player extends Character{
      */
     public int getHearts(){
         return hearts;
+    }
+
+    public int getCoins(){
+        return coins;
     }
 
     /**

@@ -25,6 +25,7 @@ import io.github.OMAL_Maze.Buttons.QuitButton;
 import io.github.OMAL_Maze.Buttons.StartButton;
 import io.github.OMAL_Maze.Buttons.UnpauseButton;
 import io.github.OMAL_Maze.Entities.Character;
+import io.github.OMAL_Maze.Entities.Coin;
 import io.github.OMAL_Maze.Entities.Entity;
 import io.github.OMAL_Maze.Entities.EntityData;
 import io.github.OMAL_Maze.Entities.Goose;
@@ -180,6 +181,8 @@ public class Main extends ApplicationAdapter {
             case "Goose" -> entity = new Goose(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(),
                     texture);
             case "Seeds" -> entity = new Seeds(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(),
+                    texture);
+            case "Coin" -> entity = new Coin(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(),
                     texture);
             default ->
                 //Only other one is just Entity or should be cast to basic entity
@@ -378,6 +381,7 @@ public class Main extends ApplicationAdapter {
         font.draw(batch, "Bad:" + badEventsRemaining, timerX + 300, timerY);    //goose bites
         font.draw(batch, "Hidden:" + hiddenEventsRemaining, timerX + 380, timerY);  //goose appears
         font.draw(batch, "Lives:" + player.hearts, timerX + 120, timerY-15);    //lives remaining
+        font.draw(batch, "Coins:" + player.coins, timerX + 200, timerY-15);
 
 
         //making buttons active on the gameplay screen
@@ -493,17 +497,24 @@ public class Main extends ApplicationAdapter {
         //Clear all previous buildings, entities, and trigger zones
         //These will be null upon first use of the function (initialization)
         boolean seedCheck = false;
-        int currenthearts=3;
+        int currenthearts;
+        int currentcoins;
+        try {
+            currenthearts=player.getHearts();
+            currentcoins=player.getCoins();
+        }
+        catch(Exception e) {
+            currenthearts=3;
+            currentcoins=0;
+        }
         float speed = 150f;
         if (buildings!=null) buildings.clear();
         if (triggerZones!=null) triggerZones.clear();
         if (entities!=null) {
             if (player.hasSeeds) seedCheck = true;
             currenthearts=player.getHearts();
+            currentcoins=player.getCoins();
             speed=player.speed;
-            if (maze==0) {
-                currenthearts=3;
-            }
             entities.clear();
         }
         //Level int is 1 behind naming convention, add 1 when loading.
@@ -520,6 +531,7 @@ public class Main extends ApplicationAdapter {
         player.hasSeeds=seedCheck;
         player.hearts=currenthearts;
         player.speed=speed;
+        player.coins=currentcoins;
     }
 
     /**
