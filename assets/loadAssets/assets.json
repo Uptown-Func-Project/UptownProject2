@@ -538,7 +538,7 @@
           "y": 40,
           "width": 23,
           "height": 30,
-          "texturePath": "entityTextures/player_A.png"
+          "texturePath": "entityTextures/empty.png"
         }
       ],
       "buildings": [
@@ -589,7 +589,7 @@
           "y": 40,
           "width": 23,
           "height": 30,
-          "texturePath": "entityTextures/player_A.png"
+          "texturePath": "entityTextures/empty.png"
         },
         {
           "type": "Goose",
@@ -597,7 +597,7 @@
           "y": 1000,
           "width": 24,
           "height": 24,
-          "texturePath": "entityTextures/goose.png"
+          "texturePath": "entityTextures/empty.png"
         }
       ],
       "buildings": [
@@ -658,7 +658,7 @@
           "y": 40,
           "width": 23,
           "height": 30,
-          "texturePath": "entityTextures/player_A.png"
+          "texturePath": "entityTextures/Seeds.png"
         }
       ],
       "buildings": [],
@@ -708,7 +708,7 @@
           "y": 40,
           "width": 23,
           "height": 30,
-          "texturePath": "entityTextures/player_A.png"
+          "texturePath": "entityTextures/empty.png"
         },
         {
           "type": "Seeds",

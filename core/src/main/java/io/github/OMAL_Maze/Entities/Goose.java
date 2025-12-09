@@ -31,6 +31,7 @@ public class Goose extends Character{
     Sound gooseQuack;
     public int healthPoints;
     public boolean knockbackActive = false;
+    private Animation walkAnimation;
 
     enum gooseState{
         IDLE,
@@ -56,6 +57,9 @@ public class Goose extends Character{
         this.biteTimer=5f;
         this.healthPoints=3;
         this.createTrigger();
+        this.walkAnimation = new Animation(0.1,4);
+        this.walkAnimation.setLooping(true);
+
         gooseQuack = Gdx.audio.newSound(Gdx.files.internal("Sounds/Geese.mp3"));
     }
 
@@ -225,11 +229,18 @@ public class Goose extends Character{
             capSpeed(delta);
             tryMove(entities, buildings);
         }
+         if (isMoving){
+        walkAnimation.update(delta);
+    }
+    else{
+        walkAnimation.reset();
+    }
+
 
         // Call normal logic after movement code
         this.logic();
     }
-
+   
     /**
      * Attempts to move using the current move values and if a collision is detected, the goose cannot move there.
      */
@@ -301,7 +312,12 @@ public class Goose extends Character{
             Main.getInstance().decrementGoodEventCounter();
         }
     }
-
+    public int getGooseX(){
+        return (int) this.sprite.getX();
+    }
+    public int getGooseY(){
+        return (int) this.sprite.getY();
+    }
     /**
      * Creates the trigger area for spawning the goose.
      */
@@ -318,5 +334,7 @@ public class Goose extends Character{
                 (height*tileSize)
         );
     }
-
+    public int getWalkFrame(){
+        return walkAnimation.getCurrentFrame();
+    }
 }

@@ -22,11 +22,13 @@ public class Player extends Character{
     public boolean hasSeeds;
     public boolean hasBat;
     private Animation swingAnim;
+    private Animation walkAnim;
     public float knockbackForce = 100000f; //how hard the impact is
 
     private float swingTimer = 0f;
     private float swingDuration = 0.18f;
     private boolean swinging = false;
+    private boolean rightFace = true;
     public Bat batSwingEffect;
 
 
@@ -48,6 +50,8 @@ public class Player extends Character{
         this.speed=150f;
         this.accelerate=800f;
         this.friction=4000f;
+        this.walkAnim = new Animation(0.1, 4);
+        this.walkAnim.setLooping(true);
         this.swingAnim = new Animation(0.05, 4);
         this.swingAnim.setLooping(true);
     }
@@ -127,6 +131,7 @@ public class Player extends Character{
     @Override
     
     public void movement(float delta, Array<Entity> entities, Array<Building> buildings) {
+        boolean moving = false;
         //batswing float 
         
         if (hasBat && Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
@@ -142,24 +147,30 @@ public class Player extends Character{
         //If either right arrow or D is pressed, move right.
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D)) {
             Xspeed += accelerate * delta;
+            moving = true;
             //If the acceleration is in the opposite direction to previously, use a multiplier to increase the speed of deceleration.
             if (Xspeed < 0) Xspeed *= 0.25f;
+            rightFace = true;
         }
         //If either left arrow or A is pressed, move left.
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A)) {
             Xspeed -= accelerate * delta;
+            moving = true;
             //If the acceleration is in the opposite direction to previously, use a multiplier to increase the speed of deceleration.
             if (Xspeed > 0) Xspeed *= 0.25f;
+            rightFace = false;
         }
         //If either up arrow or W is pressed, move up.
         if (Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.W)) {
             Yspeed += accelerate * delta;
+            moving = true;
             //If the acceleration is in the opposite direction to previously, use a multiplier to increase the speed of deceleration.
             if (Yspeed < 0) Yspeed *= 0.25f;
         }
         //If either down arrow or S is pressed, move down.
         if (Gdx.input.isKeyPressed(Input.Keys.DOWN) || Gdx.input.isKeyPressed(Input.Keys.S)) {
             Yspeed -= accelerate * delta;
+            moving = true;
             //If the acceleration is in the opposite direction to previously, use a multiplier to increase the speed of deceleration.
             if (Yspeed >0) Yspeed *= 0.25f;
         }
@@ -184,7 +195,11 @@ public class Player extends Character{
             this.sprite.translateX(-moveX);
             Xspeed = 0;
         }
-
+        if (moving){
+            walkAnim.update(Gdx.graphics.getDeltaTime());
+        } else {
+            walkAnim.reset();
+        }
         //Attempt to move in the Y direction. If this collides, revert the movement.
         this.sprite.translateY(moveY);
         boolean collisionY = collidesOnMove(entities, buildings);
@@ -292,7 +307,9 @@ public class Player extends Character{
         }
     }
 }
-
+    public boolean isRightFace() {
+        return rightFace;
+    }
 
     /**
      * Decreases the player's hearts. This value ranges from 0-3 and once all 3 hearts/lives have been taken, the game ends.
@@ -310,4 +327,5 @@ public class Player extends Character{
         Main.getInstance().decrementBadEventCounter();
     }
     public int getAnimationFrame() { return swingAnim.getCurrentFrame(); }
+    public int getWalkAnimationFrame() { return walkAnim.getCurrentFrame(); }
 }

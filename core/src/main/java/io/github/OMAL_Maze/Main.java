@@ -51,6 +51,8 @@ public class Main extends ApplicationAdapter {
     public FitViewport viewport;
     Texture backgroundTexture;
     Texture batts;
+    Texture ploy;
+    Texture goise;
     public Array<Entity> entities;
     public static Array<Building> buildings;
     Array<TriggerZone> triggerZones;
@@ -376,11 +378,38 @@ public class Main extends ApplicationAdapter {
                 //tileSize, tileSize
           //  );
         //}
+        goise = new Texture(Gdx.files.internal("entityTextures/goosey.png"));
+        goise.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        for (Entity entity : entities) {
+
+    if (entity instanceof Goose) {
+        Goose goose = (Goose) entity;  // ✅ guaranteed safe
+
+        drawAnimatedEntity(
+            batch,
+            goise,
+            goose.getGooseX() + 15,
+            goose.getGooseY() + 15,
+            goose.getWalkFrame(),
+            true
+        );
+    }
+}
+
+        
+
         batts = new Texture(Gdx.files.internal("entityTextures/batss.png"));
         batts.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
         //battest
-        drawAnimatedEntity(batch, batts, player.getPlayerX()+30, player.getPlayerY()+15, player.getAnimationFrame(), true);
-
+        if (player.isRightFace()){
+            drawAnimatedEntity(batch, batts, player.getPlayerX()+25, player.getPlayerY()+15, player.getAnimationFrame(), true);
+        }
+        else{
+        drawAnimatedEntity(batch, batts, player.getPlayerX()+5, player.getPlayerY()+15, player.getAnimationFrame(), false);
+    }
+        ploy = new Texture(Gdx.files.internal("entityTextures/animplayer.png"));
+        ploy.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        drawAnimatedEntity(batch, ploy, player.getPlayerX()+15, player.getPlayerY()+15, player.getWalkAnimationFrame(), player.isRightFace());
         //Specific timer location
         float timerX = (float) tileSize /2;
         float timerY = worldHeight -((float) tileSize /2)+15;
