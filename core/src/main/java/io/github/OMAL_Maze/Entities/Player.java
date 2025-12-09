@@ -21,6 +21,9 @@ public class Player extends Character{
     static Sound itemPickup;
     public boolean hasSeeds;
     public int coins;
+    public boolean[] coins_log;
+    public int mazes_been_in;
+    public int current_maze;
 
     /**
      * Spawns a player entity and sets the default values for hearts, seeds, speed, acceleration, and friction.
@@ -39,6 +42,12 @@ public class Player extends Character{
         this.speed=150f;
         this.accelerate=800f;
         this.friction=4000f;
+        this.coins_log=new boolean[18];
+        this.mazes_been_in = 0;
+
+        for (int i = 0; i < 18; i++) {
+            coins_log[i]=false;
+        }
     }
 
     /**
@@ -66,7 +75,7 @@ public class Player extends Character{
         //picking up seeds and coins
         for(int i=0; i < entities.size; i++) {
             Entity entity = entities.get(i);
-            if(entity instanceof Seeds) {
+            if(entity instanceof Seeds && this.coins >= 4) {
                 //getting bounding box
                 Rectangle playerBounds = sprite.getBoundingRectangle();
                 Rectangle seedBounds = entity.sprite.getBoundingRectangle();
@@ -75,6 +84,7 @@ public class Player extends Character{
                 if (playerBounds.overlaps(seedBounds)) {
                     entities.removeIndex(i);
                     this.hasSeeds = true;
+                    this.coins-=4;
                     //seeds pickup sound
                     itemPickup = Gdx.audio.newSound(Gdx.files.internal("Sounds/ItemPickup.mp3"));
                     if (this.hasSeeds) {
@@ -89,10 +99,37 @@ public class Player extends Character{
                 Rectangle coinBounds = entity.sprite.getBoundingRectangle();
 
                 //checking bounding box
-                if (playerBounds.overlaps(coinBounds)) {
-                    entities.removeIndex(i);
+                if (playerBounds.overlaps(coinBounds) && ((Coin) entity).visible == true) {
+                    entities.get(i).visible=false;
+
+                    switch (current_maze) {
+                        case 0:
+                            this.coins_log[i+current_maze*6-1]=true;
+                            break;
+                        case 1:
+                            this.coins_log[i+current_maze*6-2]=true;
+                            break;
+                        case 3:
+                            this.coins_log[i+current_maze*6-7]=true;
+                            break;
+                        default:
+                            break;
+                    }
                     this.coins ++;
-                    System.out.println(this.coins);
+                    //seeds pickup sound
+                    itemPickup = Gdx.audio.newSound(Gdx.files.internal("Sounds/ItemPickup.mp3"));
+                    break;
+                }
+            }
+            else if(entity instanceof EnergyDrink && this.coins >= 2) {
+                //getting bounding box
+                Rectangle playerBounds = sprite.getBoundingRectangle();
+                Rectangle energyDrinkBounds = entity.sprite.getBoundingRectangle();
+
+                //checking bounding box
+                if (playerBounds.overlaps(energyDrinkBounds)) {
+                    entities.removeIndex(i);
+                    this.coins-=2;
                     //seeds pickup sound
                     itemPickup = Gdx.audio.newSound(Gdx.files.internal("Sounds/ItemPickup.mp3"));
                     break;
@@ -204,6 +241,18 @@ public class Player extends Character{
 
     public int getCoins(){
         return coins;
+    }
+
+    public int getMazesBeenIn(){
+        return mazes_been_in;
+    }
+
+    public void setCurrentMaze(int currentMaze){
+        this.current_maze = currentMaze;
+    }
+
+    public boolean[] getCoinsLog() {
+        return this.coins_log;
     }
 
     /**

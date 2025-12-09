@@ -335,7 +335,7 @@ public class Main extends ApplicationAdapter {
         if (triggerCooldown <= 0) {
             for (TriggerZone zone : triggerZones) {
                 if (playerRect.overlaps(zone.bounds)) {
-                    changeLevel(zone.targetMaze, zone.spawnPointX, zone.spawnPointY);
+                    changeLevel(zone.fromMaze, zone.targetMaze, zone.spawnPointX, zone.spawnPointY);
                     triggerCooldown = 1.0f;
                     break;
                 }
@@ -477,13 +477,13 @@ public class Main extends ApplicationAdapter {
      * @param spawnPointX horizontal location of the player to spawn at.
      * @param spawnPointY vertical location of the player to spawn at.
      */
-    private void changeLevel(int newMaze, int spawnPointX, int spawnPointY) {
+    private void changeLevel(int oldMaze, int newMaze, int spawnPointX, int spawnPointY) {
         //Specific implementation for winning, rather than making a redundant win hitbox
         if (newMaze==10) { // TODO will need to make this higher - freddie
             secondsDecreasing=false;
             CongratsScreen.setActive(true);
         } else {
-            loadMaze(newMaze, spawnPointX, spawnPointY);
+            loadMaze(oldMaze, newMaze, spawnPointX, spawnPointY);
         }
     }
 
@@ -493,15 +493,19 @@ public class Main extends ApplicationAdapter {
      * @param spawnPointX horizontal location of the player to spawn at.
      * @param spawnPointY vertical location of the player to spawn at.
      */
-    private void loadMaze(int maze, int spawnPointX, int spawnPointY) {
+    private void loadMaze(int oldMaze, int newMaze, int spawnPointX, int spawnPointY) {
         //Clear all previous buildings, entities, and trigger zones
         //These will be null upon first use of the function (initialization)
         boolean seedCheck = false;
         int currenthearts;
         int currentcoins;
+        int currentMazesBeenIn = 0;
+        boolean[] currentcoinslog = new boolean[18];
         try {
             currenthearts=player.getHearts();
             currentcoins=player.getCoins();
+            player.setCurrentMaze(newMaze);
+            currentcoinslog=player.getCoinsLog();
         }
         catch(Exception e) {
             currenthearts=3;
@@ -514,11 +518,13 @@ public class Main extends ApplicationAdapter {
             if (player.hasSeeds) seedCheck = true;
             currenthearts=player.getHearts();
             currentcoins=player.getCoins();
+            if(oldMaze==0 || oldMaze==1 || oldMaze==3) currentMazesBeenIn=player.getMazesBeenIn()+1;
+            else currentMazesBeenIn=player.getMazesBeenIn();
             speed=player.speed;
             entities.clear();
         }
         //Level int is 1 behind naming convention, add 1 when loading.
-        MazeData.LevelData currentLevel = mazeData.getLevel("level_"+(maze+1));
+        MazeData.LevelData currentLevel = mazeData.getLevel("level_"+(newMaze+1));
         //Recreate the level background texture
         backgroundTexture = new Texture(Gdx.files.internal(currentLevel.getBackgroundImage()));
 
@@ -532,6 +538,35 @@ public class Main extends ApplicationAdapter {
         player.hearts=currenthearts;
         player.speed=speed;
         player.coins=currentcoins;
+        player.mazes_been_in=currentMazesBeenIn;
+        player.coins_log=currentcoinslog;
+        player.current_maze=newMaze;
+
+        switch (newMaze) {
+            case 0 -> {
+                for (int i = 0; i < 6; i++) {
+                    if (currentcoinslog[i]==true) {
+                        entities.get(i+1).visible=false;
+                    }
+                }
+            }
+            case 1 -> {
+                for (int i = 0; i < 6; i++) {
+                    if (currentcoinslog[i+6]==true) {
+                        entities.get(i+2).visible=false;
+                    }
+                }
+            }
+            case 3 -> {
+                for (int i = 0; i < 6; i++) {
+                    if (currentcoinslog[i+12]==true) {
+                        entities.get(i+1).visible=false;
+                    }
+                }
+            }
+            default -> {
+            }
+        }
     }
 
     /**
@@ -559,7 +594,7 @@ public class Main extends ApplicationAdapter {
      */
     public void startGame(){
         //Goes to first maze and resets character and seeds
-        loadMaze(0,40,800);
+        loadMaze(100, 0,40,800);
 
         //Set timer back to 5 minutes.
         secondsRemaining = 300;  //resets the time

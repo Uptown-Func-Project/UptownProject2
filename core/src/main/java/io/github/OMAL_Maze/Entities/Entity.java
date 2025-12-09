@@ -14,7 +14,7 @@ public class Entity {
     int height;
     public Sprite sprite;
     Texture entityTexture;
-    boolean visible=true;
+    public boolean visible=true;
     boolean isSolid;
 
     /**
