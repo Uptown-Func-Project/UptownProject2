@@ -1,7 +1,7 @@
 package io.github.OMAL_Maze.Entities;
 
 import com.badlogic.gdx.graphics.Texture;
-
+import com.badlogic.gdx.math.Rectangle;
 
 public class Professor extends Entity {
     public static final int DEFAULT_X = 432;
@@ -27,14 +27,20 @@ public class Professor extends Entity {
 
     public Professor(int x, int y) {
         super(x, y, DEFAULT_WIDTH, DEFAULT_HEIGHT, new Texture(TEXTURE_PATH));
-    
+        visible = true;
     }
 
     public Professor() {
         this(DEFAULT_X, DEFAULT_Y);
-        visible = true;
     }
 
+    public Rectangle getInteractionBounds() {
+        float interactionWidth = 100;
+        float interactionHeight = 150;
+        float interactionX = sprite.getX() + (sprite.getWidth() - interactionWidth) / 2;
+        float interactionY = sprite.getY() + (sprite.getHeight() - interactionHeight) / 2;
+        return new Rectangle(interactionX, interactionY, interactionWidth, interactionHeight);
+    }
 
     /**
      * if player is within this rectangle, they can interact with the professor. Player presses 'e'.
@@ -45,13 +51,20 @@ public class Professor extends Entity {
      * 
      * Dean has exact same entity with the geese except they cant be killed but rather stunned. hasSeeds
      * logic applied to him but its hasBad/GoodDegree which causes him to chase you or let you pass
+     * 
+     * lock player's movements when dialogue with professor
+     * 
+     * for super hard question just use more multiple choices
+     * 
+     * professor will use an int Exam_state, starts at 0 (no exam score)
+     * answering all correctly changes it to 1 (gives hasGoodDegree)
+     * answering 1 wrong changes it to 2 (gives hasBadDegree)
+     * 
+     * hasGoodDegree or hasBadDegree boolean will be used within central hall
+     * change hasGoodDegree and hasBadDegree to 1 boolean instead of 2.
+     * 
      */
 
-    // public Rectangle getInteractionBounds() {
-    //     float interactionWidth = 100;
-    //     float interactionHeight = 100;
-    //     float interactionX = sprite.getX() + (sprite.getWidth() - interactionWidth) / 2;
-    //     float interactionY = sprite.getY() + (sprite.getHeight() - interactionHeight) / 2;
-    //     return new Rectangle(interactionX, interactionY, interactionWidth, interactionHeight);
-    // }
+    // 
+    
 }

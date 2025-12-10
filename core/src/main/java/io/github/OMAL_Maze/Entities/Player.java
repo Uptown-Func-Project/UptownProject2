@@ -20,8 +20,8 @@ public class Player extends Character{
     public int hearts;
     static Sound itemPickup;
     public boolean hasSeeds;
-    public boolean hasGoodDegree;
-    public boolean hasBadDegree;
+    public boolean degreeState;
+    public int examState;
 
     /**
      * Spawns a player entity and sets the default values for hearts, seeds, speed, acceleration, and friction.
@@ -36,8 +36,8 @@ public class Player extends Character{
         this.visible = true;
         this.hearts = 3;
         this.hasSeeds = false;
-        this.hasGoodDegree = false;
-        this.hasBadDegree = false;
+        this.degreeState = false;
+        this.examState = 0;
         this.speed=150f;
         this.accelerate=800f;
         this.friction=4000f;
@@ -62,15 +62,17 @@ public class Player extends Character{
         sprite.setY(MathUtils.clamp(sprite.getY(),0,worldHeight-playerHeight));
         
         // TODO remove this - freddie
-        System.out.println(sprite.getX() + " x, " + sprite.getY() + " y");
+        //System.out.println(sprite.getX() + " x, " + sprite.getY() + " y");
 
+
+        Rectangle playerBounds = sprite.getBoundingRectangle();
         if (!this.hasSeeds) {
             //picking up seeds
             for(int i=0; i < entities.size; i++) {
                 Entity entity = entities.get(i);
                 if(entity instanceof Seeds) {
                     //getting bounding box
-                    Rectangle playerBounds = sprite.getBoundingRectangle();
+                    
                     Rectangle seedBounds = entity.sprite.getBoundingRectangle();
 
                     //checking bounding box
@@ -86,6 +88,25 @@ public class Player extends Character{
                     }
                 }
             }
+        }
+
+        if (examState == 0) {
+            // interacting with professor
+    
+            for (int i=0; i < entities.size; i++) {
+                Entity entity = entities.get(i);
+                if (entity instanceof Professor) {
+                    Professor prof = (Professor) entity;
+                    Rectangle profBounds = prof.getInteractionBounds();
+
+                    if (playerBounds.overlaps(profBounds) && Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+                        // if player is within bounds and press e, interact with professor
+                        // implement dialogue system
+                        System.out.println("Player is interacting with the Professor.");
+                    }
+                }
+            }
+
         }
     }
 
