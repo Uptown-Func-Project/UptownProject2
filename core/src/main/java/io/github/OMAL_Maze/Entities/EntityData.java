@@ -9,6 +9,7 @@ public class EntityData {
     private int y;
     private int width;
     private int height;
+    private String id;
 
     private String texturePath;
 
@@ -19,4 +20,5 @@ public class EntityData {
     public int getWidth() { return width; }
     public int getHeight() { return height; }
     public String getTexturePath() { return texturePath; }
+    public String getId() { return id; }
 }

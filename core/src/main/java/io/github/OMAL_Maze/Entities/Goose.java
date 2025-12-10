@@ -45,8 +45,8 @@ public class Goose extends Character{
      * @param height height of the goose
      * @param entityTexture the Texture object for the goose sprite
      */
-    public Goose(int x, int y, int width, int height, Texture entityTexture) {
-        super(x, y, width, height, entityTexture);
+    public Goose(int x, int y, int width, int height, Texture entityTexture, String id) {
+        super(x, y, width, height, entityTexture, id);
         visible = false;
         state = gooseState.IDLE;
         //state = gooseState.ANGRY; // for testing, delete later

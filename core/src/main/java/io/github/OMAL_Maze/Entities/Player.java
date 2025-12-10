@@ -21,9 +21,7 @@ public class Player extends Character{
     static Sound itemPickup;
     public boolean hasSeeds;
     public int coins;
-    public boolean[] coins_log;
-    public int mazes_been_in;
-    public int current_maze;
+    public String[] coins_log;
 
     /**
      * Spawns a player entity and sets the default values for hearts, seeds, speed, acceleration, and friction.
@@ -33,8 +31,8 @@ public class Player extends Character{
      * @param height height of the player in pixels.
      * @param entityTexture Texture object for the player sprite.
      */
-    public Player(int x, int y, int width, int height, Texture entityTexture) {
-        super(x,y,width,height, entityTexture);
+    public Player(int x, int y, int width, int height, Texture entityTexture, String id) {
+        super(x,y,width,height, entityTexture, id);
         this.visible = true;
         this.hearts = 3;
         this.hasSeeds = false;
@@ -42,12 +40,7 @@ public class Player extends Character{
         this.speed=150f;
         this.accelerate=800f;
         this.friction=4000f;
-        this.coins_log=new boolean[18];
-        this.mazes_been_in = 0;
-
-        for (int i = 0; i < 18; i++) {
-            coins_log[i]=false;
-        }
+        this.coins_log=new String[18];
     }
 
     /**
@@ -93,31 +86,19 @@ public class Player extends Character{
                     break;
                 }
             }
-            else if(entity instanceof Coin) {
+            else if(entity instanceof Coin coin) {
                 //getting bounding box
                 Rectangle playerBounds = sprite.getBoundingRectangle();
                 Rectangle coinBounds = entity.sprite.getBoundingRectangle();
 
                 //checking bounding box
-                if (playerBounds.overlaps(coinBounds) && ((Coin) entity).visible == true) {
+                if (playerBounds.overlaps(coinBounds) && coin.visible == true) {
                     entities.get(i).visible=false;
-
-                    switch (current_maze) {
-                        case 0:
-                            this.coins_log[i+current_maze*6-1]=true;
-                            break;
-                        case 1:
-                            this.coins_log[i+current_maze*6-2]=true;
-                            break;
-                        case 3:
-                            this.coins_log[i+current_maze*6-7]=true;
-                            break;
-                        default:
-                            break;
-                    }
                     this.coins ++;
                     //seeds pickup sound
                     itemPickup = Gdx.audio.newSound(Gdx.files.internal("Sounds/ItemPickup.mp3"));
+                    String coin_collected = entity.getId();
+                    coins_log[coins-1]=coin_collected;
                     break;
                 }
             }
@@ -128,6 +109,20 @@ public class Player extends Character{
 
                 //checking bounding box
                 if (playerBounds.overlaps(energyDrinkBounds)) {
+                    entities.removeIndex(i);
+                    this.coins-=2;
+                    //seeds pickup sound
+                    itemPickup = Gdx.audio.newSound(Gdx.files.internal("Sounds/ItemPickup.mp3"));
+                    break;
+                }
+            }
+            else if(entity instanceof Food && this.coins >= 2) {
+                //getting bounding box
+                Rectangle playerBounds = sprite.getBoundingRectangle();
+                Rectangle foodBounds = entity.sprite.getBoundingRectangle();
+
+                //checking bounding box
+                if (playerBounds.overlaps(foodBounds)) {
                     entities.removeIndex(i);
                     this.coins-=2;
                     //seeds pickup sound
@@ -241,18 +236,6 @@ public class Player extends Character{
 
     public int getCoins(){
         return coins;
-    }
-
-    public int getMazesBeenIn(){
-        return mazes_been_in;
-    }
-
-    public void setCurrentMaze(int currentMaze){
-        this.current_maze = currentMaze;
-    }
-
-    public boolean[] getCoinsLog() {
-        return this.coins_log;
     }
 
     /**

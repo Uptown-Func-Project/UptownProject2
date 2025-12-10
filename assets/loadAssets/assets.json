@@ -32,7 +32,8 @@
           "y": 40,
           "width": 23,
           "height": 30,
-          "texturePath": "entityTextures/player_A.png"
+          "texturePath": "entityTextures/player_A.png",
+          "id": "player1"
         },
         {
           "type": "Coin",
@@ -40,7 +41,8 @@
           "y": 489,
           "width": 24,
           "height": 24,
-          "texturePath": "entityTextures/coin.png"
+          "texturePath": "entityTextures/coin.png",
+          "id": "coin1"
         },
         {
           "type": "Coin",
@@ -48,7 +50,8 @@
           "y": 134,
           "width": 24,
           "height": 24,
-          "texturePath": "entityTextures/coin.png"
+          "texturePath": "entityTextures/coin.png",
+          "id": "coin2"
         },
         {
           "type": "Coin",
@@ -56,7 +59,8 @@
           "y": 238,
           "width": 24,
           "height": 24,
-          "texturePath": "entityTextures/coin.png"
+          "texturePath": "entityTextures/coin.png",
+          "id": "coin3"
         },
         {
           "type": "Coin",
@@ -64,7 +68,8 @@
           "y": 774,
           "width": 24,
           "height": 24,
-          "texturePath": "entityTextures/coin.png"
+          "texturePath": "entityTextures/coin.png",
+          "id": "coin4"
         },
         {
           "type": "Coin",
@@ -72,7 +77,8 @@
           "y": 568,
           "width": 24,
           "height": 24,
-          "texturePath": "entityTextures/coin.png"
+          "texturePath": "entityTextures/coin.png",
+          "id": "coin5"
         },
         {
           "type": "Coin",
@@ -80,7 +86,8 @@
           "y": 84,
           "width": 24,
           "height": 24,
-          "texturePath": "entityTextures/coin.png"
+          "texturePath": "entityTextures/coin.png",
+          "id": "coin6"
         }
       ],
       "buildings": [
@@ -141,7 +148,8 @@
           "y": 40,
           "width": 23,
           "height": 30,
-          "texturePath": "entityTextures/player_A.png"
+          "texturePath": "entityTextures/player_A.png",
+          "id": "player1"
         },
         {
           "type": "Goose",
@@ -149,7 +157,8 @@
           "y": 1000,
           "width": 24,
           "height": 24,
-          "texturePath": "entityTextures/goose.png"
+          "texturePath": "entityTextures/goose.png",
+          "id": "goose1"
         },
         {
           "type": "Coin",
@@ -157,7 +166,8 @@
           "y": 211,
           "width": 24,
           "height": 24,
-          "texturePath": "entityTextures/coin.png"
+          "texturePath": "entityTextures/coin.png",
+          "id": "coin7"
         },
         {
           "type": "Coin",
@@ -165,7 +175,8 @@
           "y": 371,
           "width": 24,
           "height": 24,
-          "texturePath": "entityTextures/coin.png"
+          "texturePath": "entityTextures/coin.png",
+          "id": "coin8"
         },
         {
           "type": "Coin",
@@ -173,7 +184,8 @@
           "y": 805,
           "width": 24,
           "height": 24,
-          "texturePath": "entityTextures/coin.png"
+          "texturePath": "entityTextures/coin.png",
+          "id": "coin9"
         },
         {
           "type": "Coin",
@@ -181,7 +193,8 @@
           "y": 644,
           "width": 24,
           "height": 24,
-          "texturePath": "entityTextures/coin.png"
+          "texturePath": "entityTextures/coin.png",
+          "id": "coin10"
         },
         {
           "type": "Coin",
@@ -189,7 +202,8 @@
           "y": 204,
           "width": 24,
           "height": 24,
-          "texturePath": "entityTextures/coin.png"
+          "texturePath": "entityTextures/coin.png",
+          "id": "coin11"
         },
         {
           "type": "Coin",
@@ -197,7 +211,8 @@
           "y": 480,
           "width": 24,
           "height": 24,
-          "texturePath": "entityTextures/coin.png"
+          "texturePath": "entityTextures/coin.png",
+          "id": "coin12"
         }
       ],
       "buildings": [
@@ -278,7 +293,8 @@
           "y": 40,
           "width": 23,
           "height": 30,
-          "texturePath": "entityTextures/player_A.png"
+          "texturePath": "entityTextures/player_A.png",
+          "id": "player1"
         }
       ],
       "buildings": [],
@@ -338,7 +354,8 @@
           "y": 40,
           "width": 23,
           "height": 30,
-          "texturePath": "entityTextures/player_A.png"
+          "texturePath": "entityTextures/player_A.png",
+          "id": "player1"
         },
         {
           "type": "Coin",
@@ -346,7 +363,8 @@
           "y": 203,
           "width": 24,
           "height": 24,
-          "texturePath": "entityTextures/coin.png"
+          "texturePath": "entityTextures/coin.png",
+          "id": "coin13"
         },
         {
           "type": "Coin",
@@ -354,7 +372,8 @@
           "y": 244,
           "width": 24,
           "height": 24,
-          "texturePath": "entityTextures/coin.png"
+          "texturePath": "entityTextures/coin.png",
+          "id": "coin14"
         },
         {
           "type": "Coin",
@@ -362,7 +381,8 @@
           "y": 47,
           "width": 24,
           "height": 24,
-          "texturePath": "entityTextures/coin.png"
+          "texturePath": "entityTextures/coin.png",
+          "id": "coin15"
         },
         {
           "type": "Coin",
@@ -370,7 +390,8 @@
           "y": 805,
           "width": 24,
           "height": 24,
-          "texturePath": "entityTextures/coin.png"
+          "texturePath": "entityTextures/coin.png",
+          "id": "coin16"
         },
         {
           "type": "Coin",
@@ -378,7 +399,8 @@
           "y": 564,
           "width": 24,
           "height": 24,
-          "texturePath": "entityTextures/coin.png"
+          "texturePath": "entityTextures/coin.png",
+          "id": "coin17"
         },
         {
           "type": "Coin",
@@ -386,7 +408,8 @@
           "y": 324,
           "width": 24,
           "height": 24,
-          "texturePath": "entityTextures/coin.png"
+          "texturePath": "entityTextures/coin.png",
+          "id": "coin18"
         }
       ],
       "buildings": [],
@@ -446,7 +469,8 @@
           "y": 40,
           "width": 23,
           "height": 30,
-          "texturePath": "entityTextures/player_A.png"
+          "texturePath": "entityTextures/player_A.png",
+          "id": "player1"
         }
       ],
       "buildings": [],
@@ -496,7 +520,8 @@
           "y": 40,
           "width": 23,
           "height": 30,
-          "texturePath": "entityTextures/player_A.png"
+          "texturePath": "entityTextures/player_A.png",
+          "id": "player1"
         }
       ],
       "buildings": [],
@@ -546,23 +571,35 @@
           "y": 40,
           "width": 23,
           "height": 30,
-          "texturePath": "entityTextures/player_A.png"
+          "texturePath": "entityTextures/player_A.png",
+          "id": "player1"
         },
         {
           "type": "Seeds",
-          "x": 430,
-          "y": 460,
+          "x": 420,
+          "y": 390,
           "width": 40,
           "height": 40,
-          "texturePath": "entityTextures/Seeds.png"
+          "texturePath": "entityTextures/Seeds.png",
+          "id": "seeds1"
         },
         {
           "type": "EnergyDrink",
           "x": 470,
-          "y": 420,
+          "y": 390,
           "width": 40,
           "height": 40,
-          "texturePath": "entityTextures/energy drink.png"
+          "texturePath": "entityTextures/energy drink.png",
+          "id": "energyDrink1"
+        },
+        {
+          "type": "Food",
+          "x": 390,
+          "y": 390,
+          "width": 40,
+          "height": 40,
+          "texturePath": "entityTextures/food.png",
+          "id": "food1"
         }
       ],
       "buildings": [],
