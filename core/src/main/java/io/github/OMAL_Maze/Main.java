@@ -545,8 +545,8 @@ public class Main extends ApplicationAdapter {
         player.coins_log=currentcoinlog;
         // Checks for which coins have already been collected by the player
         for (Entity e : entities) {
-            for (String coins_log : player.coins_log) {
-                if (coins_log != null && coins_log.equals(e.getId())) {
+            for (int i = 0; i < player.coins_log.length; i++) {
+                if (player.coins_log[i]!=null && player.coins_log[i].equals(e.getId())) {
                     e.visible=false;
                 }
             }
