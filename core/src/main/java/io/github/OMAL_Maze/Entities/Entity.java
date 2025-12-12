@@ -25,6 +25,7 @@ public class Entity {
      * @param width Width of the entity.
      * @param height Height of the entity.
      * @param entityTexture Texture object for the entity sprite.
+     * @param id Unique identifier for the entity.
      */
     public Entity(int x, int y, int width, int height, Texture entityTexture, String id) {
         this.width=width;
@@ -68,5 +69,10 @@ public class Entity {
      * @return Boolean value, true if the entity is visible and false if it isn't.
      */
     public boolean getVisible() {return this.visible;}
+
+    /**
+     * Getter method for the ID.
+     * @return String value, the value of the ID of the entity.
+     */
     public String getId() {return this.id;}
 }

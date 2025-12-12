@@ -176,8 +176,7 @@ public class Main extends ApplicationAdapter {
         switch (entityType) {
             case "Player" -> {
                     entity = new Player(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture, entityData.getId());
-                    player = (Player) entity;
-            }
+                    player = (Player) entity;}
             case "Character" ->
                     entity = new Character(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture, entityData.getId());
             case "Goose" -> entity = new Goose(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(),
@@ -387,7 +386,7 @@ public class Main extends ApplicationAdapter {
         font.draw(batch, "Bad:" + badEventsRemaining, timerX + 300, timerY);    //goose bites
         font.draw(batch, "Hidden:" + hiddenEventsRemaining, timerX + 380, timerY);  //goose appears
         font.draw(batch, "Lives:" + player.hearts, timerX + 120, timerY-15);    //lives remaining
-        font.draw(batch, "Coins:" + player.coins, timerX + 200, timerY-15);
+        font.draw(batch, "Coins:" + player.coins, timerX + 200, timerY-15);    //coins collected
 
 
         //making buttons active on the gameplay screen
@@ -485,7 +484,7 @@ public class Main extends ApplicationAdapter {
      */
     private void changeLevel(int maze, int spawnPointX, int spawnPointY) {
         //Specific implementation for winning, rather than making a redundant win hitbox
-        if (maze==10) { // TODO will need to make this higher - freddie
+        if (maze==10) {
             secondsDecreasing=false;
             CongratsScreen.setActive(true);
         } else {
@@ -506,17 +505,19 @@ public class Main extends ApplicationAdapter {
         int currenthearts;
         int currentcoins;
         String[] currentcoinlog;
+        // Saves the current state of the player
         try {
             currenthearts=player.getHearts();
             currentcoins=player.getCoins();
             currentcoinlog=player.coins_log;
         }
+        // Error will occur if player is not yet initialised (as the game has just started)
         catch(Exception e) {
             currenthearts=3;
             currentcoins=0;
             currentcoinlog = new String[18];
         }
-        float speed = 150f;
+        float speed = 200f;
         if (buildings!=null) buildings.clear();
         if (triggerZones!=null) triggerZones.clear();
         if (entities!=null) {
@@ -542,9 +543,10 @@ public class Main extends ApplicationAdapter {
         player.speed=speed;
         player.coins=currentcoins;
         player.coins_log=currentcoinlog;
+        // Checks for which coins have already been collected by the player
         for (Entity e : entities) {
-            for (int i = 0; i < player.coins_log.length; i++) {
-                if (player.coins_log[i]!=null && player.coins_log[i].equals(e.getId())) {
+            for (String coins_log : player.coins_log) {
+                if (coins_log != null && coins_log.equals(e.getId())) {
                     e.visible=false;
                 }
             }
