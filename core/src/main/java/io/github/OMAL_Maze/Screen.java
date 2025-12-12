@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.ScalingViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 import io.github.OMAL_Maze.Buttons.AbstractButton;
 
@@ -20,7 +20,7 @@ public class Screen{
     protected Sprite backgroundSprite;
     protected ArrayList<AbstractButton> buttons;
     private SpriteBatch batch;
-    private ScalingViewport viewport; // will handle screen scaling / resizing
+    private Viewport viewport; // will handle screen scaling / resizing
     protected Boolean active;
 /**
  * Constructs a new {@code Screen} instance
@@ -28,7 +28,7 @@ public class Screen{
  * @param viewport      the {@link FitViewport} controlling scaling and camera.
  * @param backgroundPath the relative path to the background texture file.
  */
-    public Screen(SpriteBatch batch, ScalingViewport viewport, String backgroundPath){
+    public Screen(SpriteBatch batch, FitViewport viewport, String backgroundPath){
         this.batch = batch;
         this.viewport = viewport;
         this.backgroundTexture = new Texture(Gdx.files.internal(backgroundPath));
@@ -60,7 +60,7 @@ public class Screen{
             for (AbstractButton b : buttons) {
                 if (b.isActive()){
                     b.draw(batch);
-                    if (b.isClicked((ScalingViewport) viewport)){{
+                    if (b.isClicked((FitViewport) viewport)){{
                         handleButtonClick(b);
                     }}
                 }
