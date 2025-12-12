@@ -206,35 +206,6 @@ public class Goose extends Character{
 
         // Normal chasing / wandering behaviour when not knocked back
         if (isMoving && state.equals(gooseState.ANGRY) ) {
-            float X_diff = this.player.sprite.getX() - this.sprite.getX();
-            float Y_diff = this.player.sprite.getY() - this.sprite.getY();
-            double distance = Math.sqrt((Math.pow(X_diff, 2) + Math.pow(Y_diff, 2)));
-            if (distance==0) return;
-            double unitVector_x=X_diff/distance;
-            double unitVector_y=Y_diff/distance;
-
-            if (unitVector_x > 0) {
-                Xspeed+=accelerate*delta;
-                if (Xspeed<0) Xspeed*=0.25f;
-            } else if (unitVector_x<0) {
-                Xspeed-=accelerate*delta;
-                if (Xspeed>0) Xspeed*=0.25f;
-            } else {
-                Xspeed*=Math.max(0,1-friction*delta/speed);
-            }
-
-            if (unitVector_y > 0) {
-                Yspeed+=accelerate*delta;
-                if (Yspeed<0) Yspeed*=0.25f;
-            } else if (unitVector_y<0) {
-                Yspeed-=accelerate*delta;
-                if (Yspeed>0) Yspeed*=0.25f;
-            } else {
-                Yspeed*=Math.max(0,1-friction*delta/speed);
-            }
-
-            capSpeed(delta);
-            tryMove(entities, buildings);
 
             int[] goal = new int[] {
         (int)(player.getPlayerX() / 40),
@@ -246,7 +217,7 @@ public class Goose extends Character{
     };
             int[] next = io.github.OMAL_Maze.Map.AStar.getNextMove(mapy, start, goal);
             float vx = 0, vy = 0;
-            boolean moving = false;
+            boolean isMoving = false;
 
             if (next != null) {
                 float targetX = next[0] * 16 + 8;
@@ -260,32 +231,21 @@ public class Goose extends Character{
                 if (dist > 0.1f) {
                     vx = (dx / dist) * speed;
                     vy = (dy / dist) * speed;
-                    moving = true;
+                    isMoving = true;
                 }
 
                 if (vx > 0) { facingRight = true; lastMoveX = 1; }
                 if (vx < 0) { facingRight = false; lastMoveX = -1; }
+                Xspeed = vx;
+                Yspeed = vy;
+                System.out.println(player.getPlayerX()/40 + "," + player.getPlayerY()/40);
                 capSpeed(delta);
-            tryMove(entities, buildings);
+                 tryMove(entities, buildings);
             }
-        } else if (isMoving && this.state.equals(gooseState.HAPPY)){
-            wanderTimer -= delta;
-            if (wanderTimer <= 0) {
-                if (wandering) {
-                    Xspeed = 0;
-                    Yspeed = 0;
-                    wandering = false;
-                    wanderTimer = 1f + (float)(Math.random() * 3f);
-                } else {
-                    double angle = Math.random() * 2 * Math.PI;
-                    Xspeed = (float)(Math.cos(angle) * speed);
-                    Yspeed = (float)(Math.sin(angle) * speed);
-                    wandering = true;
-                    wanderTimer = 0.25f + (float)(Math.random() * 1.5f);
-                }
-            }
-            capSpeed(delta);
-            tryMove(entities, buildings);
+        }
+        else{
+            Xspeed=0;
+            Yspeed=0;
         }
          if (isMoving){
         walkAnimation.update(delta);

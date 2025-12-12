@@ -187,6 +187,7 @@ public class Player extends Character{
         }
         //Cap the speed to the maximum if the values are too high as a result of the movement calculations.
         capSpeed(delta);
+        
 
         //Attempt to move in the X direction. If this collides, revert the movement.
         this.sprite.translateX(moveX);
