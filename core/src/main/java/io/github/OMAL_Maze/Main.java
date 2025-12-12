@@ -25,8 +25,11 @@ import io.github.OMAL_Maze.Buttons.QuitButton;
 import io.github.OMAL_Maze.Buttons.StartButton;
 import io.github.OMAL_Maze.Buttons.UnpauseButton;
 import io.github.OMAL_Maze.Entities.Character;
+import io.github.OMAL_Maze.Entities.Coin;
+import io.github.OMAL_Maze.Entities.EnergyDrink;
 import io.github.OMAL_Maze.Entities.Entity;
 import io.github.OMAL_Maze.Entities.EntityData;
+import io.github.OMAL_Maze.Entities.Food;
 import io.github.OMAL_Maze.Entities.Goose;
 import io.github.OMAL_Maze.Entities.Player;
 import io.github.OMAL_Maze.Entities.Seeds;
@@ -172,18 +175,23 @@ public class Main extends ApplicationAdapter {
         Entity entity;
         switch (entityType) {
             case "Player" -> {
-                    entity = new Player(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture);
-                    player = (Player) entity;
-            }
+                    entity = new Player(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture, entityData.getId());
+                    player = (Player) entity;}
             case "Character" ->
-                    entity = new Character(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture);
+                    entity = new Character(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture, entityData.getId());
             case "Goose" -> entity = new Goose(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(),
-                    texture);
+                    texture, entityData.getId());
             case "Seeds" -> entity = new Seeds(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(),
-                    texture);
+                    texture, entityData.getId());
+            case "Coin" -> entity = new Coin(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(),
+                    texture, entityData.getId());
+            case "EnergyDrink" -> entity = new EnergyDrink(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(),
+                    texture, entityData.getId());
+            case "Food" -> entity = new Food(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(),
+                    texture, entityData.getId());
             default ->
                 //Only other one is just Entity or should be cast to basic entity
-                    entity = new Entity(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture);
+                    entity = new Entity(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture, entityData.getId());
         }
         return entity;
     }
@@ -379,6 +387,7 @@ public class Main extends ApplicationAdapter {
         font.draw(batch, "Bad:" + badEventsRemaining, timerX + 300, timerY);    //goose bites
         font.draw(batch, "Hidden:" + hiddenEventsRemaining, timerX + 380, timerY);  //goose appears
         font.draw(batch, "Lives:" + player.hearts, timerX + 120, timerY-15);    //lives remaining
+        font.draw(batch, "Coins:" + player.coins, timerX + 200, timerY-15);    //coins collected
 
 
         //making buttons active on the gameplay screen
@@ -474,13 +483,13 @@ public class Main extends ApplicationAdapter {
      * @param spawnPointX horizontal location of the player to spawn at.
      * @param spawnPointY vertical location of the player to spawn at.
      */
-    private void changeLevel(int newMaze, int spawnPointX, int spawnPointY) {
+    private void changeLevel(int maze, int spawnPointX, int spawnPointY) {
         //Specific implementation for winning, rather than making a redundant win hitbox
-        if (newMaze==10) { // TODO will need to make this higher - freddie
+        if (maze==10) {
             secondsDecreasing=false;
             CongratsScreen.setActive(true);
         } else {
-            loadMaze(newMaze, spawnPointX, spawnPointY);
+            loadMaze(maze, spawnPointX, spawnPointY);
         }
     }
 
@@ -494,17 +503,29 @@ public class Main extends ApplicationAdapter {
         //Clear all previous buildings, entities, and trigger zones
         //These will be null upon first use of the function (initialization)
         boolean seedCheck = false;
-        int currenthearts=3;
-        float speed = 150f;
+        int currenthearts;
+        int currentcoins;
+        String[] currentcoinlog;
+        // Saves the current state of the player
+        try {
+            currenthearts=player.getHearts();
+            currentcoins=player.getCoins();
+            currentcoinlog=player.coins_log;
+        }
+        // Error will occur if player is not yet initialised (as the game has just started)
+        catch(Exception e) {
+            currenthearts=3;
+            currentcoins=0;
+            currentcoinlog = new String[18];
+        }
+        float speed = 200f;
         if (buildings!=null) buildings.clear();
         if (triggerZones!=null) triggerZones.clear();
         if (entities!=null) {
             if (player.hasSeeds) seedCheck = true;
             currenthearts=player.getHearts();
+            currentcoins=player.getCoins();
             speed=player.speed;
-            if (maze==0) {
-                currenthearts=3;
-            }
             entities.clear();
         }
         //Level int is 1 behind naming convention, add 1 when loading.
@@ -521,6 +542,16 @@ public class Main extends ApplicationAdapter {
         player.hasSeeds=seedCheck;
         player.hearts=currenthearts;
         player.speed=speed;
+        player.coins=currentcoins;
+        player.coins_log=currentcoinlog;
+        // Checks for which coins have already been collected by the player
+        for (Entity e : entities) {
+            for (int i = 0; i < player.coins_log.length; i++) {
+                if (player.coins_log[i]!=null && player.coins_log[i].equals(e.getId())) {
+                    e.visible=false;
+                }
+            }
+        }
     }
 
     /**

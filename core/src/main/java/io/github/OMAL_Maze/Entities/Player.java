@@ -14,12 +14,15 @@ import io.github.OMAL_Maze.Map.Building;
 /**
  * the player class which extends the {@link Character} class
  * Can pickup items
- * Has hearts(lives)
+ * Has hearts (lives)
+ * Can collect coins
  */
 public class Player extends Character{
     public int hearts;
     static Sound itemPickup;
     public boolean hasSeeds;
+    public int coins;
+    public String[] coins_log;
 
     /**
      * Spawns a player entity and sets the default values for hearts, seeds, speed, acceleration, and friction.
@@ -28,15 +31,18 @@ public class Player extends Character{
      * @param width width of the player in pixels.
      * @param height height of the player in pixels.
      * @param entityTexture Texture object for the player sprite.
+     * @param id a unique identifier for each entity.
      */
-    public Player(int x, int y, int width, int height, Texture entityTexture) {
-        super(x,y,width,height, entityTexture);
+    public Player(int x, int y, int width, int height, Texture entityTexture, String id) {
+        super(x, y, width, height, entityTexture, id);
         this.visible = true;
         this.hearts = 3;
         this.hasSeeds = false;
-        this.speed=150f;
+        this.coins = 0;
+        this.speed=200f;
         this.accelerate=800f;
         this.friction=4000f;
+        this.coins_log=new String[18];
     }
 
     /**
@@ -56,30 +62,86 @@ public class Player extends Character{
         // Clamp x to values between 0 and worldWidth
         sprite.setX(MathUtils.clamp(sprite.getX(), 0, worldWidth-playerWidth));
         sprite.setY(MathUtils.clamp(sprite.getY(),0,worldHeight-playerHeight));
-        
-        // TODO remove this - freddie
-        System.out.println(sprite.getX() + " x, " + sprite.getY() + " y");
 
-        if (!this.hasSeeds) {
-            //picking up seeds
-            for(int i=0; i < entities.size; i++) {
-                Entity entity = entities.get(i);
-                if(entity instanceof Seeds) {
-                    //getting bounding box
-                    Rectangle playerBounds = sprite.getBoundingRectangle();
-                    Rectangle seedBounds = entity.sprite.getBoundingRectangle();
+        //picking up seeds, coins, energy drinks and food
+        for(int i=0; i < entities.size; i++) {
+            Entity entity = entities.get(i);
 
-                    //checking bounding box
-                    if (playerBounds.overlaps(seedBounds)) {
-                        entities.removeIndex(i);
-                        this.hasSeeds = true;
-                        //seeds pickup sound
-                        itemPickup = Gdx.audio.newSound(Gdx.files.internal("Sounds/ItemPickup.mp3"));
-                        if (this.hasSeeds) {
-                            itemPickup.play();
-                        }
-                        break;
+            // Seeds, costs 4 coins
+            if(entity instanceof Seeds && this.coins >= 4) {
+                //getting bounding box
+                Rectangle playerBounds = sprite.getBoundingRectangle();
+                Rectangle seedBounds = entity.sprite.getBoundingRectangle();
+
+                //checking bounding box
+                if (playerBounds.overlaps(seedBounds)) {
+                    entities.removeIndex(i);
+                    this.hasSeeds = true;
+                    this.coins-=4;
+                    //seeds pickup sound
+                    itemPickup = Gdx.audio.newSound(Gdx.files.internal("Sounds/ItemPickup.mp3"));
+                    if (this.hasSeeds) {
+                        itemPickup.play();
                     }
+                    break;
+                }
+            }
+
+            // Coins
+            else if(entity instanceof Coin coin) {
+                //getting bounding box
+                Rectangle playerBounds = sprite.getBoundingRectangle();
+                Rectangle coinBounds = entity.sprite.getBoundingRectangle();
+
+                //checking bounding box
+                if (playerBounds.overlaps(coinBounds) && coin.visible == true) {
+                    entities.get(i).visible=false;
+                    this.coins ++;
+                    //seeds pickup sound
+                    itemPickup = Gdx.audio.newSound(Gdx.files.internal("Sounds/ItemPickup.mp3"));
+
+                    // Adds the coin to the coin log
+                    String coin_collected = entity.getId();
+                    coins_log[coins-1]=coin_collected;
+                    break;
+                }
+            }
+
+            // Energy drink, costs 2 coins
+            else if(entity instanceof EnergyDrink && this.coins >= 2) {
+                //getting bounding box
+                Rectangle playerBounds = sprite.getBoundingRectangle();
+                Rectangle energyDrinkBounds = entity.sprite.getBoundingRectangle();
+
+                //checking bounding box
+                if (playerBounds.overlaps(energyDrinkBounds)) {
+                    entities.removeIndex(i);
+                    this.coins-=2;
+                    //seeds pickup sound
+                    itemPickup = Gdx.audio.newSound(Gdx.files.internal("Sounds/ItemPickup.mp3"));
+
+                    // Provides a 50% speed boost
+                    this.speed*=1.5;
+                    break;
+                }
+            }
+
+            // Food, costs 2 coins
+            else if(entity instanceof Food && this.coins >= 2) {
+                //getting bounding box
+                Rectangle playerBounds = sprite.getBoundingRectangle();
+                Rectangle foodBounds = entity.sprite.getBoundingRectangle();
+
+                //checking bounding box
+                if (playerBounds.overlaps(foodBounds)) {
+                    entities.removeIndex(i);
+                    this.coins-=2;
+                    //seeds pickup sound
+                    itemPickup = Gdx.audio.newSound(Gdx.files.internal("Sounds/ItemPickup.mp3"));
+
+                    // Gives an extra life
+                    this.hearts+=1;
+                    break;
                 }
             }
         }
@@ -187,18 +249,34 @@ public class Player extends Character{
     }
 
     /**
+     * Getter method for the player coins.
+     */
+    public int getCoins(){
+        return coins;
+    }
+
+    /**
      * Decreases the player's hearts. This value ranges from 0-3 and once all 3 hearts/lives have been taken, the game ends.
      */
     public void decreaseHearts(){
         if (hearts > 1){
-            //If the player still has hearts left, slow down the player and decrease the value.
+            // If the player still has hearts left, slow down the player and decrease the value.
             hearts--;
             this.speed*=0.75f;
         } else {
-            //If the player doesn't have any hearts left, call the function to end the game.
+            // If the player doesn't have any hearts left, call the function to end the game
+            // Also initialises the player, for if the game restarts
+            this.visible = true;
+            this.hearts = 3;
+            this.hasSeeds = false;
+            this.coins = 0;
+            this.speed=200f;
+            this.accelerate=800f;
+            this.friction=4000f;
+            this.coins_log=new String[18];
             Main.getInstance().gameOver();
         }
-        //Decrease the counter that the main game uses for the bad events as this is a bad event.
+        // Decrease the counter that the main game uses for the bad events as this is a bad event.
         Main.getInstance().decrementBadEventCounter();
     }
 }
