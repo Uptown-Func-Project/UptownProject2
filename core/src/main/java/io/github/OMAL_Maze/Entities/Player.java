@@ -221,7 +221,7 @@ public class Player extends Character{
         else {
             swingAnim.reset();
         }
-
+        
     }
 
     /**

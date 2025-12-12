@@ -54,7 +54,7 @@ public class AStar {
                 int ny = current.y + dy;
 
                 if (nx < 0 || ny < 0 || nx >= width || ny >= height) continue;
-                if (walls[ny][nx]) continue;
+                if (walls[ny][nx] == true) continue;
                 if (closed[ny][nx]) continue;
 
                 // Prevent diagonal corner clipping

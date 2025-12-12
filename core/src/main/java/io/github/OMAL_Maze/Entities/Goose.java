@@ -32,6 +32,9 @@ public class Goose extends Character{
     public int healthPoints;
     public boolean knockbackActive = false;
     private Animation walkAnimation;
+    private boolean[][] mapy;
+    private boolean facingRight = true;
+    private int lastMoveX = 0;
 
     enum gooseState{
         IDLE,
@@ -59,7 +62,30 @@ public class Goose extends Character{
         this.createTrigger();
         this.walkAnimation = new Animation(0.1,4);
         this.walkAnimation.setLooping(true);
-
+        mapy = new boolean[][]{
+    {true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true},
+    {true,false,false,false,false,false,true,true,false,false,true,false,false,false,false,false,false,false,false,false,false,false},
+    {true,true,true,false,true,false,true,true,true,false,true,false,true,true,true,true,true,true,false,true,false,true},
+    {true,false,false,false,true,false,false,false,false,false,true,false,false,false,true,false,false,false,false,false,true,false,true},
+    {true,false,true,true,true,true,true,true,true,true,true,true,true,true,false,true,true,true,true,true,false,true},
+    {true,false,true,false,false,false,false,false,false,false,false,false,true,false,false,false,false,false,false,true,false,true},
+    {true,false,true,false,true,true,true,true,true,false,false,true,true,true,true,true,false,true,true,true,false,true},
+    {true,false,true,false,true,false,false,false,false,false,false,false,false,false,false,false,true,false,false,false,true,false,true},
+    {true,false,false,false,true,false,true,true,true,true,true,true,true,true,false,false,false,true,false,true,false,true},
+    {true,false,true,true,true,false,false,false,true,true,true,true,true,true,false,false,false,true,false,true,false,true},
+    {true,false,true,false,false,false,false,false,true,true,true,true,true,true,true,true,true,true,false,true,false,true},
+    {true,false,true,false,true,true,true,false,true,true,true,true,true,true,true,true,false,false,true,false,true,false,true},
+    {true,false,true,false,false,false,true,false,true,true,true,true,true,true,true,true,false,false,true,true,true,false,true},
+    {true,true,true,false,true,false,true,true,true,true,true,true,true,true,true,false,false,false,false,false,false,true},
+    {true,false,false,false,true,false,false,false,false,false,true,true,false,true,true,false,false,false,false,false,false,true},
+    {true,false,true,false,true,true,true,true,true,false,false,true,false,true,true,false,false,true,false,true,true,true},
+    {true,false,true,false,false,false,false,true,true,true,false,true,false,true,true,false,false,true,false,false,false,true},
+    {true,true,true,true,true,true,false,true,true,true,false,true,false,true,true,true,true,true,true,true,true,true,true},
+    {true,false,false,false,true,false,false,true,true,true,false,true,false,false,false,false,false,false,true,false,false,false,true},
+    {true,false,true,false,true,false,true,true,false,true,false,true,true,true,true,true,false,true,false,true,false,true},
+    {false,false,true,false,false,false,false,false,false,true,false,false,false,false,false,false,false,false,false,true,false,true},
+    {true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,false,true}
+};
         gooseQuack = Gdx.audio.newSound(Gdx.files.internal("Sounds/Geese.mp3"));
     }
 
@@ -210,6 +236,38 @@ public class Goose extends Character{
             capSpeed(delta);
             tryMove(entities, buildings);
 
+            int[] goal = new int[] {
+        (int)(player.getPlayerX() / 40),
+        (int)(player.getPlayerY() / 40)
+    };
+            int[] start = new int[] {
+        (int)(this.getGooseX() / 40),
+        (int)(this.getGooseY() / 40)
+    };
+            int[] next = io.github.OMAL_Maze.Map.AStar.getNextMove(mapy, start, goal);
+            float vx = 0, vy = 0;
+            boolean moving = false;
+
+            if (next != null) {
+                float targetX = next[0] * 16 + 8;
+                float targetY = next[1] * 16 + 8;
+
+                float dx = targetX - player.getPlayerX();
+                float dy = targetY - player.getPlayerY();
+
+                float dist = (float)Math.sqrt(dx * dx + dy * dy);
+
+                if (dist > 0.1f) {
+                    vx = (dx / dist) * speed;
+                    vy = (dy / dist) * speed;
+                    moving = true;
+                }
+
+                if (vx > 0) { facingRight = true; lastMoveX = 1; }
+                if (vx < 0) { facingRight = false; lastMoveX = -1; }
+                capSpeed(delta);
+            tryMove(entities, buildings);
+            }
         } else if (isMoving && this.state.equals(gooseState.HAPPY)){
             wanderTimer -= delta;
             if (wanderTimer <= 0) {
