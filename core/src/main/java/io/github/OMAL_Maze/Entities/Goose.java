@@ -36,6 +36,14 @@ public class Goose extends Character{
     private boolean facingRight = true;
     private int lastMoveX = 0;
 
+    // --- NEW fields to detect & temporarily block stuck tiles ---
+    private float[][] tempBlockedTTL;
+    private int stuckCounter = 0;
+    private int lastNextX = -1;
+    private int lastNextY = -1;
+    private final float TEMP_BLOCK_DURATION = 2.0f; // seconds
+    private final int STUCK_THRESHOLD = 4;
+
     enum gooseState{
         IDLE,
         ANGRY,
@@ -49,7 +57,7 @@ public class Goose extends Character{
         super(x, y, width, height, entityTexture);
         visible = false;
         state = gooseState.IDLE;
-        this.isMoving = false;
+        this.isMoving = true;
         this.speed=75f;
         this.accelerate=600f;
         this.friction=3000f;
@@ -63,29 +71,32 @@ public class Goose extends Character{
         this.walkAnimation = new Animation(0.1,4);
         this.walkAnimation.setLooping(true);
         mapy = new boolean[][]{
-    {true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true},
-    {true,false,false,false,false,false,true,true,false,false,true,false,false,false,false,false,false,false,false,false,false,false},
-    {true,true,true,false,true,false,true,true,true,false,true,false,true,true,true,true,true,true,false,true,false,true},
-    {true,false,false,false,true,false,false,false,false,false,true,false,false,false,true,false,false,false,false,false,true,false,true},
-    {true,false,true,true,true,true,true,true,true,true,true,true,true,true,false,true,true,true,true,true,false,true},
-    {true,false,true,false,false,false,false,false,false,false,false,false,true,false,false,false,false,false,false,true,false,true},
-    {true,false,true,false,true,true,true,true,true,false,false,true,true,true,true,true,false,true,true,true,false,true},
-    {true,false,true,false,true,false,false,false,false,false,false,false,false,false,false,false,true,false,false,false,true,false,true},
-    {true,false,false,false,true,false,true,true,true,true,true,true,true,true,false,false,false,true,false,true,false,true},
-    {true,false,true,true,true,false,false,false,true,true,true,true,true,true,false,false,false,true,false,true,false,true},
-    {true,false,true,false,false,false,false,false,true,true,true,true,true,true,true,true,true,true,false,true,false,true},
-    {true,false,true,false,true,true,true,false,true,true,true,true,true,true,true,true,false,false,true,false,true,false,true},
-    {true,false,true,false,false,false,true,false,true,true,true,true,true,true,true,true,false,false,true,true,true,false,true},
-    {true,true,true,false,true,false,true,true,true,true,true,true,true,true,true,false,false,false,false,false,false,true},
-    {true,false,false,false,true,false,false,false,false,false,true,true,false,true,true,false,false,false,false,false,false,true},
-    {true,false,true,false,true,true,true,true,true,false,false,true,false,true,true,false,false,true,false,true,true,true},
-    {true,false,true,false,false,false,false,true,true,true,false,true,false,true,true,false,false,true,false,false,false,true},
-    {true,true,true,true,true,true,false,true,true,true,false,true,false,true,true,true,true,true,true,true,true,true,true},
-    {true,false,false,false,true,false,false,true,true,true,false,true,false,false,false,false,false,false,true,false,false,false,true},
-    {true,false,true,false,true,false,true,true,false,true,false,true,true,true,true,true,false,true,false,true,false,true},
-    {false,false,true,false,false,false,false,false,false,true,false,false,false,false,false,false,false,false,false,true,false,true},
-    {true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,false,true}
+            {true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true},
+            {true,false,false,false,false,false,true,true,false,false,true,false,false,false,false,false,false,false,false,false,false,false},
+            {true,true,true,false,true,false,true,true,true,false,true,false,true,true,true,true,true,true,false,true,false,true},
+            {true,false,false,false,true,false,false,false,false,false,true,false,false,false,true,false,false,false,false,false,true,false,true},
+            {true,false,true,true,true,true,true,true,true,true,true,true,true,true,false,true,true,true,true,true,false,true},
+            {true,false,true,false,false,false,false,false,false,false,false,false,true,false,false,false,false,false,false,true,false,true},
+            {true,false,true,false,true,true,true,true,true,false,false,true,true,true,true,true,false,true,true,true,false,true},
+            {true,false,true,false,true,false,false,false,false,false,false,false,false,false,false,false,true,false,false,false,true,false,true},
+            {true,false,false,false,true,false,true,true,true,true,true,true,true,true,false,false,false,true,false,true,false,true},
+            {true,false,true,true,true,false,false,false,true,true,true,true,true,true,false,false,false,true,false,true,false,true},
+            {true,false,true,false,false,false,false,false,true,true,true,true,true,true,true,true,true,true,false,true,false,true},
+            {true,false,true,false,true,true,true,false,true,true,true,true,true,true,true,true,false,false,true,false,true,false,true},
+            {true,false,true,false,false,false,true,false,true,true,true,true,true,true,true,true,false,false,true,true,true,false,true},
+            {true,true,true,false,true,false,true,true,true,true,true,true,true,true,true,false,false,false,false,false,false,true},
+            {true,false,false,false,true,false,false,false,false,false,true,true,false,true,true,false,false,false,false,false,false,true},
+            {true,false,true,false,true,true,true,true,true,false,false,true,false,true,true,false,false,true,false,true,true,true},
+            {true,false,true,false,false,false,false,true,true,true,false,true,false,true,true,false,false,true,false,false,false,true},
+            {true,true,true,true,true,true,false,true,true,true,false,true,false,true,true,true,true,true,true,true,true,true,true},
+            {true,false,false,false,true,false,false,true,true,true,false,true,false,false,false,false,false,false,true,false,false,false,true},
+            {true,false,true,false,true,false,true,true,false,true,false,true,true,true,true,true,false,true,false,true,false,true},
+            {false,false,true,false,false,false,false,false,false,true,false,false,false,false,false,false,false,false,false,true,false,true},
+            {true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,false,true}
 };
+        // initialize temporary-block TTL array
+        tempBlockedTTL = new float[mapy.length][mapy[0].length];
+
         gooseQuack = Gdx.audio.newSound(Gdx.files.internal("Sounds/Geese.mp3"));
     }
 
@@ -175,87 +186,204 @@ public class Goose extends Character{
     public void movement(float delta, Array<Entity> entities, Array<Building> buildings) {
         this.player = Main.player;
 
-        // If currently being knocked back, apply that movement and decay to zero
-        if (knockbackActive) {
-            // Cap speed according to your usual caps
-            capSpeed(delta);
+        // decrement any temporary-block TTLs
+        for (int y = 0; y < tempBlockedTTL.length; y++) {
+            for (int x = 0; x < tempBlockedTTL[0].length; x++) {
+                if (tempBlockedTTL[y][x] > 0f) {
+                    tempBlockedTTL[y][x] -= delta;
+                    if (tempBlockedTTL[y][x] < 0f) tempBlockedTTL[y][x] = 0f;
+                }
+            }
+        }
 
-            // Try to move using the current velocities
+        // If being knocked back, apply existing velocity and decay it
+        if (knockbackActive) {
+            // apply current velocity for this frame
+            capSpeed(delta);
             tryMove(entities, buildings);
 
-            // Smoothly decay velocities (game-feel)
-            float decayRate = 4f; // higher = quicker stop
-            Xspeed = MathUtils.lerp(Xspeed, 0f, decayRate * delta);
-            Yspeed = MathUtils.lerp(Yspeed, 0f, decayRate * delta);
+            // decay velocities smoothly
+            float decayRate = 4f;
+            this.Xspeed = MathUtils.lerp(this.Xspeed, 0f, decayRate * delta);
+            this.Yspeed = MathUtils.lerp(this.Yspeed, 0f, decayRate * delta);
 
-            // If velocity is small, stop knockback and resume normal behaviour
-            if (Math.abs(Xspeed) < 6f && Math.abs(Yspeed) < 6f) {
-                Xspeed = 0f;
-                Yspeed = 0f;
-                knockbackActive = false;
-                // After being knocked back, resume chasing if goose is angry
-                if (state == gooseState.ANGRY) {
-                    this.isMoving = true;
-                }
+            if (Math.abs(this.Xspeed) < 6f && Math.abs(this.Yspeed) < 6f) {
+                this.Xspeed = 0f;
+                this.Yspeed = 0f;
+                this.knockbackActive = false;
+                if (state == gooseState.ANGRY) this.isMoving = true;
             }
 
-            // Run regular logic (timers, sounds, spawn triggers)
             this.logic();
-            return; // skip chasing logic this frame
+            return;
         }
 
-        // Normal chasing / wandering behaviour when not knocked back
-        if (isMoving && state.equals(gooseState.ANGRY) ) {
+        // Normal AI movement when angry
+        if (isMoving != null && isMoving && state == gooseState.ANGRY) {
+            int tileSize = (this.instance != null) ? this.instance.tileSize : 40;
 
-            int[] goal = new int[] {
-        (int)(player.getPlayerX() / 40),
-        (int)(player.getPlayerY() / 40)
-    };
-            int[] start = new int[] {
-        (int)(this.getGooseX() / 40),
-        (int)(this.getGooseY() / 40)
-    };
-            int[] next = io.github.OMAL_Maze.Map.AStar.getNextMove(mapy, start, goal);
-            float vx = 0, vy = 0;
-            boolean isMoving = false;
+            // use sprite centers for tile conversion
+            float centerX = this.sprite.getX() + this.sprite.getWidth() / 2f;
+            float centerY = this.sprite.getY() + this.sprite.getHeight() / 2f;
+            float playerCenterX = player.sprite.getX() + player.sprite.getWidth() / 2f;
+            float playerCenterY = player.sprite.getY() + player.sprite.getHeight() / 2f;
 
-            if (next != null) {
-                float targetX = next[0] * 16 + 8;
-                float targetY = next[1] * 16 + 8;
-
-                float dx = targetX - player.getPlayerX();
-                float dy = targetY - player.getPlayerY();
-
-                float dist = (float)Math.sqrt(dx * dx + dy * dy);
-
-                if (dist > 0.1f) {
-                    vx = (dx / dist) * speed;
-                    vy = (dy / dist) * speed;
-                    isMoving = true;
+            // If map not available, fallback to direct chase
+            if (mapy == null || mapy.length == 0) {
+                float dx = playerCenterX - centerX;
+                float dy = playerCenterY - centerY;
+                float dist = (float) Math.sqrt(dx * dx + dy * dy);
+                if (dist > 1f) {
+                    this.Xspeed = (dx / dist) * speed;
+                    this.Yspeed = (dy / dist) * speed;
+                } else {
+                    this.Xspeed = 0f;
+                    this.Yspeed = 0f;
                 }
 
-                if (vx > 0) { facingRight = true; lastMoveX = 1; }
-                if (vx < 0) { facingRight = false; lastMoveX = -1; }
-                Xspeed = vx;
-                Yspeed = vy;
-                System.out.println(player.getPlayerX()/40 + "," + player.getPlayerY()/40);
+                if (this.Xspeed > 0) { facingRight = true; lastMoveX = 1; }
+                else if (this.Xspeed < 0) { facingRight = false; lastMoveX = -1; }
+
                 capSpeed(delta);
-                 tryMove(entities, buildings);
+                tryMove(entities, buildings);
+
+                if (this.Xspeed != 0f || this.Yspeed != 0f) walkAnimation.update(delta);
+                else walkAnimation.reset();
+
+                this.logic();
+                return;
             }
-        }
-        else{
-            Xspeed=0;
-            Yspeed=0;
-        }
-         if (isMoving){
-        walkAnimation.update(delta);
-    }
-    else{
-        walkAnimation.reset();
-    }
 
+            int mapH = mapy.length;
+            int mapW = mapy[0].length;
 
-        // Call normal logic after movement code
+            int startX = (int) (centerX / tileSize);
+            int startY = (int) (centerY / tileSize);
+            int goalX = (int) (playerCenterX / tileSize);
+            int goalY = (int) (playerCenterY / tileSize);
+
+            // clamp indices
+            startX = Math.max(0, Math.min(mapW - 1, startX));
+            startY = Math.max(0, Math.min(mapH - 1, startY));
+            goalX = Math.max(0, Math.min(mapW - 1, goalX));
+            goalY = Math.max(0, Math.min(mapH - 1, goalY));
+
+            int[] start = new int[] { startX, startY }; // [x,y]
+            
+            int[] goal = new int[] { goalX, goalY };
+            System.out.println("Goose A* from (" + startX + "," + startY + ") to (" + goalX + "," + goalY + ")");
+
+            // build merged map = static walls OR temporary blocked tiles
+            boolean[][] merged = copyMap(mapy);
+            for (int y = 0; y < tempBlockedTTL.length; y++) {
+                for (int x = 0; x < tempBlockedTTL[0].length; x++) {
+                    if (tempBlockedTTL[y][x] > 0f) merged[y][x] = true;
+                }
+            }
+
+            int[] next = io.github.OMAL_Maze.Map.AStar.getNextMove(merged, start, goal);
+            System.out.println("Goose A* next tile: " + ((next != null) ? ("(" + next[0] + "," + next[1] + ")") : "null"));
+
+            
+            if (next != null) {
+                int nx = next[0], ny = next[1];
+                if (ny < 0 || ny >= merged.length || nx < 0 || nx >= merged[0].length || merged[ny][nx]) {
+                    System.out.println("Goose A*: returned blocked tile (" + nx + "," + ny + ") - ignoring");
+                    next = null;
+                }
+            }
+
+            if (next != null && isTileBlocked(next[0], next[1], entities, buildings)) {
+                boolean[][] tmp = copyMap(merged); 
+                tmp[next[1]][next[0]] = true;
+                int[] alt = io.github.OMAL_Maze.Map.AStar.getNextMove(tmp, start, goal);
+                if (alt != null && !(alt[0] == startX && alt[1] == startY)) {
+                    next = alt;
+                } else {
+                    next = null;
+                }
+            }
+
+            boolean didMove = false;
+
+            
+            if (next != null) {
+                if (next[0] == lastNextX && next[1] == lastNextY) {
+                    // still trying same tile as last frame
+                    stuckCounter++;
+                } else {
+                    stuckCounter = 0;
+                }
+            } else {
+                stuckCounter = 0;
+            }
+
+            if (stuckCounter >= STUCK_THRESHOLD && next != null) {
+                // mark the not working tile blocked for a while
+                tempBlockedTTL[next[1]][next[0]] = TEMP_BLOCK_DURATION;
+                stuckCounter = 0;
+                // rebuild merged + recompute next
+                boolean[][] tmpMerged = copyMap(mapy);
+                for (int y = 0; y < tempBlockedTTL.length; y++) {
+                    for (int x = 0; x < tempBlockedTTL[0].length; x++) {
+                        if (tempBlockedTTL[y][x] > 0f) tmpMerged[y][x] = true;
+                    }
+                }
+                next = io.github.OMAL_Maze.Map.AStar.getNextMove(tmpMerged, start, goal);
+            }
+            lastNextX = (next != null) ? next[0] : -1;
+            lastNextY = (next != null) ? next[1] : -1;
+            // --- END stuck detection ---
+
+            if (next != null && !(next[0] == startX && next[1] == startY)) {
+                // convert next tile to world center coords
+                float targetX = next[0] * tileSize + tileSize / 2f;
+                float targetY = next[1] * tileSize + tileSize / 2f;
+
+                float dx = targetX - centerX;
+                float dy = targetY - centerY;
+                float dist = (float) Math.sqrt(dx * dx + dy * dy);
+
+                if (dist > 0.01f) {
+                    this.Xspeed = (dx / dist) * speed;
+                    this.Yspeed = (dy / dist) * speed;
+                    didMove = true;
+                } else {
+                    this.Xspeed = 0f;
+                    this.Yspeed = 0f;
+                }
+            } else {
+                // fallback: direct chase player to avoid getting stuck
+                float dx = playerCenterX - centerX;
+                float dy = playerCenterY - centerY;
+                float dist = (float) Math.sqrt(dx * dx + dy * dy);
+                if (dist > 1f) {
+                    this.Xspeed = (dx / dist) * speed;
+                    this.Yspeed = (dy / dist) * speed;
+                    didMove = true;
+                } else {
+                    this.Xspeed = 0f;
+                    this.Yspeed = 0f;
+                }
+            }
+
+            if (this.Xspeed > 0) { facingRight = true; lastMoveX = 1; }
+            else if (this.Xspeed < 0) { facingRight = false; lastMoveX = -1; }
+
+            capSpeed(delta);
+            tryMove(entities, buildings);
+
+            if (didMove) walkAnimation.update(delta); else walkAnimation.reset();
+
+        } else {
+            // not moving / not angry
+            this.Xspeed = 0f;
+            this.Yspeed = 0f;
+            this.moveX = 0f;
+            this.moveY = 0f;
+            walkAnimation.reset();
+        }
+
         this.logic();
     }
    
@@ -354,5 +482,44 @@ public class Goose extends Character{
     }
     public int getWalkFrame(){
         return walkAnimation.getCurrentFrame();
+    }
+
+    // --- NEW helper: check if placing the sprite centered on tile (tx,ty) would collide ---
+    private boolean isTileBlocked(int tx, int ty, Array<Entity> entities, Array<Building> buildings) {
+        int tileSize = this.instance.tileSize;
+        float centerX = tx * tileSize + tileSize / 2f;
+        float centerY = ty * tileSize + tileSize / 2f;
+        Rectangle testRect = new Rectangle(centerX - this.sprite.getWidth() / 2f,
+                                           centerY - this.sprite.getHeight() / 2f,
+                                           this.sprite.getWidth(),
+                                           this.sprite.getHeight());
+        // check buildings
+        for (int i = 0; i < buildings.size; i++) {
+            if (buildings.get(i).Overlaps(testRect)) return true;
+        }
+        // check solid entities (players, other mobs)
+        for (int i = 0; i < entities.size; i++) {
+            Entity e = entities.get(i);
+            if (e == this) continue;
+            if (!e.isSolid) continue;
+            if (e.Overlaps(testRect)) return true;
+        }
+        // also check map walls (in case of tight collision due to sprite size)
+        int mapH = mapy.length;
+        int mapW = mapy[0].length;
+        if (ty >= 0 && ty < mapH && tx >= 0 && tx < mapW && mapy[ty][tx]) return true;
+
+        return false;
+    }
+
+    // --- NEW helper: shallow copy boolean[][] ---
+    private boolean[][] copyMap(boolean[][] src) {
+        int h = src.length;
+        int w = src[0].length;
+        boolean[][] dst = new boolean[h][w];
+        for (int y = 0; y < h; y++) {
+            System.arraycopy(src[y], 0, dst[y], 0, w);
+        }
+        return dst;
     }
 }

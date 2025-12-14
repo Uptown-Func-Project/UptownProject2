@@ -8,21 +8,13 @@ public class AStar {
     static class Node {
         int x, y;
         float g, h;
-        Node parent;
-
-        Node(int x, int y, float g, float h, Node parent) {
-            this.x = x;
-            this.y = y;
-            this.g = g;
-            this.h = h;
-            this.parent = parent;
+        Node(int x, int y, float g, float h) {
+            this.x = x; this.y = y; this.g = g; this.h = h;
         }
-
         float f() { return g + h; }
     }
 
     public static int[] getNextMove(boolean[][] walls, int[] start, int[] goal) {
-
         int height = walls.length;
         int width  = walls[0].length;
 
@@ -31,80 +23,94 @@ public class AStar {
         int gx = clamp(goal[0], 0, width - 1);
         int gy = clamp(goal[1], 0, height - 1);
 
-        PriorityQueue<Node> open = new PriorityQueue<>(Comparator.comparingDouble(Node::f));
-        boolean[][] closed = new boolean[height][width];
+        // If start or goal are walls, bail early (caller can fallback)
+        if (walls[sy][sx] || walls[gy][gx]) return null;
 
-        Node startNode = new Node(sx, sy, 0, heuristic(sx, sy, gx, gy), null);
-        open.add(startNode);
+        // fast-path: already at goal
+        if (sx == gx && sy == gy) return new int[]{gx, gy};
+
+        // gScore grid init
+        float[][] gScore = new float[height][width];
+        for (int y = 0; y < height; y++)
+            for (int x = 0; x < width; x++)
+                gScore[y][x] = Float.POSITIVE_INFINITY;
+
+        // parent arrays to reconstruct path
+        int[][] parentX = new int[height][width];
+        int[][] parentY = new int[height][width];
+        for (int y = 0; y < height; y++)
+            for (int x = 0; x < width; x++) { parentX[y][x] = -1; parentY[y][x] = -1; }
+
+        PriorityQueue<Node> open = new PriorityQueue<>(Comparator.comparingDouble(n -> n.f()));
+        gScore[sy][sx] = 0f;
+        open.add(new Node(sx, sy, 0f, heuristic(sx, sy, gx, gy)));
 
         while (!open.isEmpty()) {
             Node current = open.poll();
 
-            if (current.x == gx && current.y == gy) {
-                return reconstructNextStep(current);
-            }
+            // Skip stale entry (we already have a better g)
+            if (current.g > gScore[current.y][current.x]) continue;
 
-            closed[current.y][current.x] = true;
+            if (current.x == gx && current.y == gy) {
+                // reconstruct next step: walk back until parent is the start
+                int rx = gx, ry = gy;
+                while (!(rx == sx && ry == sy)) {
+                    int px = parentX[ry][rx];
+                    int py = parentY[ry][rx];
+                    if (px == -1 || py == -1) break;
+                    if (px == sx && py == sy) break;
+                    rx = px; ry = py;
+                }
+                return new int[]{rx, ry};
+            }
 
             for (int i = 0; i < DIRS.length; i++) {
                 int dx = DIRS[i][0];
                 int dy = DIRS[i][1];
-
                 int nx = current.x + dx;
                 int ny = current.y + dy;
 
                 if (nx < 0 || ny < 0 || nx >= width || ny >= height) continue;
-                if (walls[ny][nx] == true) continue;
-                if (closed[ny][nx]) continue;
+                if (walls[ny][nx]) continue;
 
-                // Prevent diagonal corner clipping
-                if (i >= 4) {  // diagonal directions are indices 4–7
-                    int block1x = current.x + dx;
-                    int block1y = current.y;
-                    int block2x = current.x;
-                    int block2y = current.y + dy;
-
-                    if (walls[block1y][block1x] || walls[block2y][block2x])
-                        continue;
+                // prevent diagonal corner cutting
+                if (i >= 4) {
+                    int b1x = current.x + dx;
+                    int b1y = current.y;
+                    int b2x = current.x;
+                    int b2y = current.y + dy;
+                    if (b1x < 0 || b1y < 0 || b1x >= width || b1y >= height) continue;
+                    if (b2x < 0 || b2y < 0 || b2x >= width || b2y >= height) continue;
+                    if (walls[b1y][b1x] || walls[b2y][b2x]) continue;
                 }
 
-                float g = current.g + DIR_COST[i];
-                float h = heuristic(nx, ny, gx, gy);
-
-                open.add(new Node(nx, ny, g, h, current));
+                float tentativeG = current.g + DIR_COST[i];
+                if (tentativeG < gScore[ny][nx]) {
+                    gScore[ny][nx] = tentativeG;
+                    parentX[ny][nx] = current.x;
+                    parentY[ny][nx] = current.y;
+                    open.add(new Node(nx, ny, tentativeG, heuristic(nx, ny, gx, gy)));
+                }
             }
         }
 
         return null;
     }
 
-    // 8 directions: 4 cardinal + 4 diagonals
     private static final int[][] DIRS = {
         { 1, 0}, {-1, 0}, { 0, 1}, { 0,-1},
         { 1, 1}, { 1,-1}, {-1, 1}, {-1,-1}
     };
 
-    // matching movement cost (cardinal = 1, diagonal = sqrt(2))
     private static final float[] DIR_COST = {
         1f, 1f, 1f, 1f,
         1.4142f, 1.4142f, 1.4142f, 1.4142f
     };
 
     private static float heuristic(int x1, int y1, int x2, int y2) {
-        // euclid for diagonal
         int dx = Math.abs(x1 - x2);
         int dy = Math.abs(y1 - y2);
         return (float)(Math.max(dx, dy) + (Math.sqrt(2) - 1) * Math.min(dx, dy));
-    }
-
-    private static int[] reconstructNextStep(Node goal) {
-        Node curr = goal;
-
-        while (curr.parent != null && curr.parent.parent != null) {
-            curr = curr.parent;
-        }
-
-        return new int[]{curr.x, curr.y};
     }
 
     private static int clamp(int v, int min, int max) {

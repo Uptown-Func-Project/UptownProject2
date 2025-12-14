@@ -185,6 +185,7 @@ public class Player extends Character{
                 && !(Gdx.input.isKeyPressed(Input.Keys.DOWN)||Gdx.input.isKeyPressed(Input.Keys.S))) {
             Yspeed *= Math.max(0, 1 - friction * delta / speed);
         }
+        //System.out.println(this.getPlayerX()/40 + "," + this.getPlayerY()/40);
         //Cap the speed to the maximum if the values are too high as a result of the movement calculations.
         capSpeed(delta);
         
