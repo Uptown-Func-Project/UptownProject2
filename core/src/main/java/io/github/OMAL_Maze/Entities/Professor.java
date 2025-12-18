@@ -56,12 +56,18 @@ public class Professor extends Entity {
      * 
      * for super hard question just use more multiple choices
      * 
-     * professor will use an int Exam_state, starts at 0 (no exam score)
-     * answering all correctly changes it to 1 (gives hasGoodDegree)
-     * answering 1 wrong changes it to 2 (gives hasBadDegree)
      * 
-     * hasGoodDegree or hasBadDegree boolean will be used within central hall
-     * change hasGoodDegree and hasBadDegree to 1 boolean instead of 2.
+     * 
+     * professor checks if hasDegree = false and degreeState = 0
+     * If true then 
+     * 
+     * answering exam changes degreeState to either 1 or 2
+     * degreeState = 1/2 and hasDegree = false - player heads to central hall to get their degree
+     * 
+     * talking to person in central hall sets hasDegree = true
+     * 
+     * dean tells you to go get a degree if hasDegree = false. if its true, it checks if its 1 or 2 
+     * and attacks you based on the degreeState.
      * 
      */
 
