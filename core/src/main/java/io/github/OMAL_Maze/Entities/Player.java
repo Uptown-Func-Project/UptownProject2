@@ -20,8 +20,8 @@ public class Player extends Character{
     public int hearts;
     static Sound itemPickup;
     public boolean hasSeeds;
-    public boolean degreeState;
-    public int examState;
+    public boolean hasDegree;
+    public int degreeState;
 
     /**
      * Spawns a player entity and sets the default values for hearts, seeds, speed, acceleration, and friction.
@@ -36,8 +36,8 @@ public class Player extends Character{
         this.visible = true;
         this.hearts = 3;
         this.hasSeeds = false;
-        this.degreeState = false;
-        this.examState = 0;
+        this.hasDegree = false;
+        this.degreeState = 0; // 0 = no degree, 1 = bad degree, 2 = perfect degree
         this.speed=150f;
         this.accelerate=800f;
         this.friction=4000f;
@@ -90,7 +90,7 @@ public class Player extends Character{
             }
         }
 
-        if (examState == 0) {
+        if (degreeState == 0) {
             // interacting with professor
     
             for (int i=0; i < entities.size; i++) {
@@ -101,7 +101,8 @@ public class Player extends Character{
 
                     if (playerBounds.overlaps(profBounds) && Gdx.input.isKeyJustPressed(Input.Keys.E)) {
                         // if player is within bounds and press e, interact with professor
-                        // implement dialogue system
+                        Dialogue d = Dialogue.fromJson("Dialgoues/professor_intro.json");
+                        DialogueManager.getInstance().start(d, null);
                         System.out.println("Player is interacting with the Professor.");
                     }
                 }
@@ -118,6 +119,8 @@ public class Player extends Character{
      */
     @Override
     public void movement(float delta, Array<Entity> entities, Array<Building> buildings) {
+        if (io.github.OMAL_Maze.Dialogue.DialogueManager.getInstance().isActive()) return;
+        
         //If either right arrow or D is pressed, move right.
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D)) {
             Xspeed += accelerate * delta;
