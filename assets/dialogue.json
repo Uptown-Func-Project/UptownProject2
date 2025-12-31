@@ -1,0 +1,54 @@
+[
+  {
+    "id": "start",
+    "speaker": "Professor",
+    "text": "To escape the maze you'll need to answer the exam. Are you ready?",
+    "choices": [
+      {
+        "text": "Yes",
+        "nextId": "yes_response",
+        "effect": null
+      },
+      {
+        "text": "No",
+        "nextId": "no_response",
+        "effect": null
+      }
+    ],
+    "nextId": null
+  },
+  {
+    "id": "yes_response",
+    "speaker": "Professor",
+    "text": "Great! Let's get started.",
+    "choices": [],
+    "nextId": "question_1"
+  },
+  {
+    "id": "no_response",
+    "speaker": "Professor",
+    "text": "Too bad.",
+    "choices": [],
+    "nextId": "question_1"
+  },
+  {
+    "id": "question_1",
+    "speaker": "Professor",
+    "text": "1 + 1 = ?",
+    "choices": [
+      {
+        "text": "2",
+        "nextId": "q1_correct",
+        "effect": null
+      },
+      {
+        "text": "6",
+        "nextId": "q1_wrong",
+        "effect": null
+      }
+    ],
+    "nextId": null
+  }
+
+
+]

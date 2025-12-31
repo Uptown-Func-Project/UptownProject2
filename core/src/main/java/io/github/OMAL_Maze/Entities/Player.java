@@ -11,6 +11,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import io.github.OMAL_Maze.Main;
 import io.github.OMAL_Maze.Map.Building;
+import io.github.OMAL_Maze.Dialogue.DialogueManager;
+
 /**
  * the player class which extends the {@link Character} class
  * Can pickup items
@@ -101,8 +103,7 @@ public class Player extends Character{
 
                     if (playerBounds.overlaps(profBounds) && Gdx.input.isKeyJustPressed(Input.Keys.E)) {
                         // if player is within bounds and press e, interact with professor
-                        Dialogue d = Dialogue.fromJson("Dialgoues/professor_intro.json");
-                        DialogueManager.getInstance().start(d, null);
+                        DialogueManager.getInstance().startDialogue("start");
                         System.out.println("Player is interacting with the Professor.");
                     }
                 }
@@ -119,7 +120,7 @@ public class Player extends Character{
      */
     @Override
     public void movement(float delta, Array<Entity> entities, Array<Building> buildings) {
-        if (io.github.OMAL_Maze.Dialogue.DialogueManager.getInstance().isActive()) return;
+        if (io.github.OMAL_Maze.Dialogue.DialogueManager.getInstance().isDialogueActive()) return;
         
         //If either right arrow or D is pressed, move right.
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D)) {

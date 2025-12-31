@@ -59,7 +59,7 @@ public class Professor extends Entity {
      * 
      * 
      * professor checks if hasDegree = false and degreeState = 0
-     * If true then 
+     * If true then player can start test, if false dialogue says "you already did exam, go to central hall to get ur degree"
      * 
      * answering exam changes degreeState to either 1 or 2
      * degreeState = 1/2 and hasDegree = false - player heads to central hall to get their degree
@@ -67,10 +67,10 @@ public class Professor extends Entity {
      * talking to person in central hall sets hasDegree = true
      * 
      * dean tells you to go get a degree if hasDegree = false. if its true, it checks if its 1 or 2 
-     * and attacks you based on the degreeState.
+     * and chases you or lets you pass based on the degreeState.
      * 
      */
 
-    // 
+    
     
 }

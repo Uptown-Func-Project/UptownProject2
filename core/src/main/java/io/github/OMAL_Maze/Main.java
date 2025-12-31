@@ -37,6 +37,8 @@ import io.github.OMAL_Maze.Map.BuildingData;
 import io.github.OMAL_Maze.Map.MazeData;
 import io.github.OMAL_Maze.Map.MazeLoader;
 import io.github.OMAL_Maze.Map.TriggerZone;
+import io.github.OMAL_Maze.Dialogue.DialogueUI;
+import io.github.OMAL_Maze.Dialogue.DialogueManager;
 
 /** {@link ApplicationListener} implementation shared by all platforms. */
 public class Main extends ApplicationAdapter {
@@ -58,6 +60,8 @@ public class Main extends ApplicationAdapter {
     ShapeRenderer shapeRenderer; //for debugging, delete when necessary
     private float triggerCooldown = 0f;
     private static Main instance;
+    private DialogueUI dialogueUI;
+    private DialogueManager dialogueManager;
     private MazeData mazeData;
 
     BeginButton begin;
@@ -107,6 +111,9 @@ public class Main extends ApplicationAdapter {
         font = new BitmapFont();
         mazeData = MazeLoader.loadMaze("loadAssets/assets.json");
         instance = this;
+        dialogueUI = new DialogueUI(viewport, batch);
+        dialogueManager = new DialogueManager(dialogueUI);
+        dialogueManager.loadDialogue("assets/dialogue.json");
         shapeRenderer = new ShapeRenderer();
         backgroundSound = Gdx.audio.newSound(Gdx.files.internal("Sounds/Background.mp3"));
         backgroundMusic = new BackgroundMusic(backgroundSound);
@@ -431,6 +438,8 @@ public class Main extends ApplicationAdapter {
         font.draw(batch, mute.getMutedStr(), 770, 870);
         font.draw(batch, "Pause", 650, 870);
         batch.end();
+        dialogueUI.act(Gdx.graphics.getDeltaTime());
+        dialogueUI.draw();
     }
 
     /**
