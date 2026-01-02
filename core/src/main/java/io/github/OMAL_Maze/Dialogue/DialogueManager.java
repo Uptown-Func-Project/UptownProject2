@@ -1,5 +1,7 @@
 package io.github.OMAL_Maze.Dialogue;
 import com.badlogic.gdx.utils.Timer;
+import io.github.OMAL_Maze.Main;
+import io.github.OMAL_Maze.Entities.Player;
 
 public class DialogueManager {
     private Dialogue dialogue;
@@ -37,7 +39,7 @@ public class DialogueManager {
     public void selectChoice(int index) {
         if (currentLine != null && currentLine.choices != null && index >= 0 && index < currentLine.choices.size()) {
             DialogueLine.Choice choice = currentLine.choices.get(index);
-            // Apply effect if any (you can implement effects here)
+            // can apply effects to dialogue here
             if (choice.effect != null) {
                 applyEffect(choice.effect);
             }
@@ -85,7 +87,28 @@ public class DialogueManager {
 
     private void applyEffect(String effect) {
         // Implement effects based on your game logic
-        // For example, if effect == "unlock_door", unlock the door
-        System.out.println("Applying effect: " + effect);
+        // Used to keep track on the type of degree the player will get
+        if (effect == null) {
+            return;
+        }
+        Player player = Main.getInstance().player;
+
+        switch (effect) {
+            case "wrong_answer":
+                player.degreeState = 1; // player answered a question wrong
+                break;
+            case "all_correct":
+                player.degreeState = 2; //player answered everything correct
+                break;
+            case "got_degree":
+                player.hasDegree = true;
+                break;
+            case "dean_perfect_score":
+                
+                break;
+            case "dean_bad_score":
+                
+                break;
+        }
     }
 }

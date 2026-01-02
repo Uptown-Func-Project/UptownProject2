@@ -98,7 +98,7 @@ public class DialogueUI {
                         }
                     }
                 });
-                root.add(btn).pad(5).left().row();
+                root.add(btn).left().row();
                 choiceButtons.add(btn);
             }
         }

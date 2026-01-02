@@ -1,6 +1,6 @@
 [
-  {
-    "id": "start",
+  { 
+    "id": "prof_start",
     "speaker": "Professor",
     "text": "To escape the maze you'll need to answer the exam. Are you ready?",
     "choices": [
@@ -47,6 +47,126 @@
         "effect": null
       }
     ],
+    "nextId": null
+  },
+  {
+    "id": "q1_correct",
+    "speaker": "Professor",
+    "text": "Where can you find Central Hall and the University library?",
+    "choices": [
+      {
+        "text": "Campus East",
+        "nextId": "q2_wrong",
+        "effect": null
+      },
+      {
+        "text": "Campus West",
+        "nextId": "q2_correct",
+        "effect": null
+      }
+    ],
+    "nextId": null
+  },
+  { 
+    "id": "q1_wrong",
+    "speaker": "Professor",
+    "text": "Where can you find Central Hall and the University library?",
+    "choices": [
+      {
+        "text": "Campus East",
+        "nextId": "q2_wrong",
+        "effect": null
+      },
+      {
+        "text": "Campus West",
+        "nextId": "q2_wrong",
+        "effect": null
+      }
+    ],
+    "nextId": null
+  },
+  {
+    "id": "q2_correct",
+    "speaker": "Professor",
+    "text": "what is the first 10 digits of pi?",
+    "choices": [
+      {
+        "text": "3.141592653",
+        "nextId": "perfect_answer",
+        "effect": null
+      },
+      {
+        "text": "3.141592643",
+        "nextId": "imperfect_answer",
+        "effect": null
+      },
+            {
+        "text": "3.141592652",
+        "nextId": "imperfect_answer",
+        "effect": null
+      },
+      {
+        "text": "3.141592654",
+        "nextId": "imperfect_answer",
+        "effect": null
+      }
+
+    ],
+    "nextId": null
+  },
+  {
+    "id": "q2_wrong",
+    "speaker": "Professor",
+    "text": "what is the first 10 digits of pi?",
+    "choices": [
+      {
+        "text": "3.141592653",
+        "nextId": "imperfect_answer",
+        "effect": null
+      },
+      {
+        "text": "3.141592643",
+        "nextId": "imperfect_answer",
+        "effect": null
+      },
+            {
+        "text": "3.141592652",
+        "nextId": "imperfect_answer",
+        "effect": null
+      },
+      {
+        "text": "3.141592654",
+        "nextId": "imperfect_answer",
+        "effect": null
+      }
+
+    ],
+    "nextId": null
+  },
+  {
+    "id": "perfect_answer",
+    "speaker": "Professor",
+    "text": "The exam is over, head to Central Hall to collect your degree.",
+    "choices": [
+      {
+        "text": "got it",
+        "nextId": null,
+        "effect": "all_correct"
+      }
+    ],
+    "nextId": null
+  },
+  {
+    "id": "imperfect_answer",
+    "speaker": "Professor",
+    "text": "The exam is over, head to Central Hall to collect your degree. Good luck, you'll need it.",
+    "choices": [
+        {
+          "text": "got it",
+          "nextId": null,
+          "effect": "wrong_answer"
+        }
+    ],    
     "nextId": null
   }
 

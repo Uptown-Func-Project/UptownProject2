@@ -103,7 +103,7 @@ public class Player extends Character{
 
                     if (playerBounds.overlaps(profBounds) && Gdx.input.isKeyJustPressed(Input.Keys.E)) {
                         // if player is within bounds and press e, interact with professor
-                        DialogueManager.getInstance().startDialogue("start");
+                        DialogueManager.getInstance().startDialogue("prof_start");
                         System.out.println("Player is interacting with the Professor.");
                     }
                 }
