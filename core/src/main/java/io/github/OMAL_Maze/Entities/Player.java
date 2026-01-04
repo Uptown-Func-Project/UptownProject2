@@ -43,6 +43,7 @@ public class Player extends Character{
         this.speed=150f;
         this.accelerate=800f;
         this.friction=4000f;
+        System.out.println("Player has been invoked");
     }
 
     /**
@@ -92,24 +93,32 @@ public class Player extends Character{
             }
         }
 
-        if (degreeState == 0) {
+        // interacting with entities for dialogue
+        for (int i=0; i < entities.size; i++) {
+            Entity entity = entities.get(i);
             // interacting with professor
-    
-            for (int i=0; i < entities.size; i++) {
-                Entity entity = entities.get(i);
-                if (entity instanceof Professor) {
-                    Professor prof = (Professor) entity;
-                    Rectangle profBounds = prof.getInteractionBounds();
+            if (entity instanceof Professor) { 
+                Professor prof = (Professor) entity;
+                Rectangle profBounds = prof.getInteractionBounds();
 
-                    if (playerBounds.overlaps(profBounds) && Gdx.input.isKeyJustPressed(Input.Keys.E)) {
-                        // if player is within bounds and press e, interact with professor
+                if (playerBounds.overlaps(profBounds) && Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+                    // if player is within bounds and press e, interact with professor
+                    if (degreeState == 0) {
                         DialogueManager.getInstance().startDialogue("prof_start");
                         System.out.println("Player is interacting with the Professor.");
+                    }
+                    else {
+                        DialogueManager.getInstance().startDialogue("prof_idle");
+                    
                     }
                 }
             }
 
+            // interacting with Degree guy
+            
+            // interacting with Dean
         }
+
     }
 
     /**
@@ -213,6 +222,10 @@ public class Player extends Character{
      */
     public int getHearts(){
         return hearts;
+    }
+
+    public int getDegree() {
+        return degreeState;
     }
 
     /**

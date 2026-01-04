@@ -378,6 +378,12 @@ public class Main extends ApplicationAdapter {
             if(secondsRemaining > 0){
                 font.draw(batch, " Inventory: Seeds", timerX, timerY-15);
             }
+        //if degree is collected then text is displayed
+        if(player.hasDegree) {
+            if(secondsRemaining > 0){
+                font.draw(batch, " Inventory: Degree", timerX, timerY-30);
+            }
+
         }
         for (Building building: buildings) {
             render(building);
@@ -440,6 +446,7 @@ public class Main extends ApplicationAdapter {
         batch.end();
         dialogueUI.act(Gdx.graphics.getDeltaTime());
         dialogueUI.draw();
+        }
     }
 
     /**
@@ -505,13 +512,17 @@ public class Main extends ApplicationAdapter {
         //Clear all previous buildings, entities, and trigger zones
         //These will be null upon first use of the function (initialization)
         boolean seedCheck = false;
+        boolean degreeCheck = false;
+        int currentDegree = 0;
         int currenthearts=3;
         float speed = 150f;
         if (buildings!=null) buildings.clear();
         if (triggerZones!=null) triggerZones.clear();
         if (entities!=null) {
             if (player.hasSeeds) seedCheck = true;
+            if (player.hasDegree) degreeCheck = true;
             currenthearts=player.getHearts();
+            currentDegree = player.getDegree();
             speed=player.speed;
             if (maze==0) {
                 currenthearts=3;
@@ -530,6 +541,8 @@ public class Main extends ApplicationAdapter {
         //Set start values for the player
         player.sprite.setPosition(spawnPointX,spawnPointY);
         player.hasSeeds=seedCheck;
+        player.hasDegree = degreeCheck;
+        player.degreeState = currentDegree;
         player.hearts=currenthearts;
         player.speed=speed;
     }

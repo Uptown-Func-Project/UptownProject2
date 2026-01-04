@@ -1,5 +1,12 @@
 [
   { 
+    "id": "prof_idle",
+    "speaker": "Professor",
+    "text": "Head to Central Hall to collect your degree.",
+    "choices": [],
+    "nextId": "dialogue_end"
+  },
+  { 
     "id": "prof_start",
     "speaker": "Professor",
     "text": "To escape the maze you'll need to answer the exam. Are you ready?",
@@ -27,9 +34,9 @@
   {
     "id": "no_response",
     "speaker": "Professor",
-    "text": "Too bad.",
+    "text": "Come back when you're ready.",
     "choices": [],
-    "nextId": "question_1"
+    "nextId": "dialogue_end"
   },
   {
     "id": "question_1",
@@ -150,7 +157,7 @@
     "choices": [
       {
         "text": "got it",
-        "nextId": null,
+        "nextId": "dialogue_end",
         "effect": "all_correct"
       }
     ],
@@ -163,10 +170,17 @@
     "choices": [
         {
           "text": "got it",
-          "nextId": null,
+          "nextId": "dialogue_end",
           "effect": "wrong_answer"
         }
     ],    
+    "nextId": null
+  },
+  {
+    "id": "dialogue_end",
+    "speaker": null,
+    "text": null,
+    "choices": [],    
     "nextId": null
   }
 

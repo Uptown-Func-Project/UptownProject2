@@ -309,8 +309,8 @@
           "type": "Professor",
           "x": 432,
           "y": 480,
-          "width": 30,
-          "height": 45,
+          "width": 25,
+          "height": 40,
           "texturePath": "entityTextures/professor.png"
         }
       ],

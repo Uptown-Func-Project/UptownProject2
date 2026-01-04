@@ -62,6 +62,8 @@ public class DialogueManager {
                         advanceTo(currentLine.nextId);
                     }
                 }, 2.0f);  // 2-second delay before advancing
+            } else if (currentLine.choices.isEmpty() && currentLine.nextId == null) {
+                endDialogue();
             }
         } else {
             endDialogue();
@@ -96,9 +98,11 @@ public class DialogueManager {
         switch (effect) {
             case "wrong_answer":
                 player.degreeState = 1; // player answered a question wrong
+                System.out.println("degreeState set to 1"); 
                 break;
             case "all_correct":
                 player.degreeState = 2; //player answered everything correct
+                System.out.println("degreeState set to 2");
                 break;
             case "got_degree":
                 player.hasDegree = true;
