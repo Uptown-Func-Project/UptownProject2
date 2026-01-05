@@ -177,6 +177,35 @@
     "nextId": null
   },
   {
+    "id": "degreeStart0",
+    "speaker": "Head of Academics",
+    "text": "You haven't attempted the exam. Come back after you do.",
+    "choices": [],
+    "nextId": "dialogue_end"
+  },
+  {
+    "id": "degreeStart",
+    "speaker": "Head of Academics",
+    "text": "Congratulations on completing your course, here's your degree.",
+    "choices": [
+        {
+          "text": "*take degree*",
+          "nextId": "degreeIdle",
+          "effect": "got_degree"
+        }
+
+    ],
+    "nextId": null
+  },
+  {
+    "id": "degreeIdle",
+    "speaker": "Head of Academics",
+    "text": "Show your degree to the Dean to leave.",
+    "choices": [],
+    "nextId": "dialogue_end"
+  },
+
+  {
     "id": "dialogue_end",
     "speaker": null,
     "text": null,

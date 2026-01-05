@@ -69,6 +69,8 @@ public class Player extends Character{
 
 
         Rectangle playerBounds = sprite.getBoundingRectangle();
+        
+        
         if (!this.hasSeeds) {
             //picking up seeds
             for(int i=0; i < entities.size; i++) {
@@ -83,8 +85,8 @@ public class Player extends Character{
                         entities.removeIndex(i);
                         this.hasSeeds = true;
                         //seeds pickup sound
-                        itemPickup = Gdx.audio.newSound(Gdx.files.internal("Sounds/ItemPickup.mp3"));
                         if (this.hasSeeds) {
+                            itemPickup = Gdx.audio.newSound(Gdx.files.internal("Sounds/ItemPickup.mp3"));
                             itemPickup.play();
                         }
                         break;
@@ -92,6 +94,7 @@ public class Player extends Character{
                 }
             }
         }
+
 
         // interacting with entities for dialogue
         for (int i=0; i < entities.size; i++) {
@@ -115,7 +118,24 @@ public class Player extends Character{
             }
 
             // interacting with Degree guy
-            
+            if (entity instanceof degreeGuy) { 
+                degreeGuy degreeG = (degreeGuy) entity;
+                Rectangle degreeGBounds = degreeG.getInteractionBounds();
+
+                if (playerBounds.overlaps(degreeGBounds) && Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+                    System.out.println("within entity bounds");
+                    if (degreeState == 0) {
+                        DialogueManager.getInstance().startDialogue("degreeStart0");
+                    }
+                    else if (hasDegree == true) {
+                        DialogueManager.getInstance().startDialogue("degreeIdle");
+                    }
+                    else {
+                        DialogueManager.getInstance().startDialogue("degreeStart");
+                    }
+
+                }
+            }
             // interacting with Dean
         }
 

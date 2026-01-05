@@ -362,6 +362,15 @@
           "width": 23,
           "height": 30,
           "texturePath": "entityTextures/player_A.png"
+        },
+
+        {
+          "type": "degreeGuy",
+          "x": 382,
+          "y": 530,
+          "width": 25,
+          "height": 40,
+          "texturePath": "entityTextures/degreeGuy.png"
         }
       ],
       "buildings": [],

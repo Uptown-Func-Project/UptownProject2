@@ -30,6 +30,7 @@ import io.github.OMAL_Maze.Entities.EntityData;
 import io.github.OMAL_Maze.Entities.Goose;
 import io.github.OMAL_Maze.Entities.Player;
 import io.github.OMAL_Maze.Entities.Professor;
+import io.github.OMAL_Maze.Entities.degreeGuy;
 import io.github.OMAL_Maze.Entities.Seeds;
 import io.github.OMAL_Maze.Map.BackgroundMusic;
 import io.github.OMAL_Maze.Map.Building;
@@ -185,6 +186,8 @@ public class Main extends ApplicationAdapter {
             }
             case "Professor" ->
                     entity = new Professor(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture);
+            case "degreeGuy" ->
+                    entity = new degreeGuy(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture);
             case "Character" ->
                     entity = new Character(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture);
             case "Goose" -> entity = new Goose(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(),
@@ -378,6 +381,7 @@ public class Main extends ApplicationAdapter {
             if(secondsRemaining > 0){
                 font.draw(batch, " Inventory: Seeds", timerX, timerY-15);
             }
+        }
         //if degree is collected then text is displayed
         if(player.hasDegree) {
             if(secondsRemaining > 0){
@@ -447,7 +451,7 @@ public class Main extends ApplicationAdapter {
         dialogueUI.act(Gdx.graphics.getDeltaTime());
         dialogueUI.draw();
         }
-    }
+    
 
     /**
      * Getter method to get the number of seconds left

@@ -28,7 +28,6 @@ public class DialogueUI {
     private List<TextButton> choiceButtons;
     private ChoiceListener choiceListener;
     private BitmapFont font;
-    private Texture backgroundTexture;
 
     public interface ChoiceListener {
         void onChoiceSelected(int index);
@@ -49,15 +48,6 @@ public class DialogueUI {
         textLabel.setWrap(true);
         
         root = new Table();
-
-        // background for text box
-        Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-        pixmap.setColor(new Color(0, 0, 0, 0.3f)); // RGB value then 80% Opacity
-        pixmap.fill();
-        backgroundTexture = new Texture(pixmap);
-        pixmap.dispose();
-        TextureRegionDrawable background = new TextureRegionDrawable(new TextureRegion(backgroundTexture));
-        root.setBackground(background);
         
         // Position and pad the table
         root.center().bottom().pad(10).padLeft(900);

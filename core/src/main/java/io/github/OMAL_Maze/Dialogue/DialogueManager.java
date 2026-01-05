@@ -1,4 +1,6 @@
 package io.github.OMAL_Maze.Dialogue;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.utils.Timer;
 import io.github.OMAL_Maze.Main;
 import io.github.OMAL_Maze.Entities.Player;
@@ -8,6 +10,7 @@ public class DialogueManager {
     private DialogueLine currentLine;
     private static DialogueManager instance;
     private DialogueUI ui;
+    static Sound itemPickup;
 
     public DialogueManager(DialogueUI ui) {
         this.ui = ui;
@@ -94,18 +97,21 @@ public class DialogueManager {
             return;
         }
         Player player = Main.getInstance().player;
+        itemPickup = Gdx.audio.newSound(Gdx.files.internal("Sounds/ItemPickup.mp3"));
 
         switch (effect) {
             case "wrong_answer":
                 player.degreeState = 1; // player answered a question wrong
-                System.out.println("degreeState set to 1"); 
+                // System.out.println("degreeState set to 1"); 
                 break;
             case "all_correct":
                 player.degreeState = 2; //player answered everything correct
-                System.out.println("degreeState set to 2");
+                // System.out.println("degreeState set to 2");
                 break;
             case "got_degree":
                 player.hasDegree = true;
+                itemPickup.play();
+                // System.out.println("hasDegree set to true");
                 break;
             case "dean_perfect_score":
                 
