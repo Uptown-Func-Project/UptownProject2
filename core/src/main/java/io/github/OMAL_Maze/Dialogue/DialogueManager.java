@@ -100,24 +100,23 @@ public class DialogueManager {
         itemPickup = Gdx.audio.newSound(Gdx.files.internal("Sounds/ItemPickup.mp3"));
 
         switch (effect) {
-            case "wrong_answer":
-                player.degreeState = 1; // player answered a question wrong
-                // System.out.println("degreeState set to 1"); 
-                break;
             case "all_correct":
                 player.degreeState = 2; //player answered everything correct
                 // System.out.println("degreeState set to 2");
+                break;
+            case "take_bat":  // code to spawn bat
+                player.degreeState = 1;
+                break;
+            case "take_coins":  // code to spawn coins
+                player.degreeState = 1;
                 break;
             case "got_degree":
                 player.hasDegree = true;
                 itemPickup.play();
                 // System.out.println("hasDegree set to true");
                 break;
-            case "dean_perfect_score":
-                
-                break;
-            case "dean_bad_score":
-                
+            case "dean_spawn":
+                // Can spawn dean after dialogue.
                 break;
         }
     }

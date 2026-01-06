@@ -110,10 +110,13 @@ public class Player extends Character{
                         DialogueManager.getInstance().startDialogue("prof_start");
                         System.out.println("Player is interacting with the Professor.");
                     }
-                    else {
-                        DialogueManager.getInstance().startDialogue("prof_idle");
-                    
+                    else if (degreeState == 1) {
+                        DialogueManager.getInstance().startDialogue("imperfect_answer2");
                     }
+                    else if (degreeState == 2) {
+                        DialogueManager.getInstance().startDialogue("prof_idle");
+                    }
+
                 }
             }
 
@@ -127,10 +130,10 @@ public class Player extends Character{
                     if (degreeState == 0) {
                         DialogueManager.getInstance().startDialogue("degreeStart0");
                     }
-                    else if (hasDegree == true) {
-                        DialogueManager.getInstance().startDialogue("degreeIdle");
+                    else if (degreeState == 1) {
+                        DialogueManager.getInstance().startDialogue("degreeFail");
                     }
-                    else {
+                    else if (degreeState == 2) {
                         DialogueManager.getInstance().startDialogue("degreeStart");
                     }
 

@@ -153,7 +153,7 @@
   {
     "id": "perfect_answer",
     "speaker": "Professor",
-    "text": "The exam is over, head to Central Hall to collect your degree.",
+    "text": "Congratulations on getting a perfect score! Head to Central Hall to collect your degree.",
     "choices": [
       {
         "text": "got it",
@@ -166,15 +166,34 @@
   {
     "id": "imperfect_answer",
     "speaker": "Professor",
-    "text": "The exam is over, head to Central Hall to collect your degree. Good luck, you'll need it.",
+    "text": "You've failed the exam. Ngl you might be cooked.",
+    "choices": [],    
+    "nextId": "imperfect_answer1"
+  },
+  {
+    "id": "imperfect_answer1",
+    "speaker": "Professor",
+    "text": "I'll at least give you a reward for your efforts. Pick one.",
     "choices": [
-        {
-          "text": "got it",
-          "nextId": "dialogue_end",
-          "effect": "wrong_answer"
-        }
+      {
+        "text": "*bat*",
+        "nextId": "imperfect_answer2",
+        "effect": "take_bat"
+      },
+      {
+        "text": "*coins*",
+        "nextId": "imperfect_answer2",
+        "effect": "take_coins"
+      }
     ],    
     "nextId": null
+  },
+  {
+    "id": "imperfect_answer2",
+    "speaker": "Professor",
+    "text": "The Dean will stop anyone who failed the exam from escaping this place. Good luck.",
+    "choices": [],    
+    "nextId": "dialogue_end"
   },
   {
     "id": "degreeStart0",
@@ -190,7 +209,7 @@
     "choices": [
         {
           "text": "*take degree*",
-          "nextId": "degreeIdle",
+          "nextId": "dialogue_end",
           "effect": "got_degree"
         }
 
@@ -198,13 +217,19 @@
     "nextId": null
   },
   {
-    "id": "degreeIdle",
+    "id": "degreeFail",
     "speaker": "Head of Academics",
-    "text": "Show your degree to the Dean to leave.",
+    "text": "Is this a joke?",
+    "choices": [],
+    "nextId": "degreeFail1"
+  },
+  {
+    "id": "degreeFail1",
+    "speaker": "Head of Academics",
+    "text": "You can't expect to get a degree after failing the exam.",
     "choices": [],
     "nextId": "dialogue_end"
   },
-
   {
     "id": "dialogue_end",
     "speaker": null,
