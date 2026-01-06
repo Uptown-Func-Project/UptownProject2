@@ -469,8 +469,16 @@
           "y": 40,
           "width": 23,
           "height": 30,
-          "texturePath": "entityTextures/player_A.png",
-          "id": "player1"
+          "texturePath": "entityTextures/player_A.png"
+        },
+
+        {
+          "type": "Professor",
+          "x": 432,
+          "y": 480,
+          "width": 25,
+          "height": 40,
+          "texturePath": "entityTextures/professor.png"
         }
       ],
       "buildings": [],
@@ -520,8 +528,16 @@
           "y": 40,
           "width": 23,
           "height": 30,
-          "texturePath": "entityTextures/player_A.png",
-          "id": "player1"
+          "texturePath": "entityTextures/player_A.png"
+        },
+
+        {
+          "type": "degreeGuy",
+          "x": 382,
+          "y": 530,
+          "width": 25,
+          "height": 40,
+          "texturePath": "entityTextures/degreeGuy.png"
         }
       ],
       "buildings": [],

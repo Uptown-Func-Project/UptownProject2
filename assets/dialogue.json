@@ -1,0 +1,242 @@
+[
+  { 
+    "id": "prof_idle",
+    "speaker": "Professor",
+    "text": "Head to Central Hall to collect your degree.",
+    "choices": [],
+    "nextId": "dialogue_end"
+  },
+  { 
+    "id": "prof_start",
+    "speaker": "Professor",
+    "text": "To escape the maze you'll need to answer the exam. Are you ready?",
+    "choices": [
+      {
+        "text": "Yes",
+        "nextId": "yes_response",
+        "effect": null
+      },
+      {
+        "text": "No",
+        "nextId": "no_response",
+        "effect": null
+      }
+    ],
+    "nextId": null
+  },
+  {
+    "id": "yes_response",
+    "speaker": "Professor",
+    "text": "Great! Let's get started.",
+    "choices": [],
+    "nextId": "question_1"
+  },
+  {
+    "id": "no_response",
+    "speaker": "Professor",
+    "text": "Come back when you're ready.",
+    "choices": [],
+    "nextId": "dialogue_end"
+  },
+  {
+    "id": "question_1",
+    "speaker": "Professor",
+    "text": "1 + 1 = ?",
+    "choices": [
+      {
+        "text": "2",
+        "nextId": "q1_correct",
+        "effect": null
+      },
+      {
+        "text": "6",
+        "nextId": "q1_wrong",
+        "effect": null
+      }
+    ],
+    "nextId": null
+  },
+  {
+    "id": "q1_correct",
+    "speaker": "Professor",
+    "text": "Where can you find Central Hall and the University library?",
+    "choices": [
+      {
+        "text": "Campus East",
+        "nextId": "q2_wrong",
+        "effect": null
+      },
+      {
+        "text": "Campus West",
+        "nextId": "q2_correct",
+        "effect": null
+      }
+    ],
+    "nextId": null
+  },
+  { 
+    "id": "q1_wrong",
+    "speaker": "Professor",
+    "text": "Where can you find Central Hall and the University library?",
+    "choices": [
+      {
+        "text": "Campus East",
+        "nextId": "q2_wrong",
+        "effect": null
+      },
+      {
+        "text": "Campus West",
+        "nextId": "q2_wrong",
+        "effect": null
+      }
+    ],
+    "nextId": null
+  },
+  {
+    "id": "q2_correct",
+    "speaker": "Professor",
+    "text": "what is the first 10 digits of pi?",
+    "choices": [
+      {
+        "text": "3.141592653",
+        "nextId": "perfect_answer",
+        "effect": null
+      },
+      {
+        "text": "3.141592643",
+        "nextId": "imperfect_answer",
+        "effect": null
+      },
+            {
+        "text": "3.141592652",
+        "nextId": "imperfect_answer",
+        "effect": null
+      },
+      {
+        "text": "3.141592654",
+        "nextId": "imperfect_answer",
+        "effect": null
+      }
+
+    ],
+    "nextId": null
+  },
+  {
+    "id": "q2_wrong",
+    "speaker": "Professor",
+    "text": "what is the first 10 digits of pi?",
+    "choices": [
+      {
+        "text": "3.141592653",
+        "nextId": "imperfect_answer",
+        "effect": null
+      },
+      {
+        "text": "3.141592643",
+        "nextId": "imperfect_answer",
+        "effect": null
+      },
+            {
+        "text": "3.141592652",
+        "nextId": "imperfect_answer",
+        "effect": null
+      },
+      {
+        "text": "3.141592654",
+        "nextId": "imperfect_answer",
+        "effect": null
+      }
+
+    ],
+    "nextId": null
+  },
+  {
+    "id": "perfect_answer",
+    "speaker": "Professor",
+    "text": "Congratulations on getting a perfect score! Head to Central Hall to collect your degree.",
+    "choices": [
+      {
+        "text": "got it",
+        "nextId": "dialogue_end",
+        "effect": "all_correct"
+      }
+    ],
+    "nextId": null
+  },
+  {
+    "id": "imperfect_answer",
+    "speaker": "Professor",
+    "text": "You've failed the exam. Ngl you might be cooked.",
+    "choices": [],    
+    "nextId": "imperfect_answer1"
+  },
+  {
+    "id": "imperfect_answer1",
+    "speaker": "Professor",
+    "text": "I'll at least give you a reward for your efforts. Pick one.",
+    "choices": [
+      {
+        "text": "*bat*",
+        "nextId": "imperfect_answer2",
+        "effect": "take_bat"
+      },
+      {
+        "text": "*coins*",
+        "nextId": "imperfect_answer2",
+        "effect": "take_coins"
+      }
+    ],    
+    "nextId": null
+  },
+  {
+    "id": "imperfect_answer2",
+    "speaker": "Professor",
+    "text": "The Dean will stop anyone who failed the exam from escaping this place. Good luck.",
+    "choices": [],    
+    "nextId": "dialogue_end"
+  },
+  {
+    "id": "degreeStart0",
+    "speaker": "Head of Academics",
+    "text": "You haven't attempted the exam. Come back after you do.",
+    "choices": [],
+    "nextId": "dialogue_end"
+  },
+  {
+    "id": "degreeStart",
+    "speaker": "Head of Academics",
+    "text": "Congratulations on completing your course, here's your degree.",
+    "choices": [
+        {
+          "text": "*take degree*",
+          "nextId": "dialogue_end",
+          "effect": "got_degree"
+        }
+
+    ],
+    "nextId": null
+  },
+  {
+    "id": "degreeFail",
+    "speaker": "Head of Academics",
+    "text": "Is this a joke?",
+    "choices": [],
+    "nextId": "degreeFail1"
+  },
+  {
+    "id": "degreeFail1",
+    "speaker": "Head of Academics",
+    "text": "You can't expect to get a degree after failing the exam.",
+    "choices": [],
+    "nextId": "dialogue_end"
+  },
+  {
+    "id": "dialogue_end",
+    "speaker": null,
+    "text": null,
+    "choices": [],    
+    "nextId": null
+  }
+
+
+]

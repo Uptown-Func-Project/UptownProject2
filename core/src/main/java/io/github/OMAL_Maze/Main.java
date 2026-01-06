@@ -37,6 +37,8 @@ import io.github.OMAL_Maze.Entities.EntityData;
 import io.github.OMAL_Maze.Entities.Food;
 import io.github.OMAL_Maze.Entities.Goose;
 import io.github.OMAL_Maze.Entities.Player;
+import io.github.OMAL_Maze.Entities.Professor;
+import io.github.OMAL_Maze.Entities.degreeGuy;
 import io.github.OMAL_Maze.Entities.Seeds;
 import io.github.OMAL_Maze.Map.BackgroundMusic;
 import io.github.OMAL_Maze.Map.Building;
@@ -44,6 +46,8 @@ import io.github.OMAL_Maze.Map.BuildingData;
 import io.github.OMAL_Maze.Map.MazeData;
 import io.github.OMAL_Maze.Map.MazeLoader;
 import io.github.OMAL_Maze.Map.TriggerZone;
+import io.github.OMAL_Maze.Dialogue.DialogueUI;
+import io.github.OMAL_Maze.Dialogue.DialogueManager;
 
 /** {@link ApplicationListener} implementation shared by all platforms. */
 public class Main extends ApplicationAdapter {
@@ -65,6 +69,8 @@ public class Main extends ApplicationAdapter {
     ShapeRenderer shapeRenderer; //for debugging, delete when necessary
     private float triggerCooldown = 0f;
     private static Main instance;
+    private DialogueUI dialogueUI;
+    private DialogueManager dialogueManager;
     private MazeData mazeData;
     public ArrayList<LeaderboardScore> scores = new ArrayList<>(); 
     public boolean enteringName = false;
@@ -128,6 +134,9 @@ public class Main extends ApplicationAdapter {
         font = new BitmapFont();
         mazeData = MazeLoader.loadMaze("loadAssets/assets.json");
         instance = this;
+        dialogueUI = new DialogueUI(viewport, batch);
+        dialogueManager = new DialogueManager(dialogueUI);
+        dialogueManager.loadDialogue("assets/dialogue.json");
         shapeRenderer = new ShapeRenderer();
         backgroundSound = Gdx.audio.newSound(Gdx.files.internal("Sounds/Background.mp3"));
         backgroundMusic = new BackgroundMusic(backgroundSound);
@@ -199,8 +208,13 @@ public class Main extends ApplicationAdapter {
         Entity entity;
         switch (entityType) {
             case "Player" -> {
-                    entity = new Player(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture, entityData.getId());
-                    player = (Player) entity;}
+                    entity = new Player(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture);
+                    player = (Player) entity;
+            }
+            case "Professor" ->
+                    entity = new Professor(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture);
+            case "degreeGuy" ->
+                    entity = new degreeGuy(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture);
             case "Character" ->
                     entity = new Character(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture, entityData.getId());
             case "Goose" -> entity = new Goose(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(),
@@ -408,6 +422,13 @@ public class Main extends ApplicationAdapter {
                 font.draw(batch, " Inventory: Seeds", timerX, timerY-15);
             }
         }
+        //if degree is collected then text is displayed
+        if(player.hasDegree) {
+            if(secondsRemaining > 0){
+                font.draw(batch, " Inventory: Degree", timerX, timerY-30);
+            }
+
+        }
         for (Building building: buildings) {
             render(building);
         }
@@ -468,7 +489,10 @@ public class Main extends ApplicationAdapter {
         font.draw(batch, mute.getMutedStr(), 770, 870);
         font.draw(batch, "Pause", 650, 870);
         batch.end();
-    }
+        dialogueUI.act(Gdx.graphics.getDeltaTime());
+        dialogueUI.draw();
+        }
+    
 
     /**
      * Getter method to get the number of seconds left
@@ -533,28 +557,17 @@ public class Main extends ApplicationAdapter {
         //Clear all previous buildings, entities, and trigger zones
         //These will be null upon first use of the function (initialization)
         boolean seedCheck = false;
-        int currenthearts;
-        int currentcoins;
-        String[] currentcoinlog;
-        // Saves the current state of the player
-        try {
-            currenthearts=player.getHearts();
-            currentcoins=player.getCoins();
-            currentcoinlog=player.coins_log;
-        }
-        // Error will occur if player is not yet initialised (as the game has just started)
-        catch(Exception e) {
-            currenthearts=3;
-            currentcoins=0;
-            currentcoinlog = new String[18];
-        }
-        float speed = 200f;
+        boolean degreeCheck = false;
+        int currentDegree = 0;
+        int currenthearts=3;
+        float speed = 150f;
         if (buildings!=null) buildings.clear();
         if (triggerZones!=null) triggerZones.clear();
         if (entities!=null) {
             if (player.hasSeeds) seedCheck = true;
+            if (player.hasDegree) degreeCheck = true;
             currenthearts=player.getHearts();
-            currentcoins=player.getCoins();
+            currentDegree = player.getDegree();
             speed=player.speed;
             entities.clear();
         }
@@ -570,6 +583,8 @@ public class Main extends ApplicationAdapter {
         //Set start values for the player
         player.sprite.setPosition(spawnPointX,spawnPointY);
         player.hasSeeds=seedCheck;
+        player.hasDegree = degreeCheck;
+        player.degreeState = currentDegree;
         player.hearts=currenthearts;
         player.speed=speed;
         player.coins=currentcoins;

@@ -11,6 +11,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import io.github.OMAL_Maze.Main;
 import io.github.OMAL_Maze.Map.Building;
+import io.github.OMAL_Maze.Dialogue.DialogueManager;
+
 /**
  * the player class which extends the {@link Character} class
  * Can pickup items
@@ -23,6 +25,8 @@ public class Player extends Character{
     public boolean hasSeeds;
     public int coins;
     public String[] coins_log;
+    public boolean hasDegree;
+    public int degreeState;
 
     /**
      * Spawns a player entity and sets the default values for hearts, seeds, speed, acceleration, and friction.
@@ -38,6 +42,8 @@ public class Player extends Character{
         this.visible = true;
         this.hearts = 3;
         this.hasSeeds = false;
+        this.hasDegree = false;
+        this.degreeState = 0; // 0 = no degree, 1 = bad score, 2 = perfect score
         this.coins = 0;
         this.speed=200f;
         this.accelerate=800f;
@@ -148,6 +154,54 @@ public class Player extends Character{
                 }
             }
         }
+
+
+        // interacting with entities for dialogue
+        for (int i=0; i < entities.size; i++) {
+            Entity entity = entities.get(i);
+            // interacting with professor
+            if (entity instanceof Professor) { 
+                Professor prof = (Professor) entity;
+                Rectangle profBounds = prof.getInteractionBounds();
+
+                if (playerBounds.overlaps(profBounds) && Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+                    // if player is within bounds and press e, interact with professor
+                    if (degreeState == 0) {
+                        DialogueManager.getInstance().startDialogue("prof_start");
+                        System.out.println("Player is interacting with the Professor.");
+                    }
+                    else if (degreeState == 1) {
+                        DialogueManager.getInstance().startDialogue("imperfect_answer2");
+                    }
+                    else if (degreeState == 2) {
+                        DialogueManager.getInstance().startDialogue("prof_idle");
+                    }
+
+                }
+            }
+
+            // interacting with Degree guy
+            if (entity instanceof degreeGuy) { 
+                degreeGuy degreeG = (degreeGuy) entity;
+                Rectangle degreeGBounds = degreeG.getInteractionBounds();
+
+                if (playerBounds.overlaps(degreeGBounds) && Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+                    System.out.println("within entity bounds");
+                    if (degreeState == 0) {
+                        DialogueManager.getInstance().startDialogue("degreeStart0");
+                    }
+                    else if (degreeState == 1) {
+                        DialogueManager.getInstance().startDialogue("degreeFail");
+                    }
+                    else if (degreeState == 2) {
+                        DialogueManager.getInstance().startDialogue("degreeStart");
+                    }
+
+                }
+            }
+            // interacting with Dean
+        }
+
     }
 
     /**
@@ -158,6 +212,8 @@ public class Player extends Character{
      */
     @Override
     public void movement(float delta, Array<Entity> entities, Array<Building> buildings) {
+        if (io.github.OMAL_Maze.Dialogue.DialogueManager.getInstance().isDialogueActive()) return;
+        
         //If either right arrow or D is pressed, move right.
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D)) {
             Xspeed += accelerate * delta;
@@ -249,6 +305,10 @@ public class Player extends Character{
      */
     public int getHearts(){
         return hearts;
+    }
+
+    public int getDegree() {
+        return degreeState;
     }
 
     /**
