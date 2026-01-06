@@ -383,7 +383,7 @@ public class Main extends ApplicationAdapter {
         for (Entity entity : entities) {
 
     if (entity instanceof Goose) {
-        Goose goose = (Goose) entity;  // ✅ guaranteed safe
+        Goose goose = (Goose) entity;  
 
         drawAnimatedEntity(
             batch,
@@ -391,7 +391,7 @@ public class Main extends ApplicationAdapter {
             goose.getGooseX() + 15,
             goose.getGooseY() + 15,
             goose.getWalkFrame(),
-            true
+            false
         );
     }
 }
