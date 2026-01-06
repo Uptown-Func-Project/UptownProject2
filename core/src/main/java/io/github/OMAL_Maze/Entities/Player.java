@@ -159,6 +159,7 @@ public class Player extends Character{
         // interacting with entities for dialogue
         for (int i=0; i < entities.size; i++) {
             Entity entity = entities.get(i);
+            Rectangle playerBounds = sprite.getBoundingRectangle();
             // interacting with professor
             if (entity instanceof Professor) { 
                 Professor prof = (Professor) entity;

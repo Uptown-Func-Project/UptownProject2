@@ -21,12 +21,12 @@ public class degreeGuy extends Entity {
      */
 
     public degreeGuy(int x, int y, int width, int height, Texture texture) {
-        super(x, y, width, height, texture);
+        super(x, y, width, height, texture, "degreeGuy");
         visible = true;
     }
 
     public degreeGuy(int x, int y) {
-        super(x, y, DEFAULT_WIDTH, DEFAULT_HEIGHT, new Texture(TEXTURE_PATH));
+        super(x, y, DEFAULT_WIDTH, DEFAULT_HEIGHT, new Texture(TEXTURE_PATH), "degreeGuy");
         visible = true;
     }
 

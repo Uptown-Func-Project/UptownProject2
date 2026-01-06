@@ -21,12 +21,12 @@ public class Professor extends Entity {
      */
 
     public Professor(int x, int y, int width, int height, Texture texture) {
-        super(x, y, width, height, texture);
+        super(x, y, width, height, texture, "professor");
         visible = true;
     }
 
     public Professor(int x, int y) {
-        super(x, y, DEFAULT_WIDTH, DEFAULT_HEIGHT, new Texture(TEXTURE_PATH));
+        super(x, y, DEFAULT_WIDTH, DEFAULT_HEIGHT, new Texture(TEXTURE_PATH), "professor");
         visible = true;
     }
 

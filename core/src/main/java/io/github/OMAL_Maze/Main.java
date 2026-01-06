@@ -208,7 +208,7 @@ public class Main extends ApplicationAdapter {
         Entity entity;
         switch (entityType) {
             case "Player" -> {
-                    entity = new Player(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture);
+                    entity = new Player(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture, entityData.getId());
                     player = (Player) entity;
             }
             case "Professor" ->
@@ -561,6 +561,9 @@ public class Main extends ApplicationAdapter {
         int currentDegree = 0;
         int currenthearts=3;
         float speed = 150f;
+        int currentcoin = 0;
+        String[] currentcoinlog = new String[18];
+
         if (buildings!=null) buildings.clear();
         if (triggerZones!=null) triggerZones.clear();
         if (entities!=null) {
@@ -568,6 +571,8 @@ public class Main extends ApplicationAdapter {
             if (player.hasDegree) degreeCheck = true;
             currenthearts=player.getHearts();
             currentDegree = player.getDegree();
+            currentcoin = player.getCoins();
+            currentcoinlog = player.coins_log;
             speed=player.speed;
             entities.clear();
         }
@@ -587,7 +592,7 @@ public class Main extends ApplicationAdapter {
         player.degreeState = currentDegree;
         player.hearts=currenthearts;
         player.speed=speed;
-        player.coins=currentcoins;
+        player.coins=currentcoin;
         player.coins_log=currentcoinlog;
         // Checks for which coins have already been collected by the player
         for (Entity e : entities) {
