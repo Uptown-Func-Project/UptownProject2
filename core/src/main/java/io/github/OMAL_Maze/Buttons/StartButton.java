@@ -15,7 +15,7 @@ public class StartButton extends AbstractButton{
      */
     public StartButton(FileHandle image){
         super(image);
-        super.x = 350;
+        super.x = 200;
         super.y = 50;
         super.message = "start button title screen";
     }

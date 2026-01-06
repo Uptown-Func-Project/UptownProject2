@@ -103,14 +103,14 @@ public abstract class AbstractButton {
      */
     public boolean isClicked(Viewport viewport) {
         boolean clicked = false;
-        if (Gdx.input.isTouched()) {
+        if (Gdx.input.justTouched()) {
             //changes location of click to the viewport to scale the point
             Vector2 click = viewport.unproject(new Vector2(Gdx.input.getX(),Gdx.input.getY()));
 
             if (click.x >= x && click.x <= x+getWidth()){
                 if (click.y >= y && click.y <= y+getHeight()){
                     clicked = true;
-                    //System.out.println(message);
+                    System.out.println(message);
                 }
             }
         }

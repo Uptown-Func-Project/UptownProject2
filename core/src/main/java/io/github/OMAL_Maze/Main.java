@@ -1,6 +1,8 @@
 package io.github.OMAL_Maze;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.jar.Attributes.Name;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.ApplicationListener;
@@ -16,9 +18,12 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.Input;
 
 import io.github.OMAL_Maze.Buttons.AbstractButton;
 import io.github.OMAL_Maze.Buttons.BeginButton;
+import io.github.OMAL_Maze.Buttons.ReturnButton;
+import io.github.OMAL_Maze.Buttons.LeaderboardButton;
 import io.github.OMAL_Maze.Buttons.MuteButton;
 import io.github.OMAL_Maze.Buttons.PauseButton;
 import io.github.OMAL_Maze.Buttons.QuitButton;
@@ -58,21 +63,35 @@ public class Main extends ApplicationAdapter {
     private float triggerCooldown = 0f;
     private static Main instance;
     private MazeData mazeData;
+    public ArrayList<LeaderboardScore> scores = new ArrayList<>(); 
+    public boolean enteringName = false;
+    public boolean hasAddedScore = false;
+    public String playerName = "";
 
+
+
+    
     BeginButton begin;
     QuitButton quit;
     PauseButton pause;
     UnpauseButton unpause;
     MuteButton mute;
+    LeaderboardButton leaderboard;
+    ReturnButton returnbutton;
     //add in new button here!!!!!
     StartButton start;
     Screen GameOverScreen;
     Screen TitleScreen;
     Screen CongratsScreen; //will use the same quit and start button as game over screen
     Screen PauseScreen;
+    Screen LeaderboardScreen;
+    Screen AchievementScreen;
     boolean secondsDecreasing = false;
+    NameInputUI nameInputUI;
+    AchievementTracker achievementTracker;
     //storing all buttons in an arraylist so they can be iterated through
     ArrayList<AbstractButton> buttons = new ArrayList<>(6);
+
 
     //Sounds
     Sound backgroundSound;
@@ -120,6 +139,8 @@ public class Main extends ApplicationAdapter {
         unpause = new UnpauseButton(Gdx.files.internal("buttonTextures/resumebutton.png"));
         mute = new MuteButton(Gdx.files.internal("buttonTextures/greenbutton.png"));
         start = new StartButton(Gdx.files.internal("buttonTextures/startNew.png"));
+        leaderboard = new LeaderboardButton(Gdx.files.internal("buttonTextures/leaderboard.png"));
+        returnbutton = new ReturnButton(Gdx.files.internal("buttonTextures/returnbutton.png"));
         //adding all buttons to the arraylist in one go
         Collections.addAll(buttons, begin, quit, pause, unpause, mute, start);
         startTimer();
@@ -127,6 +148,9 @@ public class Main extends ApplicationAdapter {
         TitleScreen = new Screen (batch, viewport, "screenTextures/Title screen.png");
         CongratsScreen = new Screen(batch, viewport, "screenTextures/Congratulations.png");
         PauseScreen = new Screen(batch, viewport, "screenTextures/pausescreen.png");
+        LeaderboardScreen = new Screen(batch, viewport, "screenTextures/blankbackground.png");
+        AchievementScreen = new Screen(batch, viewport, "screenTextures/blankbackground.png");
+        achievementTracker = new AchievementTracker();
         TitleScreen.setActive(true);
     }
 
@@ -289,6 +313,12 @@ public class Main extends ApplicationAdapter {
         }
         else if (GameOverScreen.getActive()){
             GameOverScreenLogic();
+        }
+        else if (LeaderboardScreen.getActive()){
+            LeaderboardScreenLogic();
+        }
+        else if (AchievementScreen.getActive()){
+            achievementScreenLogic();
         }
         else {
             input();
@@ -563,6 +593,8 @@ public class Main extends ApplicationAdapter {
         this.goodEventsRemaining = 1;
         this.hiddenEventsRemaining = 1;
         //draw(); //this continues to show the game over screen
+        enteringName = false;
+        hasAddedScore = false;
     }
 
     /**
@@ -574,14 +606,55 @@ public class Main extends ApplicationAdapter {
         TitleScreen.render();
         start.setActive(true);
         mute.setActive(true);
+        leaderboard.setActive(true);
         start.draw(batch);
+        leaderboard.draw(batch);
         batch.end();
         if (start.isClicked(viewport)){
             TitleScreen.setActive(false);
             start.setActive(false);
+            leaderboard.setActive(false);
             pause.setActive(true);
             mute.setActive(true);
             startGame();
+        } else if (leaderboard.isClicked(viewport)){
+            //code to show leaderboard goes here
+            TitleScreen.setActive(false);
+            start.setActive(false);
+            leaderboard.setActive(false);
+            LeaderboardScreen.setActive(true);
+        }
+    }
+
+    public void LeaderboardScreenLogic(){
+        //code to show leaderboard goes here
+        batch.begin();
+        secondsDecreasing = false;
+        LeaderboardScreen.render();
+        font.getData().setScale(4);
+        font.draw(batch, "Leaderboard", 275, 800);
+        font.getData().setScale(1);
+        int yPosition = 700;
+        int maxRows = 5;
+        for (int i = 0; i < maxRows; i++) {
+            String scoreText;
+            if (i < scores.size()) {
+                LeaderboardScore score = scores.get(i);
+                scoreText = (i + 1) + ". " + score.playerName + " - " + score.score + " seconds";
+            } else {
+                scoreText = (i + 1) + ". ---";
+            }
+            font.draw(batch, scoreText, 300, yPosition);
+            yPosition -= 50; // Move down for the next score
+        }
+
+        returnbutton.setActive(true);
+        returnbutton.draw(batch);
+        batch.end();
+        if (returnbutton.isClicked(viewport)){
+            LeaderboardScreen.setActive(false);
+            returnbutton.setActive(false);
+            TitleScreen.setActive(true);
         }
     }
 
@@ -615,28 +688,105 @@ public class Main extends ApplicationAdapter {
      * Renders the congratulations screen and causes the buttons to function.
      */
     public void CongratsScreenLogic(){
+
+        if (nameInputUI == null) {
+            nameInputUI = new NameInputUI(viewport);
+            nameInputUI.show();
+            hasAddedScore = false;
+        }
+
         batch.begin();
         CongratsScreen.render();
         //increasing font size
         font.getData().setScale(5);
         font.draw(batch, String.valueOf(secondsRemaining), 520, 500);
-        //returning font size to original
         font.getData().setScale(1);
-        begin.setActive(true);
-        quit.setActive(true);
-        begin.draw(batch);
-        quit.draw(batch);
+        
+        if (hasAddedScore) {
+            begin.setActive(true);
+            quit.setActive(true);
+            begin.draw(batch);
+            quit.draw(batch);
+        }
+    
         batch.end();
+        nameInputUI.update(Gdx.graphics.getDeltaTime());
+        nameInputUI.draw();
+        if (nameInputUI.isSubmitted() && !hasAddedScore) {
+            String playerName = nameInputUI.getName();
+            scores.add(new LeaderboardScore(playerName, secondsRemaining));
+            scores.sort((a, b) -> b.score - a.score); // Sort scores in descending order
+            if (scores.size() > 5) {
+                scores = new ArrayList<>(scores.subList(0, 5)); // Keep only top 10 scores
+            }
+            hasAddedScore = true;
+        }
+
+
         pause.setActive(false);
         mute.setActive(false);
-        if (quit.isClicked(viewport)){
-            Gdx.app.exit();
+
+        if (hasAddedScore) {
+            if (quit.isClicked(viewport)){
+                Gdx.app.exit();
+            }
+            if (begin.isClicked(viewport)){
+                begin.setActive(false);
+                quit.setActive(false);
+                CongratsScreen.setActive(false);
+                // Reset the game state and return to the title screen instead of
+                // immediately starting a new game.
+                if (nameInputUI != null) {
+                nameInputUI.dispose();
+                nameInputUI = null; // Reset the name input UI for the next game
+            }
+
+            resetToTitle();
+            TitleScreen.setActive(true);
+            }
         }
-        if (begin.isClicked(viewport)){
-            begin.setActive(false);
-            quit.setActive(false);
-            CongratsScreen.setActive(false);
-            startGame();
+       
+    }
+
+    /**
+     * Reset game state back to the initial title-screen state without
+     * immediately starting gameplay.
+     */
+    public void resetToTitle(){
+        // Reset timer and pause timer progression until player starts a game
+        secondsRemaining = 300;
+        secondsDecreasing = false;
+
+        // Stop any background music
+        if (backgroundMusic != null) backgroundMusic.stop();
+
+        // Deactivate other screens that might be visible
+        GameOverScreen.setActive(false);
+        PauseScreen.setActive(false);
+        LeaderboardScreen.setActive(false);
+        CongratsScreen.setActive(false);
+
+        // Ensure title screen buttons are in the correct state
+        start.setActive(false);
+        pause.setActive(false);
+        mute.setActive(false);
+        begin.setActive(false);
+        quit.setActive(false);
+
+        // Reset event counters to defaults
+        this.badEventsRemaining = 1;
+        this.goodEventsRemaining = 1;
+        this.hiddenEventsRemaining = 1;
+
+        // Clear gameplay objects so the title screen is clean. They'll be
+        // recreated when a new game is started via `startGame()`.
+        if (entities != null) entities.clear();
+        if (buildings != null) buildings.clear();
+        if (triggerZones != null) triggerZones.clear();
+
+        if (nameInputUI != null) {
+            nameInputUI.dispose();
+            nameInputUI = null; // Reset the name input UI for the next game
         }
     }
     /**
@@ -661,6 +811,37 @@ public class Main extends ApplicationAdapter {
             quit.setActive(false);
             GameOverScreen.setActive(false);
             startGame();
+        }
+    }
+
+    public void achievementScreenLogic(){
+        batch.begin();
+        achievementScreenLogic();
+
+        font.getData().setScale(4);
+        font.draw(batch, "Achievements", 275, 800);
+        font.getData().setScale(1);
+
+        int y = 700;
+
+        for (Achievement achievement : achievementTracker.getAchievements()) {
+            if (achievement.unlocked) {
+                font.setColor(Color.GREEN);
+                font.draw(batch, achievement.name + " - " + achievement.description, 300, y);
+            } else {
+                font.setColor(Color.RED);
+                font.draw(batch, achievement.name + " - " + achievement.description, 300, y);
+            }
+            y -= 50;
+        }
+
+        returnbutton.setActive(true);
+        returnbutton.draw(batch);
+        batch.end();
+        if (returnbutton.isClicked(viewport)){
+            AchievementScreen.setActive(false);
+            returnbutton.setActive(false);
+            TitleScreen.setActive(true);
         }
     }
 }
