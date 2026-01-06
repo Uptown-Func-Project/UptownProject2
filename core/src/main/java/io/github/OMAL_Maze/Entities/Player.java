@@ -99,6 +99,7 @@ public class Player extends Character{
                     this.coins ++;
                     //seeds pickup sound
                     itemPickup = Gdx.audio.newSound(Gdx.files.internal("Sounds/ItemPickup.mp3"));
+                    itemPickup.play();
 
                     // Adds the coin to the coin log
                     String coin_collected = entity.getId();
@@ -119,6 +120,7 @@ public class Player extends Character{
                     this.coins-=2;
                     //seeds pickup sound
                     itemPickup = Gdx.audio.newSound(Gdx.files.internal("Sounds/ItemPickup.mp3"));
+                    itemPickup.play();
 
                     // Provides a 50% speed boost
                     this.speed*=1.5;
@@ -138,6 +140,7 @@ public class Player extends Character{
                     this.coins-=2;
                     //seeds pickup sound
                     itemPickup = Gdx.audio.newSound(Gdx.files.internal("Sounds/ItemPickup.mp3"));
+                    itemPickup.play();
 
                     // Gives an extra life
                     this.hearts+=1;
