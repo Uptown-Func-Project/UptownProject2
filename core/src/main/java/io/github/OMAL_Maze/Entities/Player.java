@@ -307,6 +307,20 @@ public class Player extends Character{
                 goose.applyExternalVelocity(dirX * knockbackForce, dirY * knockbackForce);
             }
         }
+        if (entity instanceof Geesey && entity.getVisible()) {
+            Geesey geesey = (Geesey) entity;
+            if (geesey.Overlaps(attackBox)) {
+                geesey.decreaseHealthPoints();
+                geesey.applyExternalVelocity(dirX * knockbackForce, dirY * knockbackForce);
+            }
+        }
+        if (entity instanceof Dean && entity.getVisible()) {
+            Dean dean = (Dean) entity;
+            if (dean.Overlaps(attackBox)) {
+                dean.decreaseHealthPoints();
+                dean.applyExternalVelocity(dirX * knockbackForce, dirY * knockbackForce);
+            }
+        }
     }
 }
     public boolean isRightFace() {

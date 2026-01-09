@@ -539,6 +539,46 @@
           "width": 23,
           "height": 30,
           "texturePath": "entityTextures/empty.png"
+        },
+        {
+         "type": "Geesey",
+          "x": 40,
+          "y": 30,
+          "width": 24,
+          "height": 24,
+          "texturePath": "entityTextures/empty.png"
+        },
+        {
+         "type": "Geesey",
+          "x": 40,
+          "y": 30,
+          "width": 24,
+          "height": 24,
+          "texturePath": "entityTextures/empty.png"
+        },
+        {
+         "type": "Geesey",
+          "x": 40,
+          "y": 30,
+          "width": 24,
+          "height": 24,
+          "texturePath": "entityTextures/empty.png"
+        },
+        {
+         "type": "Geesey",
+          "x": 40,
+          "y": 30,
+          "width": 24,
+          "height": 24,
+          "texturePath": "entityTextures/empty.png"
+        },
+        {
+         "type": "Geesey",
+          "x": 40,
+          "y": 30,
+          "width": 24,
+          "height": 24,
+          "texturePath": "entityTextures/empty.png"
         }
       ],
       "buildings": [
@@ -658,7 +698,15 @@
           "y": 40,
           "width": 23,
           "height": 30,
-          "texturePath": "entityTextures/Seeds.png"
+          "texturePath": "entityTextures/empty.png"
+        },
+        {
+          "type": "Dean",
+          "x": 600,
+          "y": 200,
+          "width": 23,
+          "height": 30,
+          "texturePath": "entityTextures/empty.png"
         }
       ],
       "buildings": [],

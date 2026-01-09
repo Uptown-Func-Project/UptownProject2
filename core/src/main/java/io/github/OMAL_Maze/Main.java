@@ -26,8 +26,10 @@ import io.github.OMAL_Maze.Buttons.StartButton;
 import io.github.OMAL_Maze.Buttons.UnpauseButton;
 import io.github.OMAL_Maze.Entities.Bat;
 import io.github.OMAL_Maze.Entities.Character;
+import io.github.OMAL_Maze.Entities.Dean;
 import io.github.OMAL_Maze.Entities.Entity;
 import io.github.OMAL_Maze.Entities.EntityData;
+import io.github.OMAL_Maze.Entities.Geesey;
 import io.github.OMAL_Maze.Entities.Goose;
 import io.github.OMAL_Maze.Entities.Player;
 import io.github.OMAL_Maze.Entities.Seeds;
@@ -53,6 +55,7 @@ public class Main extends ApplicationAdapter {
     Texture batts;
     Texture ploy;
     Texture goise;
+    Texture deane;
     public Array<Entity> entities;
     public static Array<Building> buildings;
     Array<TriggerZone> triggerZones;
@@ -188,6 +191,10 @@ public class Main extends ApplicationAdapter {
             case "Character" ->
                     entity = new Character(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture);
             case "Goose" -> entity = new Goose(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(),
+                    texture);
+            case "Geesey" -> entity = new Geesey(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(),
+                    texture);
+            case "Dean" -> entity = new Dean(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(),
                     texture);
             case "Seeds" -> entity = new Seeds(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(),
                     texture);
@@ -382,7 +389,7 @@ public class Main extends ApplicationAdapter {
         goise.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
         for (Entity entity : entities) {
 
-    if (entity instanceof Goose) {
+    if (entity instanceof Goose)  {
         Goose goose = (Goose) entity;  
 
         drawAnimatedEntity(
@@ -394,9 +401,33 @@ public class Main extends ApplicationAdapter {
             false
         );
     }
-}
+    if (entity instanceof Geesey)  {
+        Geesey geesey = (Geesey) entity;  
 
-        
+        drawAnimatedEntity(
+            batch,
+            goise,
+            geesey.getGooseX() + 15,
+            geesey.getGooseY() + 15,
+            geesey.getWalkFrame(),
+            false
+        );
+    }
+}
+        deane= new Texture(Gdx.files.internal("entityTextures/Dean.png"));
+        deane.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        for (Entity entity : entities) {
+    if (entity instanceof Dean) {
+        Dean dean = (Dean) entity;
+        drawAnimatedEntity(
+            batch,
+            deane,
+            dean.getGooseX() + 15,
+            dean.getGooseY() + 15,
+            dean.getWalkFrame(),
+            false
+        );
+    }}
 
         batts = new Texture(Gdx.files.internal("entityTextures/batss.png"));
         batts.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
