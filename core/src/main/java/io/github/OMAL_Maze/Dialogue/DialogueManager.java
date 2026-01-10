@@ -105,18 +105,17 @@ public class DialogueManager {
                 // System.out.println("degreeState set to 2");
                 break;
             case "take_bat":  // code to spawn bat
-                player.degreeState = 1;
+                player.hasBat = true;
+                itemPickup.play();
                 break;
             case "take_coins":  // code to spawn coins
-                player.degreeState = 1;
+                player.coins += 5;
+                itemPickup.play();
                 break;
             case "got_degree":
                 player.hasDegree = true;
                 itemPickup.play();
                 // System.out.println("hasDegree set to true");
-                break;
-            case "dean_spawn":
-                // Can spawn dean after dialogue.
                 break;
         }
     }

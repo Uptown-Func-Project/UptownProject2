@@ -656,6 +656,7 @@ public class Main extends ApplicationAdapter {
         //These will be null upon first use of the function (initialization)
         boolean seedCheck = false;
         boolean degreeCheck = false;
+        boolean batCheck = false;
         int currentDegree = 0;
         int currenthearts=3;
         float speed = 150f;
@@ -667,6 +668,7 @@ public class Main extends ApplicationAdapter {
         if (entities!=null) {
             if (player.hasSeeds) seedCheck = true;
             if (player.hasDegree) degreeCheck = true;
+            if (player.hasBat) batCheck = true;
             currenthearts=player.getHearts();
             currentDegree = player.getDegree();
             currentcoin = player.getCoins();
@@ -687,6 +689,7 @@ public class Main extends ApplicationAdapter {
         player.sprite.setPosition(spawnPointX,spawnPointY);
         player.hasSeeds=seedCheck;
         player.hasDegree = degreeCheck;
+        player.hasBat = batCheck;
         player.degreeState = currentDegree;
         player.hearts=currenthearts;
         player.speed=speed;

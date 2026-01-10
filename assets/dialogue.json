@@ -173,25 +173,40 @@
   {
     "id": "imperfect_answer1",
     "speaker": "Professor",
-    "text": "I'll at least give you a reward for your efforts. Pick one.",
+    "text": "I'll at least reward you for your efforts. Pick one.",
     "choices": [
       {
         "text": "*bat*",
-        "nextId": "imperfect_answer2",
+        "nextId": "took_bat",
         "effect": "take_bat"
       },
       {
         "text": "*coins*",
-        "nextId": "imperfect_answer2",
+        "nextId": "took_coins",
         "effect": "take_coins"
       }
     ],    
     "nextId": null
   },
   {
+    "id": "took_bat",
+    "speaker": null,
+    "text": "*bat has been added to your inventory*",
+    "choices": [],
+    "nextId": "imperfect_answer2"
+  },
+  {
+    "id": "took_coins",
+    "speaker": null,
+    "text": "*5 coins has been added to your inventory*",
+    "choices": [],
+    "nextId": "imperfect_answer2"
+  },
+
+  {
     "id": "imperfect_answer2",
     "speaker": "Professor",
-    "text": "The Dean will stop anyone who failed the exam from escaping this place. Good luck.",
+    "text": "The Dean will stop anyone wihtout a degree from escaping this place. Good luck.",
     "choices": [],    
     "nextId": "dialogue_end"
   },

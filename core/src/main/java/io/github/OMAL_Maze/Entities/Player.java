@@ -61,7 +61,7 @@ public class Player extends Character{
         this.accelerate=800f;
         this.friction=4000f;
         this.coins_log=new String[18];
-        this.hasBat = true;
+        this.hasBat = false;
         this.speed=150f;
         this.accelerate=800f;
         this.friction=4000f;
