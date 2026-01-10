@@ -27,8 +27,6 @@ public class Geesey extends Character{
     Main instance;
     float solidTimer = 0.5f;
     float soundTimer = 0f;
-    private float wanderTimer = 0f;
-    private boolean wandering=false;
     public Rectangle spawnTrigger;
     Boolean spawned;
     Long soundID;
@@ -39,7 +37,6 @@ public class Geesey extends Character{
     private boolean[][] mapy;
     
     private boolean facingRight = true;
-    private int lastMoveX = 0;
 
     // --- NEW fields to detect & temporarily block stuck tiles ---
     private float[][] tempBlockedTTL;
@@ -108,37 +105,61 @@ public class Geesey extends Character{
     }
 
     /**
-     * Sets the goose position and makes it visible.
+     * Returns a random free tile (x,y) from the provided grid, or null if none.
      */
     public static int[] randomZero(boolean[][] grid) {
-    List<int[]> zeros = new ArrayList<>();
+        List<int[]> zeros = new ArrayList<>();
 
-    for (int y = 0; y < grid.length; y++) {
-        for (int x = 0; x < grid[y].length; x++) {
-            if (!grid[y][x]) { 
-                zeros.add(new int[]{x, y});
+        for (int y = 0; y < grid.length; y++) {
+            for (int x = 0; x < grid[y].length; x++) {
+                if (!grid[y][x]) { 
+                    zeros.add(new int[]{x, y});
+                }
             }
         }
+
+        if (zeros.isEmpty()) {
+            return null; 
+        }
+
+        return zeros.get(ThreadLocalRandom.current().nextInt(zeros.size()));
     }
 
-    if (zeros.isEmpty()) {
-        return null; 
-    }
-
-    return zeros.get(ThreadLocalRandom.current().nextInt(zeros.size()));
-    }
     public void show(){
-        int coord []= randomZero(mapy);
-        int ox = coord[0];
-        int oy = coord[1];
-        this.sprite.setX(ox*this.instance.tileSize+16);
-        this.sprite.setY(oy*this.instance.tileSize+16);
-        this.visible=true;
-        this.isMoving=true;
-        this.spawned=true;
+        int tileSize = this.instance.tileSize;
+        int[] coord = randomZero(mapy);
+        int baseTx = (coord != null) ? coord[0] : 11;
+        int baseTy = (coord != null) ? coord[1] : 14;
+        int maxRadius = 6;
+        int foundTx = -1, foundTy = -1;
+        float bestDist = Float.MAX_VALUE;
+        for (int dx = -maxRadius; dx <= maxRadius; dx++) {
+            for (int dy = -maxRadius; dy <= maxRadius; dy++) {
+                int tx = baseTx + dx;
+                int ty = baseTy + dy;
+                if (ty < 0 || tx < 0 || ty >= mapy.length || tx >= mapy[0].length) continue;
+                if (!isTileBlocked(tx, ty, this.instance.entities, Main.buildings)) {
+                    float dist = dx * dx + dy * dy;
+                    if (dist < bestDist) {
+                        bestDist = dist;
+                        foundTx = tx;
+                        foundTy = ty;
+                    }
+                }
+            }
+        }
+        if (foundTx == -1) { // fallback to random coord or 11,14
+            foundTx = baseTx;
+            foundTy = baseTy;
+        }
+        this.sprite.setX(foundTx * tileSize + 16);
+        this.sprite.setY(foundTy * tileSize + 16);
+        this.visible = true;
+        this.isMoving = true;
+        this.spawned = true;
         this.soundID = gooseQuack.play();
-        this.soundTimer=5f;
-        this.state=gooseState.ANGRY;
+        this.soundTimer = 5f;
+        this.state = gooseState.ANGRY;
     }
 
     @Override
@@ -151,8 +172,7 @@ public class Geesey extends Character{
         // Ensure player is set (player is a static reference in Main)
         this.player = Main.player;
 
-        Rectangle playerBounds = player.sprite.getBoundingRectangle();
-        if (playerBounds.overlaps(this.spawnTrigger) && (this.spawned==null || !this.spawned)) {
+        if (player.getHasBat() && (this.spawned==null || !this.spawned)) {
             this.show();
             Main.getInstance().decrementHiddenEventCounter();
         }
@@ -268,8 +288,8 @@ public class Geesey extends Character{
                     this.Yspeed = 0f;
                 }
 
-                if (this.Xspeed > 0) { facingRight = true; lastMoveX = 1; }
-                else if (this.Xspeed < 0) { facingRight = false; lastMoveX = -1; }
+                if (this.Xspeed > 0) { facingRight = true; }
+                else if (this.Xspeed < 0) { facingRight = false; }
 
                 capSpeed(delta);
                 tryMove(entities, buildings);
@@ -394,8 +414,8 @@ public class Geesey extends Character{
                 }
             }
 
-            if (this.Xspeed > 0) { facingRight = true; lastMoveX = 1; }
-            else if (this.Xspeed < 0) { facingRight = false; lastMoveX = -1; }
+            if (this.Xspeed > 0) { facingRight = true; }
+            else if (this.Xspeed < 0) { facingRight = false; }
 
             capSpeed(delta);
             tryMove(entities, buildings);
@@ -485,6 +505,8 @@ public class Geesey extends Character{
             Main.getInstance().decrementGoodEventCounter();
         }
     }
+    public boolean isFacingRight() { return facingRight; }
+
     public int getGooseX(){
         return (int) this.sprite.getX();
     }

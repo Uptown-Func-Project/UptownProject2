@@ -461,7 +461,7 @@ public class Main extends ApplicationAdapter {
             geesey.getGooseX() + 15,
             geesey.getGooseY() + 15,
             geesey.getWalkFrame(),
-            false
+            geesey.isFacingRight()
         );
     }
 }
@@ -480,15 +480,17 @@ public class Main extends ApplicationAdapter {
         );
     }}
 
-        batts = new Texture(Gdx.files.internal("entityTextures/batss.png"));
-        batts.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
-        //battest
-        if (player.isRightFace()){
-            drawAnimatedEntity(batch, batts, player.getPlayerX()+25, player.getPlayerY()+15, player.getAnimationFrame(), true);
+        if (player.hasBat) {
+            batts = new Texture(Gdx.files.internal("entityTextures/batss.png"));
+            batts.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+            //battest
+            if (player.isRightFace()){
+                drawAnimatedEntity(batch, batts, player.getPlayerX()+25, player.getPlayerY()+15, player.getAnimationFrame(), true);
+            }
+            else{
+                drawAnimatedEntity(batch, batts, player.getPlayerX()+5, player.getPlayerY()+15, player.getAnimationFrame(), false);
+            }
         }
-        else{
-        drawAnimatedEntity(batch, batts, player.getPlayerX()+5, player.getPlayerY()+15, player.getAnimationFrame(), false);
-    }
         ploy = new Texture(Gdx.files.internal("entityTextures/animplayer.png"));
         ploy.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
         drawAnimatedEntity(batch, ploy, player.getPlayerX()+15, player.getPlayerY()+15, player.getWalkAnimationFrame(), player.isRightFace());

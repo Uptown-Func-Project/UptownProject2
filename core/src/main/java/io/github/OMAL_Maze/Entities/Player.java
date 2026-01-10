@@ -236,6 +236,7 @@ public class Player extends Character{
                     if (playerBounds.overlaps(batBounds)) {
                         entities.removeIndex(i);
                         this.hasBat = true;
+                        this.batSwingEffect = Main.getInstance().bat;
                         //bat pickup sound
                         itemPickup = Gdx.audio.newSound(Gdx.files.internal("Sounds/ItemPickup.mp3"));
                         if (this.hasBat) {
@@ -392,7 +393,12 @@ public class Player extends Character{
     /**
      * Getter method for the player hearts.
      */
-    
+    public boolean getHasBat(){
+        return hasBat;
+    }
+    public boolean getHasDegree(){
+        return hasDegree;
+    }
     public int getHearts(){
         return hearts;
     }

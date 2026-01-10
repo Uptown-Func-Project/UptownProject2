@@ -205,6 +205,7 @@
           "texturePath": "entityTextures/empty.png",
           "id": "goose1"
         },
+        
         {
           "type": "Coin",
           "x": 48,
@@ -259,6 +260,35 @@
           "texturePath": "entityTextures/coin.png",
           "id": "coin12"
           
+        },
+        {
+         "type": "Geesey",
+          "x": 40,
+          "y": 30,
+          "width": 24,
+          "height": 24,
+          "texturePath": "entityTextures/empty.png",
+          "id": "geesey7"
+        }
+        ,
+        {
+         "type": "Geesey",
+          "x": 40,
+          "y": 30,
+          "width": 24,
+          "height": 24,
+          "texturePath": "entityTextures/empty.png",
+          "id": "geesey8"
+        }
+        ,
+        {
+         "type": "Geesey",
+          "x": 40,
+          "y": 30,
+          "width": 24,
+          "height": 24,
+          "texturePath": "entityTextures/empty.png",
+          "id": "geesey9"
         }
       ],
       "buildings": [
@@ -372,6 +402,24 @@
           "spawnPointX": 860,
           "spawnPointY": 810,
           "fromMaze": 2
+        },
+        {
+         "type": "Geesey",
+          "x": 40,
+          "y": 30,
+          "width": 24,
+          "height": 24,
+          "texturePath": "entityTextures/empty.png",
+          "id": "geesey10"
+        },
+        {
+         "type": "Geesey",
+          "x": 40,
+          "y": 30,
+          "width": 24,
+          "height": 24,
+          "texturePath": "entityTextures/empty.png",
+          "id": "geesey11"
         }
       ]
     },
@@ -486,6 +534,33 @@
           "spawnPointX": 400,
           "spawnPointY": 0,
           "fromMaze": 3
+        },
+        {
+         "type": "Geesey",
+          "x": 40,
+          "y": 30,
+          "width": 24,
+          "height": 24,
+          "texturePath": "entityTextures/empty.png",
+          "id": "geesey14"
+        },
+        {
+         "type": "Geesey",
+          "x": 40,
+          "y": 30,
+          "width": 24,
+          "height": 24,
+          "texturePath": "entityTextures/empty.png",
+          "id": "geesey12"
+        },
+        {
+         "type": "Geesey",
+          "x": 40,
+          "y": 30,
+          "width": 24,
+          "height": 24,
+          "texturePath": "entityTextures/empty.png",
+          "id": "geesey13"
         }
       ]
     },

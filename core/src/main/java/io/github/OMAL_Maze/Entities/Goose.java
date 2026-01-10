@@ -428,7 +428,7 @@ public class Goose extends Character{
                                 this.state = gooseState.HAPPY;
                                 Main.getInstance().decrementGoodEventCounter();
                                 player.speed *= 2f;
-                                player.hasSeeds = false;
+                                
                                 this.instance.setSecondsRemaining(this.instance.getSecondsRemaining() + 30);
                             } else {
                                 this.bitePlayer();

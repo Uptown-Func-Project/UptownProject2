@@ -423,11 +423,11 @@ public class Dean extends Character{
                     if (entity.getClass() == Player.class) {
                         Player player = (Player) entity;
                         if (this.state != gooseState.HAPPY) {
-                            if (player.hasSeeds) {
+                            if (player.getHasDegree()) {
                                 this.state = gooseState.HAPPY;
                                 Main.getInstance().decrementGoodEventCounter();
                                 player.speed *= 2f;
-                                player.hasSeeds = false;
+                                
                                 this.instance.setSecondsRemaining(this.instance.getSecondsRemaining() + 30);
                             } else {
                                 this.bitePlayer();
