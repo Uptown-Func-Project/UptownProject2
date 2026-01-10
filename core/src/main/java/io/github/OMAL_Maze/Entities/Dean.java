@@ -11,10 +11,10 @@ import io.github.OMAL_Maze.Main;
 import io.github.OMAL_Maze.Map.Building;
 
 /**
- * Goose NPC with different states.
- * Can bite the player to reduce health and slow them down.
+ * Dean NPC with different states.
+ * Can verbally abuse the player to reduce health and slow them down.
  */
-public class Goose extends Character{
+public class Dean extends Character{
     Player player;
     gooseState state;
     Boolean isMoving;
@@ -33,7 +33,6 @@ public class Goose extends Character{
     public boolean knockbackActive = false;
     private Animation walkAnimation;
     private boolean[][] mapy;
-    
     private boolean facingRight = true;
     private int lastMoveX = 0;
 
@@ -54,48 +53,48 @@ public class Goose extends Character{
     /**
      * Constructor for the goose class.
      */
-    public Goose(int x, int y, int width, int height, Texture entityTexture, String id) {
-        super(x, y, width, height, entityTexture, id);
+    public Dean(int x, int y, int width, int height, Texture entityTexture, String id) {
+        super(x, y, width, height, entityTexture,id);
         visible = false;
         state = gooseState.IDLE;
         this.isMoving = true;
-        this.speed=75f;
+        this.speed=90f;
         this.accelerate=600f;
         this.friction=3000f;
         this.Xspeed=0f;
         this.Yspeed=0f;
         this.instance = Main.getInstance();
         this.bitPlayer=false;
-        this.biteTimer=5f;
-        this.healthPoints=3;
+        this.biteTimer=3f;
+        this.healthPoints=6;
         this.createTrigger();
         this.walkAnimation = new Animation(0.1,4);
         this.walkAnimation.setLooping(true);
-        
         mapy = new boolean[][]{
-            {true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true},
-            {true,false,false,false,false,false,true,true,false,false,true,false,false,false,false,false,false,false,false,false,false,false},
-            {true,true,true,false,true,false,true,true,true,false,true,false,true,true,true,true,true,true,false,true,false,true},
-            {true,false,false,false,true,false,false,false,false,false,true,false,false,false,true,false,false,false,false,false,true,false,true},
-            {true,false,true,true,true,true,true,true,true,true,true,true,true,true,false,true,true,true,true,true,false,true},
-            {true,false,true,false,false,false,false,false,false,false,false,false,true,false,false,false,false,false,false,true,false,true},
-            {true,false,true,false,true,true,true,true,true,false,false,true,true,true,true,true,false,true,true,true,false,true},
-            {true,false,true,false,true,false,false,false,false,false,false,false,false,false,false,false,true,false,false,false,true,false,true},
-            {true,false,false,false,true,false,true,true,true,true,true,true,true,true,false,false,false,true,false,true,false,true},
-            {true,false,true,true,true,false,false,false,true,true,true,true,true,true,false,false,false,true,false,true,false,true},
-            {true,false,true,false,false,false,false,false,true,true,true,true,true,true,true,true,true,true,false,true,false,true},
-            {true,false,true,false,true,true,true,false,true,true,true,true,true,true,true,true,false,false,true,false,true,false,true},
-            {true,false,true,false,false,false,true,false,true,true,true,true,true,true,true,true,false,false,true,true,true,false,true},
-            {true,true,true,false,true,false,true,true,true,true,true,true,true,true,true,false,false,false,false,false,false,true},
-            {true,false,false,false,true,false,false,false,false,false,true,true,false,true,true,false,false,false,false,false,false,true},
-            {true,false,true,false,true,true,true,true,true,false,false,true,false,true,true,false,false,true,false,true,true,true},
-            {true,false,true,false,false,false,false,true,true,true,false,true,false,true,true,false,false,true,false,false,false,true},
-            {true,true,true,true,true,true,false,true,true,true,false,true,false,true,true,true,true,true,true,true,true,true,true},
-            {true,false,false,false,true,false,false,true,true,true,false,true,false,false,false,false,false,false,true,false,false,false,true},
-            {true,false,true,false,true,false,true,true,false,true,false,true,true,true,true,true,false,true,false,true,false,true},
-            {false,false,true,false,false,false,false,false,false,true,false,false,false,false,false,false,false,false,false,true,false,true},
-            {true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,false,true}
-};
+  {true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true},
+  {false,false,false,false,false,false,false,true,false,false,false,false,true,true,true,false,false,false,false,false,false,true},
+  {true,true,true,true,true,true,false,true,false,true,true,false,true,true,true,false,true,true,true,true,true,true},
+  {true,false,false,false,false,false,false,true,false,false,true,false,true,true,true,false,false,false,false,false,false,true},
+  {true,false,true,true,true,true,true,true,true,true,true,false,true,true,true,true,true,true,true,true,false,true},
+  {true,false,true,false,false,false,false,false,false,false,true,false,false,false,true,false,false,false,false,false,false,true},
+  {true,false,true,false,true,true,true,false,true,false,true,false,true,false,true,false,true,true,true,true,false,true},
+  {true,false,false,false,true,true,false,false,true,false,false,false,true,false,false,false,true,false,true,true,false,true},
+  {true,false,true,true,true,true,false,true,true,true,true,true,true,true,true,true,true,false,true,true,false,true},
+  {true,false,false,false,true,true,false,false,true,true,true,false,false,false,false,false,false,false,false,false,false,true},
+  {true,true,true,false,false,true,true,false,true,true,true,false,true,false,true,false,true,true,true,true,true,true},
+  {true,false,true,true,false,true,true,false,true,true,true,true,true,false,true,false,false,false,false,false,false,true},
+  {true,false,false,true,false,true,true,false,false,true,true,true,true,false,true,true,true,true,true,true,false,true},
+  {true,true,false,true,false,true,true,false,true,true,true,true,true,false,false,false,false,false,true,true,false,true},
+  {true,false,false,false,false,true,true,false,true,true,true,true,true,true,true,true,true,false,true,true,false,true},
+  {true,false,true,false,true,true,true,false,false,false,false,false,false,false,false,false,true,false,true,true,false,true},
+  {true,false,true,false,true,true,true,true,true,true,true,true,true,false,true,false,true,false,true,true,false,true},
+  {true,false,true,false,true,false,false,true,false,false,false,false,false,false,true,false,true,false,true,true,false,true},
+  {true,false,true,false,true,true,false,true,false,true,true,true,true,true,true,true,true,false,true,true,false,true},
+  {true,false,true,false,true,true,false,true,false,true,true,true,true,true,true,true,true,false,true,true,false,true},
+  {true,false,true,false,false,false,false,true,false,false,false,false,false,false,false,false,false,false,true,true,false,true},
+  {true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true}
+}
+;
         // initialize temporary-block TTL array
         tempBlockedTTL = new float[mapy.length][mapy[0].length];
 

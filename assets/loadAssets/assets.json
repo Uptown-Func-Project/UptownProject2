@@ -32,7 +32,7 @@
           "y": 40,
           "width": 23,
           "height": 30,
-          "texturePath": "entityTextures/player_A.png",
+          "texturePath": "entityTextures/empty.png",
           "id": "player1"
         },
         {
@@ -88,6 +88,52 @@
           "height": 24,
           "texturePath": "entityTextures/coin.png",
           "id": "coin6"
+          
+        },
+        {
+         "type": "Geesey",
+          "x": 40,
+          "y": 30,
+          "width": 24,
+          "height": 24,
+          "texturePath": "entityTextures/empty.png",
+          "id": "geesey1"
+        },
+        {
+         "type": "Geesey",
+          "x": 40,
+          "y": 30,
+          "width": 24,
+          "height": 24,
+          "texturePath": "entityTextures/empty.png",
+          "id": "geesey2"
+        },
+        {
+         "type": "Geesey",
+          "x": 40,
+          "y": 30,
+          "width": 24,
+          "height": 24,
+          "texturePath": "entityTextures/empty.png",
+          "id": "geesey3"
+        },
+        {
+         "type": "Geesey",
+          "x": 40,
+          "y": 30,
+          "width": 24,
+          "height": 24,
+          "texturePath": "entityTextures/empty.png",
+          "id": "geesey4"
+        },
+        {
+         "type": "Geesey",
+          "x": 40,
+          "y": 30,
+          "width": 24,
+          "height": 24,
+          "texturePath": "entityTextures/empty.png",
+          "id": "geesey5"
         }
       ],
       "buildings": [
@@ -148,8 +194,7 @@
           "y": 40,
           "width": 23,
           "height": 30,
-          "texturePath": "entityTextures/player_A.png",
-          "id": "player1"
+          "texturePath": "entityTextures/empty.png"
         },
         {
           "type": "Goose",
@@ -157,7 +202,7 @@
           "y": 1000,
           "width": 24,
           "height": 24,
-          "texturePath": "entityTextures/goose.png",
+          "texturePath": "entityTextures/empty.png",
           "id": "goose1"
         },
         {
@@ -213,6 +258,7 @@
           "height": 24,
           "texturePath": "entityTextures/coin.png",
           "id": "coin12"
+          
         }
       ],
       "buildings": [
@@ -293,8 +339,16 @@
           "y": 40,
           "width": 23,
           "height": 30,
-          "texturePath": "entityTextures/player_A.png",
-          "id": "player1"
+          "texturePath": "entityTextures/empty.png"
+        },
+        {
+          "type": "Dean",
+          "x": 600,
+          "y": 200,
+          "width": 23,
+          "height": 30,
+          "texturePath": "entityTextures/empty.png",
+          "id": "dean1"
         }
       ],
       "buildings": [],
@@ -354,8 +408,7 @@
           "y": 40,
           "width": 23,
           "height": 30,
-          "texturePath": "entityTextures/player_A.png",
-          "id": "player1"
+          "texturePath": "entityTextures/empty.png"
         },
         {
           "type": "Coin",
@@ -469,7 +522,7 @@
           "y": 40,
           "width": 23,
           "height": 30,
-          "texturePath": "entityTextures/player_A.png"
+          "texturePath": "entityTextures/empty.png"
         },
 
         {
@@ -528,7 +581,7 @@
           "y": 40,
           "width": 23,
           "height": 30,
-          "texturePath": "entityTextures/player_A.png"
+          "texturePath": "entityTextures/empty.png"
         },
 
         {
@@ -587,7 +640,7 @@
           "y": 40,
           "width": 23,
           "height": 30,
-          "texturePath": "entityTextures/player_A.png",
+          "texturePath": "entityTextures/empty.png",
           "id": "player1"
         },
         {

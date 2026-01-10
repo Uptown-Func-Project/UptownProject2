@@ -1,8 +1,6 @@
 package io.github.OMAL_Maze;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.jar.Attributes.Name;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.ApplicationListener;
@@ -18,36 +16,38 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.Input;
 
 import io.github.OMAL_Maze.Buttons.AbstractButton;
 import io.github.OMAL_Maze.Buttons.BeginButton;
-import io.github.OMAL_Maze.Buttons.ReturnButton;
 import io.github.OMAL_Maze.Buttons.LeaderboardButton;
 import io.github.OMAL_Maze.Buttons.MuteButton;
 import io.github.OMAL_Maze.Buttons.PauseButton;
 import io.github.OMAL_Maze.Buttons.QuitButton;
+import io.github.OMAL_Maze.Buttons.ReturnButton;
 import io.github.OMAL_Maze.Buttons.StartButton;
 import io.github.OMAL_Maze.Buttons.UnpauseButton;
+import io.github.OMAL_Maze.Dialogue.DialogueManager;
+import io.github.OMAL_Maze.Dialogue.DialogueUI;
+import io.github.OMAL_Maze.Entities.Bat;
 import io.github.OMAL_Maze.Entities.Character;
 import io.github.OMAL_Maze.Entities.Coin;
+import io.github.OMAL_Maze.Entities.Dean;
 import io.github.OMAL_Maze.Entities.EnergyDrink;
 import io.github.OMAL_Maze.Entities.Entity;
 import io.github.OMAL_Maze.Entities.EntityData;
 import io.github.OMAL_Maze.Entities.Food;
+import io.github.OMAL_Maze.Entities.Geesey;
 import io.github.OMAL_Maze.Entities.Goose;
 import io.github.OMAL_Maze.Entities.Player;
 import io.github.OMAL_Maze.Entities.Professor;
-import io.github.OMAL_Maze.Entities.degreeGuy;
 import io.github.OMAL_Maze.Entities.Seeds;
+import io.github.OMAL_Maze.Entities.degreeGuy;
 import io.github.OMAL_Maze.Map.BackgroundMusic;
 import io.github.OMAL_Maze.Map.Building;
 import io.github.OMAL_Maze.Map.BuildingData;
 import io.github.OMAL_Maze.Map.MazeData;
 import io.github.OMAL_Maze.Map.MazeLoader;
 import io.github.OMAL_Maze.Map.TriggerZone;
-import io.github.OMAL_Maze.Dialogue.DialogueUI;
-import io.github.OMAL_Maze.Dialogue.DialogueManager;
 
 /** {@link ApplicationListener} implementation shared by all platforms. */
 public class Main extends ApplicationAdapter {
@@ -61,10 +61,16 @@ public class Main extends ApplicationAdapter {
     private String timerText;
     public FitViewport viewport;
     Texture backgroundTexture;
+    Texture batts;
+    Texture ploy;
+    Texture goise;
+    Texture deane;
     public Array<Entity> entities;
     public static Array<Building> buildings;
     Array<TriggerZone> triggerZones;
     public static Player player;
+    public static Bat bat; 
+
     public int tileSize;
     ShapeRenderer shapeRenderer; //for debugging, delete when necessary
     private float triggerCooldown = 0f;
@@ -133,6 +139,10 @@ public class Main extends ApplicationAdapter {
         tileSize= worldWidth /22;
         font = new BitmapFont();
         mazeData = MazeLoader.loadMaze("loadAssets/assets.json");
+        Texture batts = new Texture(Gdx.files.internal("entityTextures/batss.png")); //placeholder
+        bat = new Bat(0, 0, tileSize, tileSize, batts);
+        //entities.add(bat); 
+        
         instance = this;
         dialogueUI = new DialogueUI(viewport, batch);
         dialogueManager = new DialogueManager(dialogueUI);
@@ -219,6 +229,11 @@ public class Main extends ApplicationAdapter {
                     entity = new Character(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture, entityData.getId());
             case "Goose" -> entity = new Goose(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(),
                     texture, entityData.getId());
+                    
+            case "Geesey" -> entity = new Geesey(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(),
+                    texture, entityData.getId());
+            case "Dean" -> entity = new Dean(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(),
+                    texture,entityData.getId());
             case "Seeds" -> entity = new Seeds(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(),
                     texture, entityData.getId());
             case "Coin" -> entity = new Coin(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(),
@@ -345,6 +360,7 @@ public class Main extends ApplicationAdapter {
         else {
             input();
             logic();
+            bat.logic();
             draw();
         }
     }
@@ -410,6 +426,72 @@ public class Main extends ApplicationAdapter {
             if (entity==null) continue;
             render(entity);
         }
+        
+
+        //if (bat.visible) {
+          //      batch.draw(
+            //    bat.texture,
+              //  bat.sprite.getX(),
+                //bat.sprite.getY(),
+                //tileSize, tileSize
+          //  );
+        //}
+        goise = new Texture(Gdx.files.internal("entityTextures/goosey.png"));
+        goise.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        for (Entity entity : entities) {
+
+    if (entity instanceof Goose)  {
+        Goose goose = (Goose) entity;  
+
+        drawAnimatedEntity(
+            batch,
+            goise,
+            goose.getGooseX() + 15,
+            goose.getGooseY() + 15,
+            goose.getWalkFrame(),
+            false
+        );
+    }
+    if (entity instanceof Geesey)  {
+        Geesey geesey = (Geesey) entity;  
+
+        drawAnimatedEntity(
+            batch,
+            goise,
+            geesey.getGooseX() + 15,
+            geesey.getGooseY() + 15,
+            geesey.getWalkFrame(),
+            false
+        );
+    }
+}
+        deane= new Texture(Gdx.files.internal("entityTextures/Dean.png"));
+        deane.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        for (Entity entity : entities) {
+    if (entity instanceof Dean) {
+        Dean dean = (Dean) entity;
+        drawAnimatedEntity(
+            batch,
+            deane,
+            dean.getGooseX() + 15,
+            dean.getGooseY() + 15,
+            dean.getWalkFrame(),
+            false
+        );
+    }}
+
+        batts = new Texture(Gdx.files.internal("entityTextures/batss.png"));
+        batts.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        //battest
+        if (player.isRightFace()){
+            drawAnimatedEntity(batch, batts, player.getPlayerX()+25, player.getPlayerY()+15, player.getAnimationFrame(), true);
+        }
+        else{
+        drawAnimatedEntity(batch, batts, player.getPlayerX()+5, player.getPlayerY()+15, player.getAnimationFrame(), false);
+    }
+        ploy = new Texture(Gdx.files.internal("entityTextures/animplayer.png"));
+        ploy.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        drawAnimatedEntity(batch, ploy, player.getPlayerX()+15, player.getPlayerY()+15, player.getWalkAnimationFrame(), player.isRightFace());
         //Specific timer location
         float timerX = (float) tileSize /2;
         float timerY = worldHeight -((float) tileSize /2)+15;
@@ -519,7 +601,23 @@ public class Main extends ApplicationAdapter {
             entity.render(batch);
         }
     }
+    private void drawAnimatedEntity(SpriteBatch batch, Texture sheet, float px, float py, int frame, boolean facingRight) {
 
+        int row = frame / 2;
+        int col = frame % 2;
+
+        int srcX = col * 32;
+        int srcY = row * 32;
+
+        float drawX = px - 32 / 2f;
+        float drawY = py - 32 / 2f;
+
+        if (facingRight) {
+            batch.draw(sheet, drawX, drawY, 32, 32, srcX, srcY, 32, 32, false, false);
+        } else {
+            batch.draw(sheet, drawX + 32, drawY, -32, 32, srcX, srcY, 32, 32, false, false);
+        }
+    }
     /**
      * Renders a building if its visible attribute is set to true
      * @param building building object to render
@@ -602,6 +700,7 @@ public class Main extends ApplicationAdapter {
                 }
             }
         }
+        entities.add(bat);
     }
 
     /**

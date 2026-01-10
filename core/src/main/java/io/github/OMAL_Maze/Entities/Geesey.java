@@ -1,5 +1,9 @@
 package io.github.OMAL_Maze.Entities;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
@@ -14,7 +18,7 @@ import io.github.OMAL_Maze.Map.Building;
  * Goose NPC with different states.
  * Can bite the player to reduce health and slow them down.
  */
-public class Goose extends Character{
+public class Geesey extends Character{
     Player player;
     gooseState state;
     Boolean isMoving;
@@ -54,8 +58,8 @@ public class Goose extends Character{
     /**
      * Constructor for the goose class.
      */
-    public Goose(int x, int y, int width, int height, Texture entityTexture, String id) {
-        super(x, y, width, height, entityTexture, id);
+    public Geesey(int x, int y, int width, int height, Texture entityTexture, String id) {
+        super(x, y, width, height, entityTexture,id);
         visible = false;
         state = gooseState.IDLE;
         this.isMoving = true;
@@ -73,29 +77,30 @@ public class Goose extends Character{
         this.walkAnimation.setLooping(true);
         
         mapy = new boolean[][]{
-            {true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true},
-            {true,false,false,false,false,false,true,true,false,false,true,false,false,false,false,false,false,false,false,false,false,false},
-            {true,true,true,false,true,false,true,true,true,false,true,false,true,true,true,true,true,true,false,true,false,true},
-            {true,false,false,false,true,false,false,false,false,false,true,false,false,false,true,false,false,false,false,false,true,false,true},
-            {true,false,true,true,true,true,true,true,true,true,true,true,true,true,false,true,true,true,true,true,false,true},
-            {true,false,true,false,false,false,false,false,false,false,false,false,true,false,false,false,false,false,false,true,false,true},
-            {true,false,true,false,true,true,true,true,true,false,false,true,true,true,true,true,false,true,true,true,false,true},
-            {true,false,true,false,true,false,false,false,false,false,false,false,false,false,false,false,true,false,false,false,true,false,true},
-            {true,false,false,false,true,false,true,true,true,true,true,true,true,true,false,false,false,true,false,true,false,true},
-            {true,false,true,true,true,false,false,false,true,true,true,true,true,true,false,false,false,true,false,true,false,true},
-            {true,false,true,false,false,false,false,false,true,true,true,true,true,true,true,true,true,true,false,true,false,true},
-            {true,false,true,false,true,true,true,false,true,true,true,true,true,true,true,true,false,false,true,false,true,false,true},
-            {true,false,true,false,false,false,true,false,true,true,true,true,true,true,true,true,false,false,true,true,true,false,true},
-            {true,true,true,false,true,false,true,true,true,true,true,true,true,true,true,false,false,false,false,false,false,true},
-            {true,false,false,false,true,false,false,false,false,false,true,true,false,true,true,false,false,false,false,false,false,true},
-            {true,false,true,false,true,true,true,true,true,false,false,true,false,true,true,false,false,true,false,true,true,true},
-            {true,false,true,false,false,false,false,true,true,true,false,true,false,true,true,false,false,true,false,false,false,true},
-            {true,true,true,true,true,true,false,true,true,true,false,true,false,true,true,true,true,true,true,true,true,true,true},
-            {true,false,false,false,true,false,false,true,true,true,false,true,false,false,false,false,false,false,true,false,false,false,true},
-            {true,false,true,false,true,false,true,true,false,true,false,true,true,true,true,true,false,true,false,true,false,true},
-            {false,false,true,false,false,false,false,false,false,true,false,false,false,false,false,false,false,false,false,true,false,true},
-            {true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,false,true}
-};
+  {true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true},
+  {true,false,false,false,true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true},
+  {true,false,true,false,true,false,true,true,true,true,true,true,true,true,true,true,true,true,true,true,false,true},
+  {true,false,true,false,true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true,true,true},
+  {true,false,true,false,true,true,true,true,true,true,true,true,true,true,true,true,true,true,false,false,false,true},
+  {true,false,true,false,false,false,false,false,false,true,false,false,false,true,false,false,false,true,true,true,false,true},
+  {true,false,true,true,true,true,true,true,false,true,false,true,false,true,false,true,false,false,false,false,false,true},
+  {true,false,false,false,false,true,false,false,false,true,false,true,false,false,false,true,false,true,true,true,false,true},
+  {true,true,true,true,false,true,false,true,false,true,true,true,true,true,false,true,false,false,false,true,true,true},
+  {true,false,true,true,false,true,false,true,false,true,true,false,true,true,true,true,true,true,false,true,true,true},
+  {true,false,true,true,false,true,false,true,true,true,true,false,true,true,true,true,true,true,false,true,true,true},
+  {true,false,true,true,false,true,false,false,false,false,false,false,true,true,false,false,false,false,false,false,false,true},
+  {true,false,true,true,false,true,true,true,true,true,true,true,true,true,false,true,true,true,true,true,false,true},
+  {true,false,true,true,false,false,false,false,false,false,true,false,false,true,false,true,false,false,false,true,false,true},
+  {true,false,true,true,false,true,true,true,true,false,true,true,false,true,false,true,false,true,true,true,false,true},
+  {true,false,true,true,false,true,false,true,true,false,false,true,false,true,false,true,false,true,true,true,false,true},
+  {true,false,true,true,false,true,false,true,true,true,false,true,false,true,false,true,false,false,false,false,false,true},
+  {true,false,true,true,false,true,false,true,true,true,false,true,false,true,false,true,true,true,true,true,false,true},
+  {true,false,false,false,false,true,false,false,false,false,false,true,false,true,false,false,false,true,true,true,false,true},
+  {true,true,true,true,true,true,true,true,false,true,true,true,false,true,true,true,false,true,false,true,false,true},
+  {true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true,false,false,false,false},
+  {true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true}
+}
+;
         // initialize temporary-block TTL array
         tempBlockedTTL = new float[mapy.length][mapy[0].length];
 
@@ -105,9 +110,29 @@ public class Goose extends Character{
     /**
      * Sets the goose position and makes it visible.
      */
+    public static int[] randomZero(boolean[][] grid) {
+    List<int[]> zeros = new ArrayList<>();
+
+    for (int y = 0; y < grid.length; y++) {
+        for (int x = 0; x < grid[y].length; x++) {
+            if (!grid[y][x]) { 
+                zeros.add(new int[]{x, y});
+            }
+        }
+    }
+
+    if (zeros.isEmpty()) {
+        return null; 
+    }
+
+    return zeros.get(ThreadLocalRandom.current().nextInt(zeros.size()));
+    }
     public void show(){
-        this.sprite.setX(11*this.instance.tileSize);
-        this.sprite.setY(14*this.instance.tileSize+16);
+        int coord []= randomZero(mapy);
+        int ox = coord[0];
+        int oy = coord[1];
+        this.sprite.setX(ox*this.instance.tileSize+16);
+        this.sprite.setY(oy*this.instance.tileSize+16);
         this.visible=true;
         this.isMoving=true;
         this.spawned=true;
