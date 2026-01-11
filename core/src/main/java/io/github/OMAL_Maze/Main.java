@@ -791,10 +791,9 @@ public class Main extends ApplicationAdapter {
         font.draw(batch,"However, if you fail you there may be lots of obstacles in the way stopping you from escaping.",150,475);
         font.draw(batch,"Controls:", 150,450);
         font.draw(batch,"Arrow Keys or WASD - Movement",150,425);
-        font.draw(batch,"P - Pause Menu",150,400);
-        font.draw(batch,"E - Interact",150,375);
-        font.draw(batch, "Space - Use Bat", 150, 350);
-        font.draw(batch, "Walk up to the building to enter it.", 150, 325);
+        font.draw(batch,"E - Interact",150,400);
+        font.draw(batch, "Space - Use Bat", 150, 375);
+        font.draw(batch, "Walk up to a building to enter it.", 150, 350);
         start.setActive(true);
         mute.setActive(true);
         leaderboard.setActive(true);
@@ -896,9 +895,9 @@ public class Main extends ApplicationAdapter {
         }
         whichEnding();
         finalScore = secondsRemaining;
-        finalScore = finalScore + (5 - goodEventsRemaining) * 10;
-        finalScore = finalScore + (3 - badEventsRemaining) * 20;
-        finalScore = finalScore + (3 - hiddenEventsRemaining) * 50;
+        finalScore = finalScore + (5 - badEventsRemaining) * 10;
+        finalScore = finalScore + (3 - goodEventsRemaining) * 20;
+        finalScore = finalScore + (3 - hiddenEventsRemaining) * 30;
         finalScore = finalScore + (player.coins * 10);
 
         if (nameInputUI == null) {
@@ -912,6 +911,8 @@ public class Main extends ApplicationAdapter {
         //increasing font size
         font.getData().setScale(5);
         font.draw(batch, String.valueOf(finalScore), 520, 500);
+        font.getData().setScale(3);
+        font.draw(batch, "You escaped in " + (300 - secondsRemaining) + " seconds", 200, 400);
         font.getData().setScale(1);
         
         if (hasAddedScore) {
