@@ -7,6 +7,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+/**
+ * UI to collect player's names
+ * Displays a text input field and submit button, then disables them after submission.
+ * defaults to "Player" if no name is provided
+ */
 public class NameInputUI {
     private Stage stage;
     private TextField nameField;
@@ -16,6 +21,13 @@ public class NameInputUI {
     private boolean submitted = false;
     private String name = "";
 
+    /**
+     * NameInputUI constructor with text field and submit button
+     * text field has a 12-character limit and placeholder text
+     * after submitting, UI disables itself and stores the name
+     * 
+     * @param viewport
+     */
     public NameInputUI(Viewport viewport) {
         stage = new Stage(viewport);
         skin = new Skin(Gdx.files.internal("uiskin.json"));
@@ -49,26 +61,45 @@ public class NameInputUI {
         });
     }
 
+    /**
+     * makes UI active and ready to receive input
+     * sets UI as active input processor so text field can read keyboard input
+     */
     public void show() {
         Gdx.input.setInputProcessor(stage);
     }
-
+    /**
+     * renders name input UI to screen
+     */
     public void draw() {
         stage.draw();
     }
-
+    /**
+     * checks if player submitted
+     * @return true/false if submit buttons been clicked
+     */
     public boolean isSubmitted() {
         return submitted;
     }
-
+    /**
+     * @return submitted player's name
+     */
     public String getName() {
         return name;
     }
-
+    /**
+     * Updates the stage and all its actors
+     * called once per frame
+     * 
+     * @param delta Time passed since last frame in seconds
+     */
     public void update(float delta) {
         stage.act(delta);
     }
 
+    /**
+     * Dispose of stage and skin resource when UI no longer needed
+     */
     public void dispose() {
         stage.dispose();
         skin.dispose();

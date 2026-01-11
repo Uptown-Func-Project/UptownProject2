@@ -2,10 +2,17 @@ package io.github.OMAL_Maze;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * Manages all achievements in the game
+ * Initialise list of achievements
+ */
 public class AchievementTracker {
     private List<Achievement> achievements;
-
+    /**
+     * AchievementTracker constructor
+     * adds all achievements in the game
+     * achievements start as locked
+     */
     public AchievementTracker() {
         achievements = new ArrayList<>();
         achievements.add(new Achievement("Game Started", "Started the game"));
@@ -19,10 +26,17 @@ public class AchievementTracker {
         achievements.add(new Achievement("Powered-Up", "Buy an item from the shop"));
     }
 
+    /**
+     * returns complete list of achievements
+     */
     public List<Achievement> getAchievements() {
         return achievements;
     }
 
+    /**
+     * unlocks an achievement by name if it exists in the achievement list
+     * @param name exact name of achievement to unlock
+     */
     public void unlockAchievement(String name) {
         for (Achievement achievement : achievements) {
             if (achievement.name.equals(name)) {
