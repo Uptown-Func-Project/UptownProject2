@@ -117,15 +117,7 @@
           "texturePath": "entityTextures/empty.png",
           "id": "geesey3"
         },
-        {
-         "type": "Geesey",
-          "x": 1000,
-          "y": 1000,
-          "width": 24,
-          "height": 24,
-          "texturePath": "entityTextures/empty.png",
-          "id": "geesey4"
-        },
+        
         {
          "type": "Geesey",
           "x": 1000,
@@ -261,16 +253,7 @@
           "id": "coin12"
           
         },
-        {
-         "type": "Geesey",
-          "x": 1000,
-          "y": 1000,
-          "width": 24,
-          "height": 24,
-          "texturePath": "entityTextures/empty.png",
-          "id": "geesey7"
-        }
-        ,
+        
         {
          "type": "Geesey",
           "x": 1000,
@@ -388,15 +371,6 @@
           "height": 24,
           "texturePath": "entityTextures/empty.png",
           "id": "geesey10"
-        },
-        {
-         "type": "Geesey",
-          "x": 1000,
-          "y": 1000,
-          "width": 24,
-          "height": 24,
-          "texturePath": "entityTextures/empty.png",
-          "id": "geesey11"
         }
       ],
       "buildings": [],
@@ -552,15 +526,6 @@
           "height": 24,
           "texturePath": "entityTextures/empty.png",
           "id": "geesey12"
-        },
-        {
-         "type": "Geesey",
-          "x": 40,
-          "y": 30,
-          "width": 24,
-          "height": 24,
-          "texturePath": "entityTextures/empty.png",
-          "id": "geesey13"
         }
       ]
     },
