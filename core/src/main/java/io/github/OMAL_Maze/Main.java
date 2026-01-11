@@ -42,6 +42,7 @@ import io.github.OMAL_Maze.Entities.Geesey;
 import io.github.OMAL_Maze.Entities.Goose;
 import io.github.OMAL_Maze.Entities.Player;
 import io.github.OMAL_Maze.Entities.Professor;
+import io.github.OMAL_Maze.Entities.Puddle;
 import io.github.OMAL_Maze.Entities.Seeds;
 import io.github.OMAL_Maze.Entities.degreeGuy;
 import io.github.OMAL_Maze.Map.BackgroundMusic;
@@ -238,6 +239,8 @@ public class Main extends ApplicationAdapter {
                     texture, entityData.getId());
                     
             case "Geesey" -> entity = new Geesey(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(),
+                    texture, entityData.getId());
+            case "Puddle" -> entity = new Puddle(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(),
                     texture, entityData.getId());
             case "Dean" -> entity = new Dean(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(),
                     texture,entityData.getId());
