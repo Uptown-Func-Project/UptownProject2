@@ -71,6 +71,7 @@ public class Main extends ApplicationAdapter {
     Screen CongratsScreen; //will use the same quit and start button as game over screen
     Screen PauseScreen;
     boolean secondsDecreasing = false;
+    private boolean inMainMenu = true;
     //storing all buttons in an arraylist so they can be iterated through
     ArrayList<AbstractButton> buttons = new ArrayList<>(6);
 
@@ -91,6 +92,10 @@ public class Main extends ApplicationAdapter {
      */
     public static Main getInstance() {
         return instance;
+    }
+
+    public boolean isInMainMenu() {
+        return inMainMenu;
     }
 
     /**
@@ -128,6 +133,7 @@ public class Main extends ApplicationAdapter {
         CongratsScreen = new Screen(batch, viewport, "screenTextures/Congratulations.png");
         PauseScreen = new Screen(batch, viewport, "screenTextures/pausescreen.png");
         TitleScreen.setActive(true);
+        inMainMenu = true;
     }
 
     /**
@@ -578,6 +584,7 @@ public class Main extends ApplicationAdapter {
         batch.end();
         if (start.isClicked(viewport)){
             TitleScreen.setActive(false);
+            inMainMenu = false;
             start.setActive(false);
             pause.setActive(true);
             mute.setActive(true);
