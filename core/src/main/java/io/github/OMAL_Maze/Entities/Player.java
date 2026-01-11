@@ -258,11 +258,32 @@ public class Player extends Character{
     @Override
     
     public void movement(float delta, Array<Entity> entities, Array<Building> buildings) {
+        
         if (io.github.OMAL_Maze.Dialogue.DialogueManager.getInstance().isDialogueActive()) return;
         
         boolean moving = false;
         //batswing float 
         
+        // Check for puddle overlap and temporarily slow the player's movement parameters
+        boolean inPuddle = false;
+        Rectangle pBounds = this.sprite.getBoundingRectangle();
+        for (int i = 0; i < entities.size; i++) {
+            Entity e = entities.get(i);
+            if (e instanceof Puddle) {
+                if (pBounds.overlaps(e.sprite.getBoundingRectangle())) {
+                    inPuddle = true;
+                    break;
+                }
+            }
+        }
+        float origSpeed = this.speed;
+        float origAccelerate = this.accelerate;
+        final float PUDDLE_SLOW_FACTOR = 0.15f; // % speed inside puddle
+        if (inPuddle) {
+            this.speed = origSpeed * PUDDLE_SLOW_FACTOR;
+            this.accelerate = origAccelerate * PUDDLE_SLOW_FACTOR;
+        }
+
         if (hasBat && Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
     swinging = true;
     swingTimer = swingDuration;
@@ -338,6 +359,8 @@ public class Player extends Character{
             this.sprite.translateY(-moveY);
             Yspeed = 0;
         }
+        // restore original movement parameters if modified
+        if (inPuddle) { this.speed = origSpeed; this.accelerate = origAccelerate; }
         //Now that the entity has moved, call the logic function.
         this.logic();
         delta = Gdx.graphics.getDeltaTime();
@@ -389,6 +412,9 @@ public class Player extends Character{
     public int getPlayerY(){ 
         return (int)this.sprite.getY();
 
+    }
+    public void setSpeed(float newSpeed){
+        this.speed=newSpeed;
     }
     /**
      * Getter method for the player hearts.

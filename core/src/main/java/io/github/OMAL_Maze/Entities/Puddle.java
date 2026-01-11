@@ -1,11 +1,16 @@
 package io.github.OMAL_Maze.Entities;
+
+
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Rectangle;
 
 
 
 public class Puddle extends Entity {
-
+    Player player;
+    public Rectangle trigger;
     public Texture texture;
+    
 
 
 
@@ -13,14 +18,15 @@ public class Puddle extends Entity {
         super(x,y,width,height,entityTexture, id);
         isSolid = false;
         this.texture = entityTexture;
-    }
-
-    public void show(){
-        this.sprite.setX(0);
-        this.sprite.setY(0);
-        this.visible=true;
         
+        // Position and size are initialized by the super constructor (sprite)
     }
 
+    
+    public void show(){
+        // sprite position already set in constructor; just make the puddle visible
+        this.visible=true;
+    }
+    
 }
 

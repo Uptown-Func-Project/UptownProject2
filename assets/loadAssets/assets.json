@@ -36,6 +36,24 @@
           "id": "player1"
         },
         {
+          "type": "Puddle",
+           "x": 161,
+           "y": 207,
+           "width": 36,
+           "height": 60,
+           "texturePath": "entityTextures/puddle.png",
+           "id": "puddle1"
+        },
+        {
+          "type": "Puddle",
+           "x": 713,
+           "y": 575,
+           "width": 60,
+           "height": 36,
+           "texturePath": "entityTextures/puddle.png",
+           "id": "puddle1"
+        },
+        {
           "type": "Coin",
           "x": 328,
           "y": 489,
@@ -196,6 +214,24 @@
           "height": 24,
           "texturePath": "entityTextures/empty.png",
           "id": "goose1"
+        },
+        {
+          "type": "Puddle",
+           "x": 452,
+           "y": 43,
+           "width": 60,
+           "height": 36,
+           "texturePath": "entityTextures/puddle.png",
+           "id": "puddle1"
+        },
+        {
+          "type": "Puddle",
+           "x": 224,
+           "y": 560,
+           "width": 36,
+           "height": 30,
+           "texturePath": "entityTextures/puddle.png",
+           "id": "puddle1"
         },
         
         {
@@ -364,6 +400,15 @@
           "id": "dean1"
         },
         {
+          "type": "Puddle",
+           "x": 350,
+           "y": 569,
+           "width": 36,
+           "height": 36,
+           "texturePath": "entityTextures/puddle.png",
+           "id": "puddle1"
+        },
+        {
          "type": "Geesey",
           "x": 1000,
           "y": 1000,
@@ -485,6 +530,15 @@
           "height": 24,
           "texturePath": "entityTextures/coin.png",
           "id": "coin18"
+        },
+        {
+          "type": "Puddle",
+           "x": 478,
+           "y": 726,
+           "width": 36,
+           "height": 36,
+           "texturePath": "entityTextures/puddle.png",
+           "id": "puddle1"
         }
       ],
       "buildings": [],
