@@ -14,20 +14,35 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * Handles the UI of dialogue using Scene2D library
+ * Displays speaker names, dialogue text, and interactive choice buttons.
+ * Positioned at the bottom of the screen with a fixed width layout.
+ */
 public class DialogueUI {
-    private Stage stage;
-    private Label speakerLabel;
-    private Label textLabel;
-    private Table root;
-    private List<TextButton> choiceButtons;
-    private ChoiceListener choiceListener;
-    private BitmapFont font;
+    private Stage stage;  // stage for rendering UI components
+    private Label speakerLabel; // label for the character speaking
+    private Label textLabel; // label for the actual text of dialogue
+    private Table root;  // root table for oganizing UI layout
+    private List<TextButton> choiceButtons;  // list of buttons for players to choose
+    private ChoiceListener choiceListener;   // Callback listener for handling choice selection events
+    private BitmapFont font;  // font used for text
 
+    /**
+     * Interface for receiving notifications when a player selects a dialogue choice.
+     */
     public interface ChoiceListener {
         void onChoiceSelected(int index);
     }
 
+    /**
+     * DialogueUI constructor, specifies layout and fonts of text.
+     * speaker label = yellow, dialogue text (white, wrapped)
+     * UI positioned at the bottom of the screen with some padding
+     *
+     * @param viewport viewport for the UI stage
+     * @param batch sprite batch for rendering
+     */
     public DialogueUI(FitViewport viewport, SpriteBatch batch) {
         stage = new Stage(viewport, batch);
         font = new BitmapFont();
@@ -54,9 +69,23 @@ public class DialogueUI {
         choiceButtons = new ArrayList<>();
     }
 
+    /**
+     * listener notified when a dialogue choice is selected.
+     * 
+     * @param listener The ChoiceListener to handle choice selection events
+     */
     public void setChoiceListener(ChoiceListener listener) {
         this.choiceListener = listener;
     }
+
+    /**
+     * Displays dialogue line 
+     * speaker, text, and choice buttons shown.
+     * Clears any previously displayed choices and creates new buttons for each choice.
+     * Sets this UI as the active input processor to handle button clicks.
+     * 
+     * @param line DialogueLine to display, or null to skip display
+     */
 
     public void show(DialogueLine line) {
         if (line == null) return;
@@ -91,18 +120,38 @@ public class DialogueUI {
         Gdx.input.setInputProcessor(stage);
     }
 
+    /**
+     * Hides the dialogue UI by clearing the input processor.
+     * This prevents the UI from receiving further input events.
+     */
+
     public void hide() {
         Gdx.input.setInputProcessor(null);
     }
 
+    /**
+     * updates stage and all the actors
+     * called once per frame
+     * 
+     * @param delta Time passed since last frame in seconds
+     */
     public void act(float delta) {
         stage.act(delta);
     }
 
+    /**
+     * Renders the dialogue UI to the screen
+     * called during render phase after act()
+     */
     public void draw() {
         stage.draw(); 
     }
 
+    /**
+     * Gets Scene2D stage
+     * 
+     * @return The stage instance used by the UI
+     */
     public Stage getStage() {
         return stage; 
     }

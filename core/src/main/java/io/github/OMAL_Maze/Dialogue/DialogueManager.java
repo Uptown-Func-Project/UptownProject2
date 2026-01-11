@@ -164,7 +164,7 @@ public class DialogueManager {
                 player.coins += 5;
                 itemPickup.play();
                 break;
-            case "got_degree":  // 
+            case "got_degree":  // gives player degree
                 player.hasDegree = true;
                 itemPickup.play();
                 break;
