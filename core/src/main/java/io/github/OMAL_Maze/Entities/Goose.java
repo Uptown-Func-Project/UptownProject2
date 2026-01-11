@@ -36,14 +36,16 @@ public class Goose extends Character{
     
     private boolean facingRight = true;
     private int lastMoveX = 0;
+    public boolean isNotMuted = true;
 
-    // --- NEW fields to detect & temporarily block stuck tiles ---
+    // --- fields to detect & temporarily block stuck tiles ---
     private float[][] tempBlockedTTL;
     private int stuckCounter = 0;
     private int lastNextX = -1;
     private int lastNextY = -1;
     private final float TEMP_BLOCK_DURATION = 2.0f; // seconds
     private final int STUCK_THRESHOLD = 4;
+    
 
     enum gooseState{
         IDLE,
@@ -111,7 +113,7 @@ public class Goose extends Character{
         this.visible=true;
         this.isMoving=true;
         this.spawned=true;
-        this.soundID = gooseQuack.play();
+        if (isNotMuted){this.soundID = gooseQuack.play();}
         this.soundTimer=5f;
         this.state=gooseState.ANGRY;
     }

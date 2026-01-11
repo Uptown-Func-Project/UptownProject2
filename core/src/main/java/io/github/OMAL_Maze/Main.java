@@ -542,6 +542,7 @@ public class Main extends ApplicationAdapter {
                 if (b.isClicked(viewport)){
                     if (b==mute) {
                         backgroundMusic.changeVolume(volume);
+                        
                     } else if (b==pause) {
                         PauseScreen.setActive(true);
                         backgroundMusic.pause();
