@@ -92,8 +92,8 @@
         },
         {
          "type": "Geesey",
-          "x": 40,
-          "y": 30,
+          "x": 1000,
+          "y": 1000,
           "width": 24,
           "height": 24,
           "texturePath": "entityTextures/empty.png",
@@ -101,8 +101,8 @@
         },
         {
          "type": "Geesey",
-          "x": 40,
-          "y": 30,
+          "x": 1000,
+          "y": 1000,
           "width": 24,
           "height": 24,
           "texturePath": "entityTextures/empty.png",
@@ -110,8 +110,8 @@
         },
         {
          "type": "Geesey",
-          "x": 40,
-          "y": 30,
+          "x": 1000,
+          "y": 1000,
           "width": 24,
           "height": 24,
           "texturePath": "entityTextures/empty.png",
@@ -119,8 +119,8 @@
         },
         {
          "type": "Geesey",
-          "x": 40,
-          "y": 30,
+          "x": 1000,
+          "y": 1000,
           "width": 24,
           "height": 24,
           "texturePath": "entityTextures/empty.png",
@@ -128,8 +128,8 @@
         },
         {
          "type": "Geesey",
-          "x": 40,
-          "y": 30,
+          "x": 1000,
+          "y": 1000,
           "width": 24,
           "height": 24,
           "texturePath": "entityTextures/empty.png",
@@ -263,8 +263,8 @@
         },
         {
          "type": "Geesey",
-          "x": 40,
-          "y": 30,
+          "x": 1000,
+          "y": 1000,
           "width": 24,
           "height": 24,
           "texturePath": "entityTextures/empty.png",
@@ -273,8 +273,8 @@
         ,
         {
          "type": "Geesey",
-          "x": 40,
-          "y": 30,
+          "x": 1000,
+          "y": 1000,
           "width": 24,
           "height": 24,
           "texturePath": "entityTextures/empty.png",
@@ -283,8 +283,8 @@
         ,
         {
          "type": "Geesey",
-          "x": 40,
-          "y": 30,
+          "x": 1000,
+          "y": 1000,
           "width": 24,
           "height": 24,
           "texturePath": "entityTextures/empty.png",
@@ -379,6 +379,24 @@
           "height": 30,
           "texturePath": "entityTextures/empty.png",
           "id": "dean1"
+        },
+        {
+         "type": "Geesey",
+          "x": 1000,
+          "y": 1000,
+          "width": 24,
+          "height": 24,
+          "texturePath": "entityTextures/empty.png",
+          "id": "geesey10"
+        },
+        {
+         "type": "Geesey",
+          "x": 1000,
+          "y": 1000,
+          "width": 24,
+          "height": 24,
+          "texturePath": "entityTextures/empty.png",
+          "id": "geesey11"
         }
       ],
       "buildings": [],
@@ -402,24 +420,6 @@
           "spawnPointX": 860,
           "spawnPointY": 810,
           "fromMaze": 2
-        },
-        {
-         "type": "Geesey",
-          "x": 40,
-          "y": 30,
-          "width": 24,
-          "height": 24,
-          "texturePath": "entityTextures/empty.png",
-          "id": "geesey10"
-        },
-        {
-         "type": "Geesey",
-          "x": 40,
-          "y": 30,
-          "width": 24,
-          "height": 24,
-          "texturePath": "entityTextures/empty.png",
-          "id": "geesey11"
         }
       ]
     },
