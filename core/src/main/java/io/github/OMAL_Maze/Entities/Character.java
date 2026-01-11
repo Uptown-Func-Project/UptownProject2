@@ -17,8 +17,8 @@ public class Character extends Entity {
     float moveY;
     float moveX;
 
-    public Character(int x, int y, int width, int height, Texture entityTexture) {
-        super(x,y,width,height,entityTexture);
+    public Character(int x, int y, int width, int height, Texture entityTexture, String id) {
+        super(x,y,width,height,entityTexture, id);
     }
 
     /**

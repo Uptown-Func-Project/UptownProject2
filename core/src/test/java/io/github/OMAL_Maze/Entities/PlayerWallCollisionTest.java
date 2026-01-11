@@ -25,7 +25,7 @@ class PlayerWallCollisionTest {
     @Test
     void playerDoesNotMoveThroughWallBuilding() {
         Texture texture = new Texture(Gdx.files.internal("dummy.png"));
-        Player player = new Player(0, 0, 16, 16, texture);
+        Player player = new Player(0, 0, 16, 16, texture, "player");
 
         Building wall = new Building(10, 0, 16, 16, texture);
         Array<Building> buildings = new Array<>();

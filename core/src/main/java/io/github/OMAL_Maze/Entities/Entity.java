@@ -14,8 +14,9 @@ public class Entity {
     int height;
     public Sprite sprite;
     Texture entityTexture;
-    boolean visible=true;
+    public boolean visible=true;
     boolean isSolid;
+    String id;
 
     /**
      * Creates an entity instance and sets the location, texture, and sprite
@@ -24,8 +25,9 @@ public class Entity {
      * @param width Width of the entity.
      * @param height Height of the entity.
      * @param entityTexture Texture object for the entity sprite.
+     * @param id Unique identifier for the entity.
      */
-    public Entity(int x, int y, int width, int height, Texture entityTexture) {
+    public Entity(int x, int y, int width, int height, Texture entityTexture, String id) {
         this.width=width;
         this.height=height;
         this.entityTexture=entityTexture;
@@ -34,6 +36,7 @@ public class Entity {
         this.sprite.setX(x);
         this.sprite.setY(y);
         isSolid = true;
+        this.id = id;
     }
 
     /**
@@ -66,4 +69,10 @@ public class Entity {
      * @return Boolean value, true if the entity is visible and false if it isn't.
      */
     public boolean getVisible() {return this.visible;}
+
+    /**
+     * Getter method for the ID.
+     * @return String value, the value of the ID of the entity.
+     */
+    public String getId() {return this.id;}
 }

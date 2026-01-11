@@ -19,6 +19,6 @@ class MainMenuInitialStateTest {
 
     @Test
     void beforePlayingUserIsInMainMenu() {
-        assertTrue(main.isInMainMenu(), "User should be in the main menu before playing");
+        assertTrue(main.isInMainMenu(), "User should be in main menu before playing");
     }
 }

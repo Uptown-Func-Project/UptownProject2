@@ -27,7 +27,7 @@ class PlayerMovementTest {
     @Test
     void pressingRightMovesPlayerRight() {
         Texture texture = new Texture(com.badlogic.gdx.Gdx.files.internal("dummy.png"));
-        Player player = new Player(10, 10, 16, 16, texture);
+        Player player = new Player(10, 10, 16, 16, texture, "player");
 
         Gdx.testInput().pressKey(Input.Keys.RIGHT, true);
 
@@ -35,13 +35,13 @@ class PlayerMovementTest {
         player.movement(0.1f, new Array<>(), new Array<Building>());
         float afterX = player.sprite.getX();
 
-        assertTrue(afterX > beforeX, "Player x should increase when RIGHT is pressed");
+        assertTrue(afterX > beforeX, "Player x should increase when move right key is pressed");
     }
 
     @Test
     void pressingUpMovesPlayerUp() {
         Texture texture = new Texture(com.badlogic.gdx.Gdx.files.internal("dummy.png"));
-        Player player = new Player(10, 10, 16, 16, texture);
+        Player player = new Player(10, 10, 16, 16, texture, "player");
 
         Gdx.testInput().pressKey(Input.Keys.UP, true);
 
@@ -49,13 +49,13 @@ class PlayerMovementTest {
         player.movement(0.1f, new Array<>(), new Array<Building>());
         float afterY = player.sprite.getY();
 
-        assertTrue(afterY > beforeY, "Player y should increase when UP is pressed");
+        assertTrue(afterY > beforeY, "Player y should increase when move up key is pressed");
     }
 
     @Test
     void pressingLeftMovesPlayerLeft() {
         Texture texture = new Texture(com.badlogic.gdx.Gdx.files.internal("dummy.png"));
-        Player player = new Player(10, 10, 16, 16, texture);
+        Player player = new Player(10, 10, 16, 16, texture, "player");
 
         Gdx.testInput().pressKey(Input.Keys.LEFT, true);
 
@@ -63,13 +63,13 @@ class PlayerMovementTest {
         player.movement(0.1f, new Array<>(), new Array<Building>());
         float afterX = player.sprite.getX();
 
-        assertTrue(afterX < beforeX, "Player x should decrease when LEFT is pressed");
+        assertTrue(afterX < beforeX, "Player x should decrease when mve left key is pressed");
     }
 
     @Test
     void pressingDownMovesPlayerDown() {
         Texture texture = new Texture(com.badlogic.gdx.Gdx.files.internal("dummy.png"));
-        Player player = new Player(10, 10, 16, 16, texture);
+        Player player = new Player(10, 10, 16, 16, texture, "player");
 
         Gdx.testInput().pressKey(Input.Keys.DOWN, true);
 
@@ -77,6 +77,6 @@ class PlayerMovementTest {
         player.movement(0.1f, new Array<>(), new Array<Building>());
         float afterY = player.sprite.getY();
 
-        assertTrue(afterY < beforeY, "Player y should decrease when DOWN is pressed");
+        assertTrue(afterY < beforeY, "Player y should decrease when move down key is pressed");
     }
 }

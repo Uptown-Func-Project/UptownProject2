@@ -19,17 +19,32 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import io.github.OMAL_Maze.Buttons.AbstractButton;
 import io.github.OMAL_Maze.Buttons.BeginButton;
+import io.github.OMAL_Maze.Buttons.LeaderboardButton;
 import io.github.OMAL_Maze.Buttons.MuteButton;
 import io.github.OMAL_Maze.Buttons.PauseButton;
 import io.github.OMAL_Maze.Buttons.QuitButton;
+import io.github.OMAL_Maze.Buttons.ReturnButton;
 import io.github.OMAL_Maze.Buttons.StartButton;
 import io.github.OMAL_Maze.Buttons.UnpauseButton;
+import io.github.OMAL_Maze.Buttons.AchievementButton;
+import io.github.OMAL_Maze.Buttons.TitleButton;
+import io.github.OMAL_Maze.Dialogue.DialogueManager;
+import io.github.OMAL_Maze.Dialogue.DialogueUI;
+import io.github.OMAL_Maze.Entities.Bat;
 import io.github.OMAL_Maze.Entities.Character;
+import io.github.OMAL_Maze.Entities.Coin;
+import io.github.OMAL_Maze.Entities.Dean;
+import io.github.OMAL_Maze.Entities.EnergyDrink;
 import io.github.OMAL_Maze.Entities.Entity;
 import io.github.OMAL_Maze.Entities.EntityData;
+import io.github.OMAL_Maze.Entities.Food;
+import io.github.OMAL_Maze.Entities.Geesey;
 import io.github.OMAL_Maze.Entities.Goose;
 import io.github.OMAL_Maze.Entities.Player;
+import io.github.OMAL_Maze.Entities.Professor;
+import io.github.OMAL_Maze.Entities.Puddle;
 import io.github.OMAL_Maze.Entities.Seeds;
+import io.github.OMAL_Maze.Entities.degreeGuy;
 import io.github.OMAL_Maze.Map.BackgroundMusic;
 import io.github.OMAL_Maze.Map.Building;
 import io.github.OMAL_Maze.Map.BuildingData;
@@ -41,39 +56,65 @@ import io.github.OMAL_Maze.Map.TriggerZone;
 public class Main extends ApplicationAdapter {
     public float volume = 100f;
     private int secondsRemaining = 300;
-    private int badEventsRemaining = 1;
-    private int goodEventsRemaining = 1;
-    private int hiddenEventsRemaining = 1;
+    private int badEventsRemaining = 5;
+    private int goodEventsRemaining = 3;
+    private int hiddenEventsRemaining = 3;
+    private int finalScore = 0;
     private SpriteBatch batch;
     private BitmapFont font;
     private String timerText;
     public FitViewport viewport;
     Texture backgroundTexture;
+    Texture batts;
+    Texture ploy;
+    Texture goise;
+    Texture deane;
     public Array<Entity> entities;
     public static Array<Building> buildings;
     Array<TriggerZone> triggerZones;
     public static Player player;
+    public static Bat bat; 
+
     public int tileSize;
     ShapeRenderer shapeRenderer; //for debugging, delete when necessary
     private float triggerCooldown = 0f;
     private static Main instance;
+    private DialogueUI dialogueUI;
+    private DialogueManager dialogueManager;
     private MazeData mazeData;
+    public ArrayList<LeaderboardScore> scores = new ArrayList<>(); 
+    public boolean enteringName = false;
+    public boolean hasAddedScore = false;
+    private boolean escapeSoundPlayed = false;
+    public String playerName = "";
 
+
+
+    
     BeginButton begin;
     QuitButton quit;
     PauseButton pause;
     UnpauseButton unpause;
     MuteButton mute;
+    LeaderboardButton leaderboard;
+    ReturnButton returnbutton;
+    AchievementButton achievement;
+    TitleButton title;
     //add in new button here!!!!!
     StartButton start;
     Screen GameOverScreen;
     Screen TitleScreen;
     Screen CongratsScreen; //will use the same quit and start button as game over screen
     Screen PauseScreen;
+    Screen LeaderboardScreen;
+    Screen AchievementScreen;
     boolean secondsDecreasing = false;
     private boolean inMainMenu = true;
+    NameInputUI nameInputUI;
+    AchievementTracker achievementTracker;
     //storing all buttons in an arraylist so they can be iterated through
     ArrayList<AbstractButton> buttons = new ArrayList<>(6);
+
 
     //Sounds
     Sound backgroundSound;
@@ -110,7 +151,14 @@ public class Main extends ApplicationAdapter {
         tileSize= worldWidth /22;
         font = new BitmapFont();
         mazeData = MazeLoader.loadMaze("loadAssets/assets.json");
+        Texture batts = new Texture(Gdx.files.internal("entityTextures/batss.png")); //placeholder
+        bat = new Bat(0, 0, tileSize, tileSize, batts);
+        //entities.add(bat); 
+        
         instance = this;
+        dialogueUI = new DialogueUI(viewport, batch);
+        dialogueManager = new DialogueManager(dialogueUI);
+        dialogueManager.loadDialogue("assets/dialogue.json");
         shapeRenderer = new ShapeRenderer();
         backgroundSound = Gdx.audio.newSound(Gdx.files.internal("Sounds/Background.mp3"));
         backgroundMusic = new BackgroundMusic(backgroundSound);
@@ -125,13 +173,20 @@ public class Main extends ApplicationAdapter {
         unpause = new UnpauseButton(Gdx.files.internal("buttonTextures/resumebutton.png"));
         mute = new MuteButton(Gdx.files.internal("buttonTextures/greenbutton.png"));
         start = new StartButton(Gdx.files.internal("buttonTextures/startNew.png"));
+        leaderboard = new LeaderboardButton(Gdx.files.internal("buttonTextures/leaderboard.png"));
+        returnbutton = new ReturnButton(Gdx.files.internal("buttonTextures/returnbutton.png"));
+        achievement = new AchievementButton(Gdx.files.internal("buttonTextures/achievementsbutton.png"));
+        title = new TitleButton(Gdx.files.internal("buttonTextures/titlebutton.png"));
         //adding all buttons to the arraylist in one go
         Collections.addAll(buttons, begin, quit, pause, unpause, mute, start);
         startTimer();
         GameOverScreen = new Screen(batch, viewport, "screenTextures/GAME OVER.png");
-        TitleScreen = new Screen (batch, viewport, "screenTextures/Title screen.png");
+        TitleScreen = new Screen (batch, viewport, "screenTextures/Title screen-1.png");
         CongratsScreen = new Screen(batch, viewport, "screenTextures/Congratulations.png");
         PauseScreen = new Screen(batch, viewport, "screenTextures/pausescreen.png");
+        LeaderboardScreen = new Screen(batch, viewport, "screenTextures/blankbackground.png");
+        AchievementScreen = new Screen(batch, viewport, "screenTextures/blankbackground.png");
+        achievementTracker = new AchievementTracker();
         TitleScreen.setActive(true);
         inMainMenu = true;
     }
@@ -178,18 +233,35 @@ public class Main extends ApplicationAdapter {
         Entity entity;
         switch (entityType) {
             case "Player" -> {
-                    entity = new Player(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture);
+                    entity = new Player(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture, entityData.getId());
                     player = (Player) entity;
             }
+            case "Professor" ->
+                    entity = new Professor(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture);
+            case "degreeGuy" ->
+                    entity = new degreeGuy(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture);
             case "Character" ->
-                    entity = new Character(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture);
+                    entity = new Character(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture, entityData.getId());
             case "Goose" -> entity = new Goose(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(),
-                    texture);
+                    texture, entityData.getId());
+                    
+            case "Geesey" -> entity = new Geesey(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(),
+                    texture, entityData.getId());
+            case "Puddle" -> entity = new Puddle(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(),
+                    texture, entityData.getId());
+            case "Dean" -> entity = new Dean(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(),
+                    texture,entityData.getId());
             case "Seeds" -> entity = new Seeds(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(),
-                    texture);
+                    texture, entityData.getId());
+            case "Coin" -> entity = new Coin(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(),
+                    texture, entityData.getId());
+            case "EnergyDrink" -> entity = new EnergyDrink(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(),
+                    texture, entityData.getId());
+            case "Food" -> entity = new Food(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(),
+                    texture, entityData.getId());
             default ->
                 //Only other one is just Entity or should be cast to basic entity
-                    entity = new Entity(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture);
+                    entity = new Entity(entityData.getX(), entityData.getY(), entityData.getWidth(), entityData.getHeight(), texture, entityData.getId());
         }
         return entity;
     }
@@ -255,19 +327,19 @@ public class Main extends ApplicationAdapter {
      * sets the hidden event counter to 0
      */
     public void decrementHiddenEventCounter(){
-        hiddenEventsRemaining=0;//set it to 0 instead of -- since the hidden event only happens once
+        hiddenEventsRemaining = hiddenEventsRemaining - 1;
     }
     /**
      * sets the bad event counter to 0
      */
     public void decrementBadEventCounter(){
-        badEventsRemaining=0;
+        badEventsRemaining = badEventsRemaining - 1;
     }
     /**
      * sets the good event counter to 0
      */
     public void decrementGoodEventCounter(){
-        goodEventsRemaining=0;
+        goodEventsRemaining = goodEventsRemaining - 1;
     }
 
     /**
@@ -296,9 +368,16 @@ public class Main extends ApplicationAdapter {
         else if (GameOverScreen.getActive()){
             GameOverScreenLogic();
         }
+        else if (LeaderboardScreen.getActive()){
+            LeaderboardScreenLogic();
+        }
+        else if (AchievementScreen.getActive()){
+            achievementScreenLogic();
+        }
         else {
             input();
             logic();
+            bat.logic();
             draw();
         }
     }
@@ -348,6 +427,8 @@ public class Main extends ApplicationAdapter {
         }
     }
 
+
+
     /**
      * Sets background to black initially before rendering all text, buttons, entities, and buildings.
      */
@@ -364,6 +445,78 @@ public class Main extends ApplicationAdapter {
             if (entity==null) continue;
             render(entity);
         }
+        
+
+        //if (bat.visible) {
+          //      batch.draw(
+            //    bat.texture,
+              //  bat.sprite.getX(),
+                //bat.sprite.getY(),
+                //tileSize, tileSize
+          //  );
+        //}
+        goise = new Texture(Gdx.files.internal("entityTextures/goosey.png"));
+        goise.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        for (Entity entity : entities) {
+    
+    if (entity instanceof Goose)  {
+        Goose goose = (Goose) entity;  
+        if (goose.getGooseHappy()!=true){
+            drawAnimatedEntity(
+            batch,
+            goise,
+            goose.getGooseX() + 15,
+            goose.getGooseY() + 15,
+            goose.getWalkFrame(),
+            false
+        );
+        }
+        
+    }
+    if (entity instanceof Geesey)  {
+        Geesey geesey = (Geesey) entity;  
+        if (geesey.getGeeseyHappy()!=true){
+            drawAnimatedEntity(
+            batch,
+            goise,
+            geesey.getGooseX() + 15,
+            geesey.getGooseY() + 15,
+            geesey.getWalkFrame(),
+            geesey.isFacingRight()
+        );
+        }
+        
+    }
+}
+        deane= new Texture(Gdx.files.internal("entityTextures/Dean.png"));
+        deane.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        for (Entity entity : entities) {
+    if (entity instanceof Dean) {
+        Dean dean = (Dean) entity;
+        drawAnimatedEntity(
+            batch,
+            deane,
+            dean.getGooseX() + 15,
+            dean.getGooseY() + 15,
+            dean.getWalkFrame(),
+            false
+        );
+    }}
+
+        if (player.hasBat) {
+            batts = new Texture(Gdx.files.internal("entityTextures/batss.png"));
+            batts.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+            //battest
+            if (player.isRightFace()){
+                drawAnimatedEntity(batch, batts, player.getPlayerX()+25, player.getPlayerY()+15, player.getAnimationFrame(), true);
+            }
+            else{
+                drawAnimatedEntity(batch, batts, player.getPlayerX()+5, player.getPlayerY()+15, player.getAnimationFrame(), false);
+            }
+        }
+        ploy = new Texture(Gdx.files.internal("entityTextures/animplayer.png"));
+        ploy.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        drawAnimatedEntity(batch, ploy, player.getPlayerX()+15, player.getPlayerY()+15, player.getWalkAnimationFrame(), player.isRightFace());
         //Specific timer location
         float timerX = (float) tileSize /2;
         float timerY = worldHeight -((float) tileSize /2)+15;
@@ -376,6 +529,13 @@ public class Main extends ApplicationAdapter {
                 font.draw(batch, " Inventory: Seeds", timerX, timerY-15);
             }
         }
+        //if degree is collected then text is displayed
+        if(player.hasDegree) {
+            if(secondsRemaining > 0){
+                font.draw(batch, " Inventory: Degree", timerX, timerY-30);
+            }
+
+        }
         for (Building building: buildings) {
             render(building);
         }
@@ -385,6 +545,7 @@ public class Main extends ApplicationAdapter {
         font.draw(batch, "Bad:" + badEventsRemaining, timerX + 300, timerY);    //goose bites
         font.draw(batch, "Hidden:" + hiddenEventsRemaining, timerX + 380, timerY);  //goose appears
         font.draw(batch, "Lives:" + player.hearts, timerX + 120, timerY-15);    //lives remaining
+        font.draw(batch, "Coins:" + player.coins, timerX + 200, timerY-15);    //coins collected
 
 
         //making buttons active on the gameplay screen
@@ -400,6 +561,15 @@ public class Main extends ApplicationAdapter {
                 if (b.isClicked(viewport)){
                     if (b==mute) {
                         backgroundMusic.changeVolume(volume);
+                        boolean muteFlag = (volume == 0f);
+                        for (Entity e : entities) {
+                            if (e instanceof Goose) {
+                                ((Goose) e).setMute(muteFlag);
+                            }
+                            if ( e instanceof Geesey){
+                                ((Geesey) e).setMute(muteFlag);
+                            }
+                        }
                     } else if (b==pause) {
                         PauseScreen.setActive(true);
                         backgroundMusic.pause();
@@ -435,7 +605,10 @@ public class Main extends ApplicationAdapter {
         font.draw(batch, mute.getMutedStr(), 770, 870);
         font.draw(batch, "Pause", 650, 870);
         batch.end();
-    }
+        dialogueUI.act(Gdx.graphics.getDeltaTime());
+        dialogueUI.draw();
+        }
+    
 
     /**
      * Getter method to get the number of seconds left
@@ -454,6 +627,49 @@ public class Main extends ApplicationAdapter {
     }
 
     /**
+     * Calculates the player's final score for the run.
+     * Extracted from Congrats screen logic so it can be unit-tested.
+     */
+    public int calculateFinalScore() {
+        int score = secondsRemaining;
+        score += (5 - badEventsRemaining) * 10;
+        score += (3 - goodEventsRemaining) * 20;
+        score += (3 - hiddenEventsRemaining) * 30;
+        score += (player != null ? (player.coins * 10) : 0);
+        return score;
+    }
+
+    /**
+     * Adds a score to the local leaderboard, keeps it sorted (desc) and trimmed to top 5.
+     * Extracted so it can be unit-tested without UI.
+     */
+    public void addLeaderboardScore(String playerName, int score) {
+        if (playerName == null || playerName.isBlank()) {
+            playerName = "Player";
+        }
+        if (scores == null) {
+            scores = new ArrayList<>();
+        }
+        scores.add(new LeaderboardScore(playerName, score));
+        scores.sort((a, b) -> b.score - a.score);
+        if (scores.size() > 5) {
+            scores = new ArrayList<>(scores.subList(0, 5));
+        }
+        hasAddedScore = true;
+    }
+
+    /**
+     * Plays the escape/congratulations sound once when the player wins.
+     */
+    public void playEscapeSoundOnce() {
+        if (escapeSoundPlayed) return;
+        escapeSoundPlayed = true;
+        // Reuse an existing bundled sound asset (project currently has no dedicated victory clip).
+        Sound escapeSound = Gdx.audio.newSound(Gdx.files.internal("Sounds/Eating.mp3"));
+        escapeSound.play(volume);
+    }
+
+    /**
      * Renders an entity if its visible attribute is set to true
      * @param entity entity object to render
      */
@@ -462,7 +678,23 @@ public class Main extends ApplicationAdapter {
             entity.render(batch);
         }
     }
+    private void drawAnimatedEntity(SpriteBatch batch, Texture sheet, float px, float py, int frame, boolean facingRight) {
 
+        int row = frame / 2;
+        int col = frame % 2;
+
+        int srcX = col * 32;
+        int srcY = row * 32;
+
+        float drawX = px - 32 / 2f;
+        float drawY = py - 32 / 2f;
+
+        if (facingRight) {
+            batch.draw(sheet, drawX, drawY, 32, 32, srcX, srcY, 32, 32, false, false);
+        } else {
+            batch.draw(sheet, drawX + 32, drawY, -32, 32, srcX, srcY, 32, 32, false, false);
+        }
+    }
     /**
      * Renders a building if its visible attribute is set to true
      * @param building building object to render
@@ -480,13 +712,14 @@ public class Main extends ApplicationAdapter {
      * @param spawnPointX horizontal location of the player to spawn at.
      * @param spawnPointY vertical location of the player to spawn at.
      */
-    private void changeLevel(int newMaze, int spawnPointX, int spawnPointY) {
+    private void changeLevel(int maze, int spawnPointX, int spawnPointY) {
         //Specific implementation for winning, rather than making a redundant win hitbox
-        if (newMaze==10) { // TODO will need to make this higher - freddie
+        if (maze==10) {
             secondsDecreasing=false;
+            playEscapeSoundOnce();
             CongratsScreen.setActive(true);
         } else {
-            loadMaze(newMaze, spawnPointX, spawnPointY);
+            loadMaze(maze, spawnPointX, spawnPointY);
         }
     }
 
@@ -500,17 +733,25 @@ public class Main extends ApplicationAdapter {
         //Clear all previous buildings, entities, and trigger zones
         //These will be null upon first use of the function (initialization)
         boolean seedCheck = false;
+        boolean degreeCheck = false;
+        boolean batCheck = false;
+        int currentDegree = 0;
         int currenthearts=3;
         float speed = 150f;
+        int currentcoin = 0;
+        String[] currentcoinlog = new String[18];
+
         if (buildings!=null) buildings.clear();
         if (triggerZones!=null) triggerZones.clear();
         if (entities!=null) {
             if (player.hasSeeds) seedCheck = true;
+            if (player.hasDegree) degreeCheck = true;
+            if (player.hasBat) batCheck = true;
             currenthearts=player.getHearts();
+            currentDegree = player.getDegree();
+            currentcoin = player.getCoins();
+            currentcoinlog = player.coins_log;
             speed=player.speed;
-            if (maze==0) {
-                currenthearts=3;
-            }
             entities.clear();
         }
         //Level int is 1 behind naming convention, add 1 when loading.
@@ -525,8 +766,22 @@ public class Main extends ApplicationAdapter {
         //Set start values for the player
         player.sprite.setPosition(spawnPointX,spawnPointY);
         player.hasSeeds=seedCheck;
+        player.hasDegree = degreeCheck;
+        player.hasBat = batCheck;
+        player.degreeState = currentDegree;
         player.hearts=currenthearts;
         player.speed=speed;
+        player.coins=currentcoin;
+        player.coins_log=currentcoinlog;
+        // Checks for which coins have already been collected by the player
+        for (Entity e : entities) {
+            for (int i = 0; i < player.coins_log.length; i++) {
+                if (player.coins_log[i]!=null && player.coins_log[i].equals(e.getId())) {
+                    e.visible=false;
+                }
+            }
+        }
+        entities.add(bat);
     }
 
     /**
@@ -555,6 +810,14 @@ public class Main extends ApplicationAdapter {
     public void startGame(){
         //Goes to first maze and resets character and seeds
         loadMaze(0,40,800);
+        player.hasSeeds=false;
+        player.hasDegree = false;
+        player.hasBat = false;
+        player.degreeState = 0;
+        player.hearts=3;
+        player.speed=200f;
+        player.coins=0;
+        player.coins_log=new String[18];        
 
         //Set timer back to 5 minutes.
         secondsRemaining = 300;  //resets the time
@@ -565,10 +828,13 @@ public class Main extends ApplicationAdapter {
         backgroundMusic.stop();
         backgroundMusic.start(volume);
         //Reset values for the events.
-        this.badEventsRemaining = 1;
-        this.goodEventsRemaining = 1;
-        this.hiddenEventsRemaining = 1;
+        this.badEventsRemaining = 5;
+        this.goodEventsRemaining = 3;
+        this.hiddenEventsRemaining = 3;
         //draw(); //this continues to show the game over screen
+        enteringName = false;
+        hasAddedScore = false;
+        escapeSoundPlayed = false;
     }
 
     /**
@@ -578,17 +844,80 @@ public class Main extends ApplicationAdapter {
         secondsDecreasing = false;
         batch.begin();
         TitleScreen.render();
+        font.getData().setScale(1);
+
+        font.draw(batch, "Instructions", 150, 550);
+        font.draw(batch, "You must first head to the Computer Science building to take a quiz with the Professor there.", 150, 525);
+        font.draw(batch,"If you pass you will be awarded your degree at Central Hall to escape without much difficulty.",150,500);
+        font.draw(batch,"However, if you fail you there may be lots of obstacles in the way stopping you from escaping.",150,475);
+        font.draw(batch,"Controls:", 150,450);
+        font.draw(batch,"Arrow Keys or WASD - Movement",150,425);
+        font.draw(batch,"E - Interact",150,400);
+        font.draw(batch, "Space - Use Bat", 150, 375);
+        font.draw(batch, "Walk up to a building to enter it.", 150, 350);
         start.setActive(true);
         mute.setActive(true);
+        leaderboard.setActive(true);
+        achievement.setActive(true);
+        achievement.draw(batch);
         start.draw(batch);
+        leaderboard.draw(batch);
         batch.end();
         if (start.isClicked(viewport)){
+            achievementTracker.unlockAchievement("Game Started");
             TitleScreen.setActive(false);
             inMainMenu = false;
             start.setActive(false);
+            leaderboard.setActive(false);
             pause.setActive(true);
             mute.setActive(true);
+            achievement.setActive(false);
             startGame();
+        } else if (leaderboard.isClicked(viewport)){
+            //code to show leaderboard goes here
+            TitleScreen.setActive(false);
+            start.setActive(false);
+            leaderboard.setActive(false);
+            LeaderboardScreen.setActive(true);
+            achievement.setActive(false);
+        } else if (achievement.isClicked(viewport)){
+            TitleScreen.setActive(false);
+            start.setActive(false);
+            leaderboard.setActive(false);
+            achievement.setActive(false);
+            AchievementScreen.setActive(true);
+        }
+    }
+
+    public void LeaderboardScreenLogic(){
+        //code to show leaderboard goes here
+        batch.begin();
+        secondsDecreasing = false;
+        LeaderboardScreen.render();
+        font.getData().setScale(4);
+        font.draw(batch, "Leaderboard", 275, 800);
+        font.getData().setScale(1);
+        int yPosition = 700;
+        int maxRows = 5;
+        for (int i = 0; i < maxRows; i++) {
+            String scoreText;
+            if (i < scores.size()) {
+                LeaderboardScore score = scores.get(i);
+                scoreText = (i + 1) + ". " + score.playerName + " - " + score.score + " seconds";
+            } else {
+                scoreText = (i + 1) + ". ---";
+            }
+            font.draw(batch, scoreText, 300, yPosition);
+            yPosition -= 50; // Move down for the next score
+        }
+
+        returnbutton.setActive(true);
+        returnbutton.draw(batch);
+        batch.end();
+        if (returnbutton.isClicked(viewport)){
+            LeaderboardScreen.setActive(false);
+            returnbutton.setActive(false);
+            TitleScreen.setActive(true);
         }
     }
 
@@ -622,28 +951,110 @@ public class Main extends ApplicationAdapter {
      * Renders the congratulations screen and causes the buttons to function.
      */
     public void CongratsScreenLogic(){
+        achievementTracker.unlockAchievement("Escaped Uni");
+        if (secondsRemaining > 180){
+            achievementTracker.unlockAchievement("Speedy Escaper");
+        }
+        whichEnding();
+        finalScore = calculateFinalScore();
+
+        if (nameInputUI == null) {
+            nameInputUI = new NameInputUI(viewport);
+            nameInputUI.show();
+            hasAddedScore = false;
+        }
+
         batch.begin();
         CongratsScreen.render();
         //increasing font size
         font.getData().setScale(5);
-        font.draw(batch, String.valueOf(secondsRemaining), 520, 500);
-        //returning font size to original
+        font.draw(batch, String.valueOf(finalScore), 520, 500);
+        font.getData().setScale(3);
+        font.draw(batch, "You escaped in " + (300 - secondsRemaining) + " seconds", 200, 400);
         font.getData().setScale(1);
-        begin.setActive(true);
-        quit.setActive(true);
-        begin.draw(batch);
-        quit.draw(batch);
+        
+        if (hasAddedScore) {
+            title.setActive(true);
+            quit.setActive(true);
+            title.draw(batch);
+            quit.draw(batch);
+        }
+    
         batch.end();
+        nameInputUI.update(Gdx.graphics.getDeltaTime());
+        nameInputUI.draw();
+        if (nameInputUI.isSubmitted() && !hasAddedScore) {
+            String playerName = nameInputUI.getName();
+            addLeaderboardScore(playerName, finalScore);
+        }
+
+
         pause.setActive(false);
         mute.setActive(false);
-        if (quit.isClicked(viewport)){
-            Gdx.app.exit();
+
+        if (hasAddedScore) {
+            if (quit.isClicked(viewport)){
+                Gdx.app.exit();
+            }
+            if (title.isClicked(viewport)){
+                title.setActive(false);
+                quit.setActive(false);
+                CongratsScreen.setActive(false);
+                // Reset the game state and return to the title screen instead of
+                // immediately starting a new game.
+                if (nameInputUI != null) {
+                nameInputUI.dispose();
+                nameInputUI = null; // Reset the name input UI for the next game
+            }
+
+            resetToTitle();
+            TitleScreen.setActive(true);
+            }
         }
-        if (begin.isClicked(viewport)){
-            begin.setActive(false);
-            quit.setActive(false);
-            CongratsScreen.setActive(false);
-            startGame();
+       
+    }
+
+    /**
+     * Reset game state back to the initial title-screen state without
+     * immediately starting gameplay.
+     */
+    public void resetToTitle(){
+        // Reset timer and pause timer progression until player starts a game
+        secondsRemaining = 300;
+        secondsDecreasing = false;
+
+        // Stop any background music
+        if (backgroundMusic != null) backgroundMusic.stop();
+
+        // Deactivate other screens that might be visible
+        GameOverScreen.setActive(false);
+        PauseScreen.setActive(false);
+        LeaderboardScreen.setActive(false);
+        CongratsScreen.setActive(false);
+
+        escapeSoundPlayed = false;
+
+        // Ensure title screen buttons are in the correct state
+        start.setActive(false);
+        pause.setActive(false);
+        mute.setActive(false);
+        begin.setActive(false);
+        quit.setActive(false);
+
+        // Reset event counters to defaults
+        this.badEventsRemaining = 5;
+        this.goodEventsRemaining = 3;
+        this.hiddenEventsRemaining = 3;
+
+        // Clear gameplay objects so the title screen is clean. They'll be
+        // recreated when a new game is started via `startGame()`.
+        if (entities != null) entities.clear();
+        if (buildings != null) buildings.clear();
+        if (triggerZones != null) triggerZones.clear();
+
+        if (nameInputUI != null) {
+            nameInputUI.dispose();
+            nameInputUI = null; // Reset the name input UI for the next game
         }
     }
     /**
@@ -669,5 +1080,71 @@ public class Main extends ApplicationAdapter {
             GameOverScreen.setActive(false);
             startGame();
         }
+    }
+
+    public void achievementScreenLogic(){
+        batch.begin();
+        AchievementScreen.render();
+
+        font.getData().setScale(3);
+        font.draw(batch, "Achievements", 275, 800);
+        font.getData().setScale(1);
+
+        int y = 700;
+
+        for (Achievement achievement : achievementTracker.getAchievements()) {
+            if (achievement.unlocked) {
+                font.setColor(Color.GREEN);
+                font.draw(batch, achievement.name + " - " + achievement.description, 300, y);
+            } else {
+                font.setColor(Color.RED);
+                font.draw(batch, achievement.name + " - " + achievement.description, 300, y);
+            }
+            y -= 50;
+        }
+        font.setColor(Color.WHITE);
+        returnbutton.setActive(true);
+        returnbutton.draw(batch);
+        batch.end();
+        if (returnbutton.isClicked(viewport)){
+            AchievementScreen.setActive(false);
+            returnbutton.setActive(false);
+            TitleScreen.setActive(true);
+        }
+    }
+    public void whichEnding(){
+        if (achievementTracker == null) {
+            achievementTracker = new AchievementTracker();
+        }
+        if (player.getDegree() == 2){
+            achievementTracker.unlockAchievement("Good Student");
+        } else if (player.getDegree() == 1){
+            achievementTracker.unlockAchievement("Who needs a degree?");
+        }
+    }
+
+    public void batAchievement(){
+        if (achievementTracker == null) {
+            achievementTracker = new AchievementTracker();
+        }
+        achievementTracker.unlockAchievement("Prepared and Ready");
+    }
+    public void coinsAchievement(){
+        if (achievementTracker == null) {
+            achievementTracker = new AchievementTracker();
+        }
+        achievementTracker.unlockAchievement("Coin Collector"); 
+    }
+    public void gooseBiteAchievement(){
+        if (achievementTracker == null) {
+            achievementTracker = new AchievementTracker();
+        }
+        achievementTracker.unlockAchievement("Ouch that hurts!");
+    }
+    public void itemAchievement(){
+        if (achievementTracker == null) {
+            achievementTracker = new AchievementTracker();
+        }
+        achievementTracker.unlockAchievement("Powered-Up");
     }
 }

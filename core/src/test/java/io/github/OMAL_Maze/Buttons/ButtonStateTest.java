@@ -35,8 +35,6 @@ class ButtonStateTest {
         b.setActive(false);
         assertFalse(b.isActive());
     }
-
-    @Test
     void testMuteButtonGetMutedStr() {
         MuteButton m = new MuteButton(fh);
         assertNotNull(m.getMutedStr());

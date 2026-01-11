@@ -56,11 +56,13 @@ class MenuAccessTest {
         Gdx.testInput().setPointer(clickX, clickY);
 
         mute.isClicked(viewport);
-        assertEquals(0f, main.volume, 0.0001f, "First click should mute (volume=0)");
+        assertEquals(0f, main.volume, 0.0001f, "First click should mute so volume=0");
         assertEquals("Unmute", mute.getMutedStr());
 
+        Gdx.testInput().setTouched(false);
+        Gdx.testInput().setTouched(true);
         mute.isClicked(viewport);
-        assertEquals(100f, main.volume, 0.0001f, "Second click should unmute (volume=100)");
+        assertEquals(100f, main.volume, 0.0001f, "Second click should unmute so volume=100");
         assertEquals("Mute", mute.getMutedStr());
     }
 }

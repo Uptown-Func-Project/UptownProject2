@@ -23,8 +23,6 @@ class MainTest {
     void testDefaultVolume() {
         assertEquals(100f, main.volume, 0.001f, "Default volume should be 100");
     }
-
-
     @Test
     void testGetInstance() {
         Main instance = Main.getInstance();

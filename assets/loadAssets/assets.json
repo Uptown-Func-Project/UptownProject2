@@ -32,7 +32,118 @@
           "y": 40,
           "width": 23,
           "height": 30,
-          "texturePath": "entityTextures/player_A.png"
+          "texturePath": "entityTextures/empty.png",
+          "id": "player1"
+        },
+        {
+          "type": "Puddle",
+           "x": 161,
+           "y": 207,
+           "width": 36,
+           "height": 60,
+           "texturePath": "entityTextures/puddle.png",
+           "id": "puddle1"
+        },
+        {
+          "type": "Puddle",
+           "x": 713,
+           "y": 575,
+           "width": 60,
+           "height": 36,
+           "texturePath": "entityTextures/puddle.png",
+           "id": "puddle1"
+        },
+        {
+          "type": "Coin",
+          "x": 328,
+          "y": 489,
+          "width": 24,
+          "height": 24,
+          "texturePath": "entityTextures/coin.png",
+          "id": "coin1"
+        },
+        {
+          "type": "Coin",
+          "x": 51,
+          "y": 134,
+          "width": 24,
+          "height": 24,
+          "texturePath": "entityTextures/coin.png",
+          "id": "coin2"
+        },
+        {
+          "type": "Coin",
+          "x": 247,
+          "y": 238,
+          "width": 24,
+          "height": 24,
+          "texturePath": "entityTextures/coin.png",
+          "id": "coin3"
+        },
+        {
+          "type": "Coin",
+          "x": 811,
+          "y": 774,
+          "width": 24,
+          "height": 24,
+          "texturePath": "entityTextures/coin.png",
+          "id": "coin4"
+        },
+        {
+          "type": "Coin",
+          "x": 806,
+          "y": 568,
+          "width": 24,
+          "height": 24,
+          "texturePath": "entityTextures/coin.png",
+          "id": "coin5"
+        },
+        {
+          "type": "Coin",
+          "x": 729,
+          "y": 84,
+          "width": 24,
+          "height": 24,
+          "texturePath": "entityTextures/coin.png",
+          "id": "coin6"
+          
+        },
+        {
+         "type": "Geesey",
+          "x": 2000,
+          "y": 1000,
+          "width": 24,
+          "height": 24,
+          "texturePath": "entityTextures/empty.png",
+          "id": "geesey1"
+        },
+        {
+         "type": "Geesey",
+          "x": 2000,
+          "y": 2000,
+          "width": 24,
+          "height": 24,
+          "texturePath": "entityTextures/empty.png",
+          "id": "geesey2"
+        },
+        {
+         "type": "Geesey",
+          "x": 2000,
+          "y": 2000,
+          "width": 24,
+          "height": 24,
+          "texturePath": "entityTextures/empty.png",
+          "id": "geesey3"
+        },
+        
+        {
+         "type": "Geesey",
+          "x": 2000,
+          "y": 2000,
+          "width": 24,
+          "height": 24,
+          "texturePath": "entityTextures/empty.png",
+          "id": "geesey5"
         }
       ],
       "buildings": [
@@ -93,15 +204,110 @@
           "y": 40,
           "width": 23,
           "height": 30,
-          "texturePath": "entityTextures/player_A.png"
+          "texturePath": "entityTextures/empty.png"
         },
         {
           "type": "Goose",
-          "x": 1000,
-          "y": 1000,
+          "x": 2000,
+          "y": 2000,
           "width": 24,
           "height": 24,
-          "texturePath": "entityTextures/goose.png"
+          "texturePath": "entityTextures/empty.png",
+          "id": "goose1"
+        },
+        {
+          "type": "Puddle",
+           "x": 452,
+           "y": 43,
+           "width": 60,
+           "height": 36,
+           "texturePath": "entityTextures/puddle.png",
+           "id": "puddle1"
+        },
+        {
+          "type": "Puddle",
+           "x": 224,
+           "y": 560,
+           "width": 36,
+           "height": 30,
+           "texturePath": "entityTextures/puddle.png",
+           "id": "puddle1"
+        },
+        
+        {
+          "type": "Coin",
+          "x": 48,
+          "y": 211,
+          "width": 24,
+          "height": 24,
+          "texturePath": "entityTextures/coin.png",
+          "id": "coin7"
+        },
+        {
+          "type": "Coin",
+          "x": 287,
+          "y": 371,
+          "width": 24,
+          "height": 24,
+          "texturePath": "entityTextures/coin.png",
+          "id": "coin8"
+        },
+        {
+          "type": "Coin",
+          "x": 329,
+          "y": 805,
+          "width": 24,
+          "height": 24,
+          "texturePath": "entityTextures/coin.png",
+          "id": "coin9"
+        },
+        {
+          "type": "Coin",
+          "x": 730,
+          "y": 644,
+          "width": 24,
+          "height": 24,
+          "texturePath": "entityTextures/coin.png",
+          "id": "coin10"
+        },
+        {
+          "type": "Coin",
+          "x": 800,
+          "y": 204,
+          "width": 24,
+          "height": 24,
+          "texturePath": "entityTextures/coin.png",
+          "id": "coin11"
+        },
+        {
+          "type": "Coin",
+          "x": 808,
+          "y": 480,
+          "width": 24,
+          "height": 24,
+          "texturePath": "entityTextures/coin.png",
+          "id": "coin12"
+          
+        },
+        
+        {
+         "type": "Geesey",
+          "x": 2000,
+          "y": 2000,
+          "width": 24,
+          "height": 24,
+          "texturePath": "entityTextures/empty.png",
+          "id": "geesey8"
+        }
+        ,
+        {
+         "type": "Geesey",
+          "x": 2000,
+          "y": 2000,
+          "width": 24,
+          "height": 24,
+          "texturePath": "entityTextures/empty.png",
+          "id": "geesey9"
         }
       ],
       "buildings": [
@@ -123,7 +329,7 @@
           "width": 20,
           "height": 20,
           "targetMaze": 2,
-          "spawnPointX": 0,
+          "spawnPointX": 20,
           "spawnPointY": 800,
           "fromMaze": 1
         },
@@ -133,7 +339,7 @@
           "width": 20,
           "height": 20,
           "targetMaze": 0,
-          "spawnPointX": 860,
+          "spawnPointX": 820,
           "spawnPointY": 50,
           "fromMaze": 1
         },
@@ -182,7 +388,34 @@
           "y": 40,
           "width": 23,
           "height": 30,
-          "texturePath": "entityTextures/player_A.png"
+          "texturePath": "entityTextures/empty.png"
+        },
+        {
+          "type": "Dean",
+          "x": 2000,
+          "y": 2000,
+          "width": 23,
+          "height": 30,
+          "texturePath": "entityTextures/empty.png",
+          "id": "dean1"
+        },
+        {
+          "type": "Puddle",
+           "x": 350,
+           "y": 569,
+           "width": 36,
+           "height": 36,
+           "texturePath": "entityTextures/puddle.png",
+           "id": "puddle1"
+        },
+        {
+         "type": "Geesey",
+          "x": 2000,
+          "y": 2000,
+          "width": 24,
+          "height": 24,
+          "texturePath": "entityTextures/empty.png",
+          "id": "geesey10"
         }
       ],
       "buildings": [],
@@ -242,7 +475,70 @@
           "y": 40,
           "width": 23,
           "height": 30,
-          "texturePath": "entityTextures/player_A.png"
+          "texturePath": "entityTextures/empty.png"
+        },
+        {
+          "type": "Coin",
+          "x": 688,
+          "y": 203,
+          "width": 24,
+          "height": 24,
+          "texturePath": "entityTextures/coin.png",
+          "id": "coin13"
+        },
+        {
+          "type": "Coin",
+          "x": 568,
+          "y": 244,
+          "width": 24,
+          "height": 24,
+          "texturePath": "entityTextures/coin.png",
+          "id": "coin14"
+        },
+        {
+          "type": "Coin",
+          "x": 48,
+          "y": 47,
+          "width": 24,
+          "height": 24,
+          "texturePath": "entityTextures/coin.png",
+          "id": "coin15"
+        },
+        {
+          "type": "Coin",
+          "x": 483,
+          "y": 805,
+          "width": 24,
+          "height": 24,
+          "texturePath": "entityTextures/coin.png",
+          "id": "coin16"
+        },
+        {
+          "type": "Coin",
+          "x": 120,
+          "y": 564,
+          "width": 24,
+          "height": 24,
+          "texturePath": "entityTextures/coin.png",
+          "id": "coin17"
+        },
+        {
+          "type": "Coin",
+          "x": 205,
+          "y": 324,
+          "width": 24,
+          "height": 24,
+          "texturePath": "entityTextures/coin.png",
+          "id": "coin18"
+        },
+        {
+          "type": "Puddle",
+           "x": 478,
+           "y": 726,
+           "width": 36,
+           "height": 36,
+           "texturePath": "entityTextures/puddle.png",
+           "id": "puddle1"
         }
       ],
       "buildings": [],
@@ -267,6 +563,7 @@
           "spawnPointY": 0,
           "fromMaze": 3
         }
+        
       ]
     },
         "level_5": {
@@ -302,7 +599,16 @@
           "y": 40,
           "width": 23,
           "height": 30,
-          "texturePath": "entityTextures/player_A.png"
+          "texturePath": "entityTextures/empty.png"
+        },
+
+        {
+          "type": "Professor",
+          "x": 432,
+          "y": 480,
+          "width": 25,
+          "height": 40,
+          "texturePath": "entityTextures/professor.png"
         }
       ],
       "buildings": [],
@@ -352,7 +658,16 @@
           "y": 40,
           "width": 23,
           "height": 30,
-          "texturePath": "entityTextures/player_A.png"
+          "texturePath": "entityTextures/empty.png"
+        },
+
+        {
+          "type": "degreeGuy",
+          "x": 382,
+          "y": 530,
+          "width": 25,
+          "height": 40,
+          "texturePath": "entityTextures/degreeGuy.png"
         }
       ],
       "buildings": [],
@@ -373,22 +688,22 @@
       "backgroundImage": "screenTextures/shop.png",
       "walls": [
         [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-        [1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1],
-        [1,1,1,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-        [1,1,1,0,1,1,0,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1],
-        [1,1,0,0,1,1,0,1,0,0,0,0,0,0,1,0,1,1,1,1,1,1],
-        [1,1,0,1,1,1,0,1,0,1,1,1,1,0,0,0,0,0,0,0,1,1],
-        [1,1,0,0,0,1,0,1,0,1,0,1,1,1,1,1,1,1,1,0,1,1],
-        [1,1,0,1,1,1,0,1,0,1,0,0,0,0,0,0,0,1,1,0,1,1],
-        [1,1,0,1,1,1,0,1,0,0,0,1,1,1,1,1,0,1,1,0,1,1],
-        [1,1,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,1,1,0,1,1],
-        [1,1,0,1,1,1,0,1,0,0,0,0,0,1,1,1,1,1,1,0,1,1],
-        [1,1,0,1,1,1,0,1,0,0,0,0,0,1,0,0,0,0,1,0,1,1],
-        [1,1,0,1,1,1,0,1,0,1,1,1,0,1,0,1,1,1,1,0,1,1],
-        [1,0,0,0,1,1,1,1,0,0,0,0,0,1,0,1,1,1,1,0,1,1],
-        [1,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,1],
-        [1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,1,0,1,1],
-        [1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1],
+        [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1],
+        [1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+        [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1],
+        [1,1,1,1,1,1,1,1,0,0,0,0,0,0,1,0,1,1,1,1,1,1],
+        [1,1,1,1,1,1,1,1,0,1,1,1,1,0,0,0,0,0,0,0,1,1],
+        [1,1,1,1,1,1,1,1,0,1,0,1,1,1,1,1,1,1,1,0,1,1],
+        [1,1,1,1,1,1,1,1,0,1,0,0,0,0,0,0,0,1,1,0,1,1],
+        [1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,0,1,1,0,1,1],
+        [1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,1,1,0,1,1],
+        [1,1,1,1,1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,0,1,1],
+        [1,1,1,1,1,1,1,1,0,0,0,0,0,1,0,0,0,0,1,0,1,1],
+        [1,1,1,1,1,1,1,1,0,1,1,1,0,1,0,1,1,1,1,0,1,1],
+        [1,1,1,1,1,1,1,1,0,0,0,0,0,1,0,1,1,1,1,0,1,1],
+        [1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,1],
+        [1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,1,0,1,1],
+        [1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1],
         [1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,0,1],
         [1,1,1,0,1,1,1,1,0,1,1,1,1,0,0,0,0,0,0,0,0,1],
         [1,1,1,0,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1],
@@ -402,15 +717,89 @@
           "y": 40,
           "width": 23,
           "height": 30,
-          "texturePath": "entityTextures/player_A.png"
+          "texturePath": "entityTextures/empty.png",
+          "id": "player1"
         },
         {
           "type": "Seeds",
-          "x": 430,
-          "y": 460,
-          "width": 20,
-          "height": 20,
-          "texturePath": "entityTextures/Seeds.png"
+          "x": 400,
+          "y": 390,
+          "width": 40,
+          "height": 40,
+          "texturePath": "entityTextures/Seeds.png",
+          "id": "seeds1"
+        },
+        {
+          "type": "Seeds",
+          "x": 10,
+          "y": 360,
+          "width": 80,
+          "height": 80,
+          "texturePath": "entityTextures/Seeds.png",
+          "id": "seeds2"
+        },
+        {
+          "type": "Coin",
+          "x": 125,
+          "y": 345,
+          "width": 40,
+          "height": 40,
+          "texturePath": "entityTextures/coin.png",
+          "id": "displayCoin1"
+        },
+        {
+          "type": "EnergyDrink",
+          "x": 440,
+          "y": 390,
+          "width": 40,
+          "height": 40,
+          "texturePath": "entityTextures/energy drink.png",
+          "id": "energyDrink1"
+        },
+        {
+          "type": "EnergyDrink",
+          "x": 10,
+          "y": 700,
+          "width": 100,
+          "height": 100,
+          "texturePath": "entityTextures/energy drink.png",
+          "id": "energyDrink2"
+        },
+        {
+          "type": "Coin",
+          "x": 125,
+          "y": 703,
+          "width": 40,
+          "height": 40,
+          "texturePath": "entityTextures/coin.png",
+          "id": "displayCoin2"
+        },
+        {
+          "type": "Food",
+          "x": 360,
+          "y": 390,
+          "width": 40,
+          "height": 40,
+          "texturePath": "entityTextures/food.png",
+          "id": "food1"
+        },
+        {
+          "type": "Food",
+          "x": 10,
+          "y": 535,
+          "width": 100,
+          "height": 100,
+          "texturePath": "entityTextures/food.png",
+          "id": "food2"
+        },
+        {
+          "type": "Coin",
+          "x": 125,
+          "y": 542,
+          "width": 40,
+          "height": 40,
+          "texturePath": "entityTextures/coin.png",
+          "id": "displayCoin3"
         }
       ],
       "buildings": [],
