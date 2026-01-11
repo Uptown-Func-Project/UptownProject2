@@ -110,7 +110,7 @@
         },
         {
          "type": "Geesey",
-          "x": 1000,
+          "x": 2000,
           "y": 1000,
           "width": 24,
           "height": 24,
@@ -119,8 +119,8 @@
         },
         {
          "type": "Geesey",
-          "x": 1000,
-          "y": 1000,
+          "x": 2000,
+          "y": 2000,
           "width": 24,
           "height": 24,
           "texturePath": "entityTextures/empty.png",
@@ -128,8 +128,8 @@
         },
         {
          "type": "Geesey",
-          "x": 1000,
-          "y": 1000,
+          "x": 2000,
+          "y": 2000,
           "width": 24,
           "height": 24,
           "texturePath": "entityTextures/empty.png",
@@ -138,8 +138,8 @@
         
         {
          "type": "Geesey",
-          "x": 1000,
-          "y": 1000,
+          "x": 2000,
+          "y": 2000,
           "width": 24,
           "height": 24,
           "texturePath": "entityTextures/empty.png",
@@ -208,8 +208,8 @@
         },
         {
           "type": "Goose",
-          "x": 1000,
-          "y": 1000,
+          "x": 2000,
+          "y": 2000,
           "width": 24,
           "height": 24,
           "texturePath": "entityTextures/empty.png",
@@ -292,8 +292,8 @@
         
         {
          "type": "Geesey",
-          "x": 1000,
-          "y": 1000,
+          "x": 2000,
+          "y": 2000,
           "width": 24,
           "height": 24,
           "texturePath": "entityTextures/empty.png",
@@ -302,8 +302,8 @@
         ,
         {
          "type": "Geesey",
-          "x": 1000,
-          "y": 1000,
+          "x": 2000,
+          "y": 2000,
           "width": 24,
           "height": 24,
           "texturePath": "entityTextures/empty.png",
@@ -392,8 +392,8 @@
         },
         {
           "type": "Dean",
-          "x": 600,
-          "y": 200,
+          "x": 2000,
+          "y": 2000,
           "width": 23,
           "height": 30,
           "texturePath": "entityTextures/empty.png",
@@ -410,8 +410,8 @@
         },
         {
          "type": "Geesey",
-          "x": 1000,
-          "y": 1000,
+          "x": 2000,
+          "y": 2000,
           "width": 24,
           "height": 24,
           "texturePath": "entityTextures/empty.png",
@@ -562,25 +562,8 @@
           "spawnPointX": 400,
           "spawnPointY": 0,
           "fromMaze": 3
-        },
-        {
-         "type": "Geesey",
-          "x": 40,
-          "y": 30,
-          "width": 24,
-          "height": 24,
-          "texturePath": "entityTextures/empty.png",
-          "id": "geesey14"
-        },
-        {
-         "type": "Geesey",
-          "x": 40,
-          "y": 30,
-          "width": 24,
-          "height": 24,
-          "texturePath": "entityTextures/empty.png",
-          "id": "geesey12"
         }
+        
       ]
     },
         "level_5": {

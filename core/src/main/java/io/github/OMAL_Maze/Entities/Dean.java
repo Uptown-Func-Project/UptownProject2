@@ -98,7 +98,7 @@ public class Dean extends Character{
         // initialize temporary-block TTL array
         tempBlockedTTL = new float[mapy.length][mapy[0].length];
 
-        gooseQuack = Gdx.audio.newSound(Gdx.files.internal("Sounds/Geese.mp3"));
+        //gooseQuack = Gdx.audio.newSound(Gdx.files.internal("Sounds/Geese.mp3"));
     }
 
     /**
@@ -126,18 +126,18 @@ public class Dean extends Character{
         this.player = Main.player;
 
         Rectangle playerBounds = player.sprite.getBoundingRectangle();
-        if (playerBounds.overlaps(this.spawnTrigger) && (this.spawned==null || !this.spawned)) {
+        if (playerBounds.overlaps(this.spawnTrigger) && (this.spawned==null || !this.spawned) && (player.getHasDegree()==false)) {
             this.show();
             Main.getInstance().decrementHiddenEventCounter();
         }
 
-        if (this.soundTimer>0f) {
-            this.soundTimer-=delta;
-        } else {
-            if (this.soundID!=null) {
-                gooseQuack.stop(this.soundID);
-            }
-        }
+        //if (this.soundTimer>0f) {
+          //  this.soundTimer-=delta;
+        //} else {
+          //  if (this.soundID!=null) {
+            //    gooseQuack.stop(this.soundID);
+           // }
+        //}
 
         if (bitPlayer) {
             if (this.solidTimer>0f) {
