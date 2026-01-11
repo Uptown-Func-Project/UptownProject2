@@ -36,7 +36,7 @@ public class Goose extends Character{
     
     private boolean facingRight = true;
     private int lastMoveX = 0;
-    public boolean isNotMuted = true;
+    private boolean isNotMuted = true;
 
     // --- fields to detect & temporarily block stuck tiles ---
     private float[][] tempBlockedTTL;
@@ -113,7 +113,10 @@ public class Goose extends Character{
         this.visible=true;
         this.isMoving=true;
         this.spawned=true;
-        if (isNotMuted){this.soundID = gooseQuack.play();}
+        if (isNotMuted){
+            float vol = (Main.getInstance() != null) ? Main.getInstance().volume / 100f : 1f;
+            this.soundID = gooseQuack.play(vol);
+        }
         this.soundTimer=5f;
         this.state=gooseState.ANGRY;
     }
@@ -169,6 +172,22 @@ public class Goose extends Character{
         this.bitPlayer=true;
         this.biteTimer=5f;
         this.solidTimer=0.5f;
+    }
+    public void setMute(boolean muteStatus){
+        this.isNotMuted = !muteStatus;
+        if (muteStatus){
+            if (this.soundID!=null) {
+                gooseQuack.stop(this.soundID);
+                this.soundID = null;
+            }
+        } else {
+            // if unmuting and the goose is visible, restart the sound at current global volume
+            if (this.visible) {
+                float vol = (Main.getInstance() != null) ? Main.getInstance().volume / 100f : 1f;
+                this.soundID = gooseQuack.play(vol);
+                this.soundTimer = 5f;
+            }
+        }
     }
 
     /**

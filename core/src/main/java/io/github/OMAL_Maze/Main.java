@@ -542,7 +542,15 @@ public class Main extends ApplicationAdapter {
                 if (b.isClicked(viewport)){
                     if (b==mute) {
                         backgroundMusic.changeVolume(volume);
-                        
+                        boolean muteFlag = (volume == 0f);
+                        for (Entity e : entities) {
+                            if (e instanceof Goose) {
+                                ((Goose) e).setMute(muteFlag);
+                            }
+                            if ( e instanceof Geesey){
+                                ((Geesey) e).setMute(muteFlag);
+                            }
+                        }
                     } else if (b==pause) {
                         PauseScreen.setActive(true);
                         backgroundMusic.pause();

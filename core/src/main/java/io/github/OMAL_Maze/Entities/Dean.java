@@ -110,7 +110,7 @@ public class Dean extends Character{
         this.visible=true;
         this.isMoving=true;
         this.spawned=true;
-        this.soundID = gooseQuack.play();
+        //this.soundID = gooseQuack.play();
         this.soundTimer=5f;
         this.state=deanState.ANGRY;
     }
