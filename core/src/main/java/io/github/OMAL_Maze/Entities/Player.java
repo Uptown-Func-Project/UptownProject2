@@ -487,6 +487,9 @@ public class Player extends Character{
             this.hearts = 3;
             this.hasSeeds = false;
             this.coins = 0;
+            this.hasBat = false;
+            this.hasDegree = false;
+            this.degreeState = 0;
             this.speed=200f;
             this.accelerate=800f;
             this.friction=4000f;
