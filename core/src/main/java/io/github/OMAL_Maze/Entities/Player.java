@@ -106,6 +106,8 @@ public class Player extends Character{
                     this.coins-=4;
                     //seeds pickup sound
                     itemPickup = Gdx.audio.newSound(Gdx.files.internal("Sounds/ItemPickup.mp3"));
+                    Main.getInstance().itemAchievement();
+                    Main.getInstance().decrementGoodEventCounter();
                     if (this.hasSeeds) {
                         itemPickup.play();
                     }
@@ -123,6 +125,9 @@ public class Player extends Character{
                 if (playerBounds.overlaps(coinBounds) && coin.visible == true) {
                     entities.get(i).visible=false;
                     this.coins ++;
+                    if (this.coins > 10){
+                        Main.getInstance().coinsAchievement();
+                    }
                     //seeds pickup sound
                     itemPickup = Gdx.audio.newSound(Gdx.files.internal("Sounds/ItemPickup.mp3"));
                     itemPickup.play();
@@ -147,6 +152,8 @@ public class Player extends Character{
                     //seeds pickup sound
                     itemPickup = Gdx.audio.newSound(Gdx.files.internal("Sounds/ItemPickup.mp3"));
                     itemPickup.play();
+                    Main.getInstance().itemAchievement();
+                    Main.getInstance().decrementGoodEventCounter();
 
                     // Provides a 50% speed boost
                     this.speed*=1.5;
@@ -168,6 +175,8 @@ public class Player extends Character{
                     itemPickup = Gdx.audio.newSound(Gdx.files.internal("Sounds/ItemPickup.mp3"));
                     itemPickup.play();
 
+                    Main.getInstance().itemAchievement();
+                    Main.getInstance().decrementGoodEventCounter();
                     // Gives an extra life
                     this.hearts+=1;
                     break;
@@ -192,9 +201,11 @@ public class Player extends Character{
                         System.out.println("Player is interacting with the Professor.");
                     }
                     else if (degreeState == 1) {
+                        Main.getInstance().decrementBadEventCounter();
                         DialogueManager.getInstance().startDialogue("imperfect_answer2");
                     }
                     else if (degreeState == 2) {
+                        Main.getInstance().decrementGoodEventCounter();
                         DialogueManager.getInstance().startDialogue("prof_idle");
                     }
 
@@ -236,6 +247,8 @@ public class Player extends Character{
                     if (playerBounds.overlaps(batBounds)) {
                         entities.removeIndex(i);
                         this.hasBat = true;
+                        Main.getInstance().batAchievement();
+                        Main.getInstance().decrementHiddenEventCounter();
                         this.batSwingEffect = Main.getInstance().bat;
                         //bat pickup sound
                         itemPickup = Gdx.audio.newSound(Gdx.files.internal("Sounds/ItemPickup.mp3"));

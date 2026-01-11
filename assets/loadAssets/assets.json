@@ -293,7 +293,7 @@
           "width": 20,
           "height": 20,
           "targetMaze": 2,
-          "spawnPointX": 0,
+          "spawnPointX": 20,
           "spawnPointY": 800,
           "fromMaze": 1
         },

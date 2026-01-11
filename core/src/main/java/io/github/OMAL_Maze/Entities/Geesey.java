@@ -216,6 +216,7 @@ public class Geesey extends Character{
         this.bitPlayer=true;
         this.biteTimer=5f;
         this.solidTimer=0.5f;
+        Main.getInstance().gooseBiteAchievement();
     }
     public void setMute(boolean muteStatus){
         this.isNotMuted = !muteStatus;

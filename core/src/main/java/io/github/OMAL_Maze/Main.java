@@ -26,6 +26,8 @@ import io.github.OMAL_Maze.Buttons.QuitButton;
 import io.github.OMAL_Maze.Buttons.ReturnButton;
 import io.github.OMAL_Maze.Buttons.StartButton;
 import io.github.OMAL_Maze.Buttons.UnpauseButton;
+import io.github.OMAL_Maze.Buttons.AchievementButton;
+import io.github.OMAL_Maze.Buttons.TitleButton;
 import io.github.OMAL_Maze.Dialogue.DialogueManager;
 import io.github.OMAL_Maze.Dialogue.DialogueUI;
 import io.github.OMAL_Maze.Entities.Bat;
@@ -53,9 +55,10 @@ import io.github.OMAL_Maze.Map.TriggerZone;
 public class Main extends ApplicationAdapter {
     public float volume = 100f;
     private int secondsRemaining = 300;
-    private int badEventsRemaining = 1;
-    private int goodEventsRemaining = 1;
-    private int hiddenEventsRemaining = 1;
+    private int badEventsRemaining = 5;
+    private int goodEventsRemaining = 3;
+    private int hiddenEventsRemaining = 3;
+    private int finalScore = 0;
     private SpriteBatch batch;
     private BitmapFont font;
     private String timerText;
@@ -93,6 +96,8 @@ public class Main extends ApplicationAdapter {
     MuteButton mute;
     LeaderboardButton leaderboard;
     ReturnButton returnbutton;
+    AchievementButton achievement;
+    TitleButton title;
     //add in new button here!!!!!
     StartButton start;
     Screen GameOverScreen;
@@ -163,11 +168,13 @@ public class Main extends ApplicationAdapter {
         start = new StartButton(Gdx.files.internal("buttonTextures/startNew.png"));
         leaderboard = new LeaderboardButton(Gdx.files.internal("buttonTextures/leaderboard.png"));
         returnbutton = new ReturnButton(Gdx.files.internal("buttonTextures/returnbutton.png"));
+        achievement = new AchievementButton(Gdx.files.internal("buttonTextures/achievementsbutton.png"));
+        title = new TitleButton(Gdx.files.internal("buttonTextures/titlebutton.png"));
         //adding all buttons to the arraylist in one go
         Collections.addAll(buttons, begin, quit, pause, unpause, mute, start);
         startTimer();
         GameOverScreen = new Screen(batch, viewport, "screenTextures/GAME OVER.png");
-        TitleScreen = new Screen (batch, viewport, "screenTextures/Title screen.png");
+        TitleScreen = new Screen (batch, viewport, "screenTextures/Title screen-1.png");
         CongratsScreen = new Screen(batch, viewport, "screenTextures/Congratulations.png");
         PauseScreen = new Screen(batch, viewport, "screenTextures/pausescreen.png");
         LeaderboardScreen = new Screen(batch, viewport, "screenTextures/blankbackground.png");
@@ -310,19 +317,19 @@ public class Main extends ApplicationAdapter {
      * sets the hidden event counter to 0
      */
     public void decrementHiddenEventCounter(){
-        hiddenEventsRemaining=0;//set it to 0 instead of -- since the hidden event only happens once
+        hiddenEventsRemaining = hiddenEventsRemaining - 1;
     }
     /**
      * sets the bad event counter to 0
      */
     public void decrementBadEventCounter(){
-        badEventsRemaining=0;
+        badEventsRemaining = badEventsRemaining - 1;
     }
     /**
      * sets the good event counter to 0
      */
     public void decrementGoodEventCounter(){
-        goodEventsRemaining=0;
+        goodEventsRemaining = goodEventsRemaining - 1;
     }
 
     /**
@@ -409,6 +416,8 @@ public class Main extends ApplicationAdapter {
             }
         }
     }
+
+
 
     /**
      * Sets background to black initially before rendering all text, buttons, entities, and buildings.
@@ -748,6 +757,8 @@ public class Main extends ApplicationAdapter {
         //Goes to first maze and resets character and seeds
         loadMaze(0,40,800);
 
+
+
         //Set timer back to 5 minutes.
         secondsRemaining = 300;  //resets the time
         secondsDecreasing=true;
@@ -757,9 +768,9 @@ public class Main extends ApplicationAdapter {
         backgroundMusic.stop();
         backgroundMusic.start(volume);
         //Reset values for the events.
-        this.badEventsRemaining = 1;
-        this.goodEventsRemaining = 1;
-        this.hiddenEventsRemaining = 1;
+        this.badEventsRemaining = 5;
+        this.goodEventsRemaining = 3;
+        this.hiddenEventsRemaining = 3;
         //draw(); //this continues to show the game over screen
         enteringName = false;
         hasAddedScore = false;
@@ -772,18 +783,34 @@ public class Main extends ApplicationAdapter {
         secondsDecreasing = false;
         batch.begin();
         TitleScreen.render();
+        font.getData().setScale(1);
+
+        font.draw(batch, "Instructions", 150, 550);
+        font.draw(batch, "You must first head to the Computer Science building to take a quiz with the Professor there.", 150, 525);
+        font.draw(batch,"If you pass you will be awarded your degree at Central Hall to escape without much difficulty.",150,500);
+        font.draw(batch,"However, if you fail you there may be lots of obstacles in the way stopping you from escaping.",150,475);
+        font.draw(batch,"Controls:", 150,450);
+        font.draw(batch,"Arrow Keys or WASD - Movement",150,425);
+        font.draw(batch,"P - Pause Menu",150,400);
+        font.draw(batch,"E - Interact",150,375);
+        font.draw(batch, "Space - Use Bat", 150, 350);
+        font.draw(batch, "Walk up to the building to enter it.", 150, 325);
         start.setActive(true);
         mute.setActive(true);
         leaderboard.setActive(true);
+        achievement.setActive(true);
+        achievement.draw(batch);
         start.draw(batch);
         leaderboard.draw(batch);
         batch.end();
         if (start.isClicked(viewport)){
+            achievementTracker.unlockAchievement("Game Started");
             TitleScreen.setActive(false);
             start.setActive(false);
             leaderboard.setActive(false);
             pause.setActive(true);
             mute.setActive(true);
+            achievement.setActive(false);
             startGame();
         } else if (leaderboard.isClicked(viewport)){
             //code to show leaderboard goes here
@@ -791,6 +818,13 @@ public class Main extends ApplicationAdapter {
             start.setActive(false);
             leaderboard.setActive(false);
             LeaderboardScreen.setActive(true);
+            achievement.setActive(false);
+        } else if (achievement.isClicked(viewport)){
+            TitleScreen.setActive(false);
+            start.setActive(false);
+            leaderboard.setActive(false);
+            achievement.setActive(false);
+            AchievementScreen.setActive(true);
         }
     }
 
@@ -856,6 +890,16 @@ public class Main extends ApplicationAdapter {
      * Renders the congratulations screen and causes the buttons to function.
      */
     public void CongratsScreenLogic(){
+        achievementTracker.unlockAchievement("Escaped Uni");
+        if (secondsRemaining > 180){
+            achievementTracker.unlockAchievement("Speedy Escaper");
+        }
+        whichEnding();
+        finalScore = secondsRemaining;
+        finalScore = finalScore + (5 - goodEventsRemaining) * 10;
+        finalScore = finalScore + (3 - badEventsRemaining) * 20;
+        finalScore = finalScore + (3 - hiddenEventsRemaining) * 50;
+        finalScore = finalScore + (player.coins * 10);
 
         if (nameInputUI == null) {
             nameInputUI = new NameInputUI(viewport);
@@ -867,13 +911,13 @@ public class Main extends ApplicationAdapter {
         CongratsScreen.render();
         //increasing font size
         font.getData().setScale(5);
-        font.draw(batch, String.valueOf(secondsRemaining), 520, 500);
+        font.draw(batch, String.valueOf(finalScore), 520, 500);
         font.getData().setScale(1);
         
         if (hasAddedScore) {
-            begin.setActive(true);
+            title.setActive(true);
             quit.setActive(true);
-            begin.draw(batch);
+            title.draw(batch);
             quit.draw(batch);
         }
     
@@ -882,7 +926,7 @@ public class Main extends ApplicationAdapter {
         nameInputUI.draw();
         if (nameInputUI.isSubmitted() && !hasAddedScore) {
             String playerName = nameInputUI.getName();
-            scores.add(new LeaderboardScore(playerName, secondsRemaining));
+            scores.add(new LeaderboardScore(playerName, finalScore));
             scores.sort((a, b) -> b.score - a.score); // Sort scores in descending order
             if (scores.size() > 5) {
                 scores = new ArrayList<>(scores.subList(0, 5)); // Keep only top 10 scores
@@ -898,8 +942,8 @@ public class Main extends ApplicationAdapter {
             if (quit.isClicked(viewport)){
                 Gdx.app.exit();
             }
-            if (begin.isClicked(viewport)){
-                begin.setActive(false);
+            if (title.isClicked(viewport)){
+                title.setActive(false);
                 quit.setActive(false);
                 CongratsScreen.setActive(false);
                 // Reset the game state and return to the title screen instead of
@@ -942,9 +986,9 @@ public class Main extends ApplicationAdapter {
         quit.setActive(false);
 
         // Reset event counters to defaults
-        this.badEventsRemaining = 1;
-        this.goodEventsRemaining = 1;
-        this.hiddenEventsRemaining = 1;
+        this.badEventsRemaining = 5;
+        this.goodEventsRemaining = 3;
+        this.hiddenEventsRemaining = 3;
 
         // Clear gameplay objects so the title screen is clean. They'll be
         // recreated when a new game is started via `startGame()`.
@@ -984,9 +1028,9 @@ public class Main extends ApplicationAdapter {
 
     public void achievementScreenLogic(){
         batch.begin();
-        achievementScreenLogic();
+        AchievementScreen.render();
 
-        font.getData().setScale(4);
+        font.getData().setScale(3);
         font.draw(batch, "Achievements", 275, 800);
         font.getData().setScale(1);
 
@@ -1002,7 +1046,7 @@ public class Main extends ApplicationAdapter {
             }
             y -= 50;
         }
-
+        font.setColor(Color.WHITE);
         returnbutton.setActive(true);
         returnbutton.draw(batch);
         batch.end();
@@ -1011,5 +1055,25 @@ public class Main extends ApplicationAdapter {
             returnbutton.setActive(false);
             TitleScreen.setActive(true);
         }
+    }
+    public void whichEnding(){
+        if (player.getDegree() == 2){
+            achievementTracker.unlockAchievement("Good Student");
+        } else if (player.getDegree() == 1){
+            achievementTracker.unlockAchievement("Who needs a degree?");
+        }
+    }
+
+    public void batAchievement(){
+        achievementTracker.unlockAchievement("Prepared and Ready");
+    }
+    public void coinsAchievement(){
+        achievementTracker.unlockAchievement("Coin Collector"); 
+    }
+    public void gooseBiteAchievement(){
+        achievementTracker.unlockAchievement("Ouch that hurts!");
+    }
+    public void itemAchievement(){
+        achievementTracker.unlockAchievement("Powered-Up");
     }
 }
