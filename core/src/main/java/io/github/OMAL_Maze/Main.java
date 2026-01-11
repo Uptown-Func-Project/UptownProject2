@@ -166,7 +166,7 @@ public class Main extends ApplicationAdapter {
         //Background music plays the entire time
         //Debugging line below, Used to spawn at start of second level.
         //loadMaze(1, 40, 80);
-        //the images of the buttons can be changed here
+        //The images of the buttons are loaded here
         begin = new BeginButton(Gdx.files.internal("buttonTextures/startNew.png"));
         quit = new QuitButton(Gdx.files.internal("buttonTextures/quitNew.png"));
         pause = new PauseButton(Gdx.files.internal("buttonTextures/greenbutton.png"));
@@ -178,8 +178,9 @@ public class Main extends ApplicationAdapter {
         achievement = new AchievementButton(Gdx.files.internal("buttonTextures/achievementsbutton.png"));
         title = new TitleButton(Gdx.files.internal("buttonTextures/titlebutton.png"));
         //adding all buttons to the arraylist in one go
-        Collections.addAll(buttons, begin, quit, pause, unpause, mute, start);
+        Collections.addAll(buttons, begin, quit, pause, unpause, mute, start, leaderboard, returnbutton, achievement, title);
         startTimer();
+        //Creating all the screens used in the game
         GameOverScreen = new Screen(batch, viewport, "screenTextures/GAME OVER.png");
         TitleScreen = new Screen (batch, viewport, "screenTextures/Title screen-1.png");
         CongratsScreen = new Screen(batch, viewport, "screenTextures/Congratulations.png");
@@ -839,6 +840,7 @@ public class Main extends ApplicationAdapter {
 
     /**
      * Drawing the title screen and controlling what happens when the button is clicked.
+     * Has 3 different buttons for starting the game, viewing the leaderboard, and viewing achievements.
      */
     public void TitleScreenLogic(){
         secondsDecreasing = false;
@@ -874,7 +876,6 @@ public class Main extends ApplicationAdapter {
             achievement.setActive(false);
             startGame();
         } else if (leaderboard.isClicked(viewport)){
-            //code to show leaderboard goes here
             TitleScreen.setActive(false);
             start.setActive(false);
             leaderboard.setActive(false);
@@ -888,7 +889,9 @@ public class Main extends ApplicationAdapter {
             AchievementScreen.setActive(true);
         }
     }
-
+    /**
+     * Rending the leaderboard screen, shows current top 5 scores and makes it so you can return to the title screen.
+     */
     public void LeaderboardScreenLogic(){
         //code to show leaderboard goes here
         batch.begin();
@@ -948,9 +951,10 @@ public class Main extends ApplicationAdapter {
         }
     }
     /**
-     * Renders the congratulations screen and causes the buttons to function.
+     * Renders the congratulations screen, allows the user to add their name to the leaderboard and causes the buttons to function.
      */
     public void CongratsScreenLogic(){
+        //Unlocking achievements that are related to winning
         achievementTracker.unlockAchievement("Escaped Uni");
         if (secondsRemaining > 180){
             achievementTracker.unlockAchievement("Speedy Escaper");
@@ -1082,6 +1086,9 @@ public class Main extends ApplicationAdapter {
         }
     }
 
+    /**
+     * Renders the achievement screen, gives the achievement a colour depending on if it has been unlocked or not.
+     */
     public void achievementScreenLogic(){
         batch.begin();
         AchievementScreen.render();
@@ -1091,7 +1098,7 @@ public class Main extends ApplicationAdapter {
         font.getData().setScale(1);
 
         int y = 700;
-
+        //Loops through all the achievements and then changes the colour based on if unlocked or not
         for (Achievement achievement : achievementTracker.getAchievements()) {
             if (achievement.unlocked) {
                 font.setColor(Color.GREEN);
@@ -1112,6 +1119,10 @@ public class Main extends ApplicationAdapter {
             TitleScreen.setActive(true);
         }
     }
+
+    /**
+     * Determines which ending achievement to unlock based on whether the player has a degree or not.
+     */
     public void whichEnding(){
         if (achievementTracker == null) {
             achievementTracker = new AchievementTracker();
@@ -1123,24 +1134,39 @@ public class Main extends ApplicationAdapter {
         }
     }
 
+    /**
+     * Unlocks the bat achievement.
+     */
     public void batAchievement(){
         if (achievementTracker == null) {
             achievementTracker = new AchievementTracker();
         }
         achievementTracker.unlockAchievement("Prepared and Ready");
     }
+
+    /**
+     * Unlocks the coin achievement when they have more than 10 coins.
+     */
     public void coinsAchievement(){
         if (achievementTracker == null) {
             achievementTracker = new AchievementTracker();
         }
         achievementTracker.unlockAchievement("Coin Collector"); 
     }
+
+    /**
+     * Unlocks the goose bite achievement when the player is bitten by the goose.
+     */
     public void gooseBiteAchievement(){
         if (achievementTracker == null) {
             achievementTracker = new AchievementTracker();
         }
         achievementTracker.unlockAchievement("Ouch that hurts!");
     }
+
+    /**
+     * Unlocks the item achievement when the player buys an item.
+     */
     public void itemAchievement(){
         if (achievementTracker == null) {
             achievementTracker = new AchievementTracker();
