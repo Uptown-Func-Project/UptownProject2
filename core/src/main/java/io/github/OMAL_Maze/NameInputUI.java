@@ -24,12 +24,12 @@ public class NameInputUI {
         nameField.setMessageText("Enter your name");
         nameField.setMaxLength(12);
         nameField.setSize(300, 50);
-        nameField.setPosition(150,350);
+        nameField.setPosition(150,280);
         stage.addActor(nameField);
 
         submitButton = new TextButton("Submit", skin);
         submitButton.setSize(150, 50);
-        submitButton.setPosition(550, 350);
+        submitButton.setPosition(550, 280);
         stage.addActor(submitButton);
         submitButton.addListener(new ClickListener() {
             @Override
