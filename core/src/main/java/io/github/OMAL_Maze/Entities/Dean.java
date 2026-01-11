@@ -16,7 +16,7 @@ import io.github.OMAL_Maze.Map.Building;
  */
 public class Dean extends Character{
     Player player;
-    gooseState state;
+    deanState state;
     Boolean isMoving;
     Boolean bitPlayer;
     float biteTimer;
@@ -44,19 +44,19 @@ public class Dean extends Character{
     private final float TEMP_BLOCK_DURATION = 2.0f; // seconds
     private final int STUCK_THRESHOLD = 4;
 
-    enum gooseState{
+    enum deanState{
         IDLE,
         ANGRY,
         HAPPY
     }
 
     /**
-     * Constructor for the goose class.
+     * Constructor for the dean class.
      */
     public Dean(int x, int y, int width, int height, Texture entityTexture, String id) {
         super(x, y, width, height, entityTexture,id);
         visible = false;
-        state = gooseState.IDLE;
+        state = deanState.IDLE;
         this.isMoving = true;
         this.speed=90f;
         this.accelerate=600f;
@@ -102,7 +102,7 @@ public class Dean extends Character{
     }
 
     /**
-     * Sets the goose position and makes it visible.
+     * Sets the dean position and makes it visible.
      */
     public void show(){
         this.sprite.setX(11*this.instance.tileSize);
@@ -112,13 +112,13 @@ public class Dean extends Character{
         this.spawned=true;
         this.soundID = gooseQuack.play();
         this.soundTimer=5f;
-        this.state=gooseState.ANGRY;
+        this.state=deanState.ANGRY;
     }
 
     @Override
     public void logic(){
         float delta = Gdx.graphics.getDeltaTime();
-        // Prevent goose leaving screen
+        // Prevent dean leaving screen
         sprite.setX(MathUtils.clamp(sprite.getX(), 0, instance.viewport.getWorldWidth()-width));
         sprite.setY(MathUtils.clamp(sprite.getY(),0,instance.viewport.getWorldHeight()-height));
 
@@ -169,7 +169,7 @@ public class Dean extends Character{
     }
 
     /**
-     * Applies an external velocity to the goose (used by Player when hitting with bat).
+     * Applies an external velocity to the dean (used by Player when hitting with bat).
      * This method will cancel bite state and enable knockbackActive so the movement() decay code runs.
      */
     public void applyExternalVelocity(float xVel, float yVel) {
@@ -181,7 +181,7 @@ public class Dean extends Character{
     }
 
     /**
-     * Movement override. If knockbackActive, goose is pushed by Xspeed/Yspeed and slows down.
+     * Movement override. If knockbackActive, dean is pushed by Xspeed/Yspeed and slows down.
      */
     @Override
     public void movement(float delta, Array<Entity> entities, Array<Building> buildings) {
@@ -212,7 +212,7 @@ public class Dean extends Character{
                 this.Xspeed = 0f;
                 this.Yspeed = 0f;
                 this.knockbackActive = false;
-                if (state == gooseState.ANGRY) this.isMoving = true;
+                if (state == deanState.ANGRY) this.isMoving = true;
             }
 
             this.logic();
@@ -220,7 +220,7 @@ public class Dean extends Character{
         }
 
         // Normal AI movement when angry
-        if (isMoving != null && isMoving && state == gooseState.ANGRY) {
+        if (isMoving != null && isMoving && state == deanState.ANGRY) {
             int tileSize = (this.instance != null) ? this.instance.tileSize : 40;
 
             // use sprite centers for tile conversion
@@ -272,7 +272,7 @@ public class Dean extends Character{
             int[] start = new int[] { startX, startY }; // [x,y]
             
             int[] goal = new int[] { goalX, goalY };
-            System.out.println("Goose A* from (" + startX + "," + startY + ") to (" + goalX + "," + goalY + ")");
+            
 
             // build merged map = static walls OR temporary blocked tiles
             boolean[][] merged = copyMap(mapy);
@@ -283,13 +283,13 @@ public class Dean extends Character{
             }
 
             int[] next = io.github.OMAL_Maze.Map.AStar.getNextMove(merged, start, goal);
-            System.out.println("Goose A* next tile: " + ((next != null) ? ("(" + next[0] + "," + next[1] + ")") : "null"));
+            
 
             
             if (next != null) {
                 int nx = next[0], ny = next[1];
                 if (ny < 0 || ny >= merged.length || nx < 0 || nx >= merged[0].length || merged[ny][nx]) {
-                    System.out.println("Goose A*: returned blocked tile (" + nx + "," + ny + ") - ignoring");
+                    
                     next = null;
                 }
             }
@@ -405,7 +405,7 @@ public class Dean extends Character{
     }
 
     /**
-     * Checks if the goose entity overlaps with any of the current entities or buildings.
+     * Checks if the dean entity overlaps with any of the current entities or buildings.
      */
     private boolean checkOverlaps(Array<Entity> entities, Array<Building> buildings) {
         for (int i=0;i< buildings.size;i++) {
@@ -414,7 +414,7 @@ public class Dean extends Character{
                 return true;
             }
         }
-        if (!this.state.equals(gooseState.HAPPY)) {
+        if (!this.state.equals(deanState.HAPPY)) {
             for (int i = 0; i < entities.size; i++) {
                 Entity entity = entities.get(i);
                 if (entity == this) continue;
@@ -422,9 +422,9 @@ public class Dean extends Character{
                 if (entity.Overlaps(this.sprite.getBoundingRectangle())) {
                     if (entity.getClass() == Player.class) {
                         Player player = (Player) entity;
-                        if (this.state != gooseState.HAPPY) {
+                        if (this.state != deanState.HAPPY) {
                             if (player.getHasDegree()) {
-                                this.state = gooseState.HAPPY;
+                                this.state = deanState.HAPPY;
                                 Main.getInstance().decrementGoodEventCounter();
                                 player.speed *= 2f;
                                 
@@ -455,7 +455,7 @@ public class Dean extends Character{
             this.visible = false;
             this.isMoving = false;
             this.isSolid = false;
-            this.state = gooseState.HAPPY;
+            this.state = deanState.HAPPY;
             Main.getInstance().decrementGoodEventCounter();
         }
     }
@@ -466,7 +466,7 @@ public class Dean extends Character{
         return (int) this.sprite.getY();
     }
     /**
-     * Creates the trigger area for spawning the goose.
+     * Creates the trigger area for spawning the dean.
      */
     void createTrigger() {
         int leftX = 6;

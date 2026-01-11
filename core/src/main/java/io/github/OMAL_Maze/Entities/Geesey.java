@@ -318,7 +318,7 @@ public class Geesey extends Character{
             int[] start = new int[] { startX, startY }; // [x,y]
             
             int[] goal = new int[] { goalX, goalY };
-            System.out.println("Goose A* from (" + startX + "," + startY + ") to (" + goalX + "," + goalY + ")");
+            
 
             // build merged map = static walls OR temporary blocked tiles
             boolean[][] merged = copyMap(mapy);
@@ -329,13 +329,13 @@ public class Geesey extends Character{
             }
 
             int[] next = io.github.OMAL_Maze.Map.AStar.getNextMove(merged, start, goal);
-            System.out.println("Goose A* next tile: " + ((next != null) ? ("(" + next[0] + "," + next[1] + ")") : "null"));
+            
 
             
             if (next != null) {
                 int nx = next[0], ny = next[1];
                 if (ny < 0 || ny >= merged.length || nx < 0 || nx >= merged[0].length || merged[ny][nx]) {
-                    System.out.println("Goose A*: returned blocked tile (" + nx + "," + ny + ") - ignoring");
+                    
                     next = null;
                 }
             }
@@ -490,6 +490,9 @@ public class Geesey extends Character{
     // getter for health points
     public int getHealthPoints(){
         return healthPoints;
+    }
+    public boolean getGeeseyHappy(){
+        return this.state == gooseState.HAPPY;
     }
 
     // decreases health points

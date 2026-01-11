@@ -439,11 +439,11 @@ public class Main extends ApplicationAdapter {
         goise = new Texture(Gdx.files.internal("entityTextures/goosey.png"));
         goise.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
         for (Entity entity : entities) {
-
+    
     if (entity instanceof Goose)  {
         Goose goose = (Goose) entity;  
-
-        drawAnimatedEntity(
+        if (goose.getGooseHappy()!=true){
+            drawAnimatedEntity(
             batch,
             goise,
             goose.getGooseX() + 15,
@@ -451,11 +451,13 @@ public class Main extends ApplicationAdapter {
             goose.getWalkFrame(),
             false
         );
+        }
+        
     }
     if (entity instanceof Geesey)  {
         Geesey geesey = (Geesey) entity;  
-
-        drawAnimatedEntity(
+        if (geesey.getGeeseyHappy()!=true){
+            drawAnimatedEntity(
             batch,
             goise,
             geesey.getGooseX() + 15,
@@ -463,6 +465,8 @@ public class Main extends ApplicationAdapter {
             geesey.getWalkFrame(),
             geesey.isFacingRight()
         );
+        }
+        
     }
 }
         deane= new Texture(Gdx.files.internal("entityTextures/Dean.png"));
