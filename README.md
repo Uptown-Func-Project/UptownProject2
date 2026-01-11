@@ -3,9 +3,21 @@
 The game is a single-player experience that allows the player to escape from a maze representing university life, its complexity, and annoyances. 
 The player must escape the maze within 5 minutes, if they want to win the game, or they will be stuck inside the university.
 
+## Basic Controls
+
+Arrow Keys - Movement
+E - Interact
+Space - Swing Bat
+
+## Instructions
+
+You must first head to the Computer Science building to take a quiz with the Professor there. If you pass you will be awarded your degree at Central Hall to escape without much difficulty.
+However fail and the dean will try to get you, Will you be able to escape?
+
+
 ## How to find the game
 
-Download the JAR file from the [OMAL](https://octopusmissingaleg.github.io/OctopusMissingALegWebsite/) official website, and you are ready to go!
+Download the JAR file from the [Website](https://uptown-func-project.github.io/UptownWebsite.io/), and you are ready to go!
 
 ## Credits
 
