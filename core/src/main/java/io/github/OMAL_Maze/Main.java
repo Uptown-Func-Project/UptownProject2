@@ -756,8 +756,14 @@ public class Main extends ApplicationAdapter {
     public void startGame(){
         //Goes to first maze and resets character and seeds
         loadMaze(0,40,800);
-
-
+        player.hasSeeds=false;
+        player.hasDegree = false;
+        player.hasBat = false;
+        player.degreeState = 0;
+        player.hearts=3;
+        player.speed=200f;
+        player.coins=0;
+        player.coins_log=new String[18];        
 
         //Set timer back to 5 minutes.
         secondsRemaining = 300;  //resets the time
