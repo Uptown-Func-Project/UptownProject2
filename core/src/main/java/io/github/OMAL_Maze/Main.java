@@ -1060,6 +1060,7 @@ public class Main extends ApplicationAdapter {
             nameInputUI.dispose();
             nameInputUI = null; // Reset the name input UI for the next game
         }
+        TitleScreen.setActive(true);
     }
     /**
      * Renders the game over screen and causes the buttons to function.
@@ -1068,9 +1069,9 @@ public class Main extends ApplicationAdapter {
         batch.begin();
         GameOverScreen.render(); //need to stop displaying the map
         //displaying the correct buttons on game over screen
-        begin.setActive(true);
+        title.setActive(true);
         quit.setActive(true);
-        begin.draw(batch);
+        title.draw(batch);
         quit.draw(batch);
         batch.end();
         pause.setActive(false);
@@ -1078,11 +1079,11 @@ public class Main extends ApplicationAdapter {
         if (quit.isClicked(viewport)){
             Gdx.app.exit();
         }
-        if (begin.isClicked(viewport)){
-            begin.setActive(false);
+        if (title.isClicked(viewport)){
+            title.setActive(false);
             quit.setActive(false);
             GameOverScreen.setActive(false);
-            startGame();
+            resetToTitle();
         }
     }
 

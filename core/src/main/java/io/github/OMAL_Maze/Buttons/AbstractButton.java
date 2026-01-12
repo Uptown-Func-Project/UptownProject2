@@ -110,7 +110,6 @@ public abstract class AbstractButton {
             if (click.x >= x && click.x <= x+getWidth()){
                 if (click.y >= y && click.y <= y+getHeight()){
                     clicked = true;
-                    System.out.println(message);
                 }
             }
         }
