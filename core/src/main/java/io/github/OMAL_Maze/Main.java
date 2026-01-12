@@ -18,6 +18,7 @@ import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import io.github.OMAL_Maze.Buttons.AbstractButton;
+import io.github.OMAL_Maze.Buttons.AchievementButton;
 import io.github.OMAL_Maze.Buttons.BeginButton;
 import io.github.OMAL_Maze.Buttons.LeaderboardButton;
 import io.github.OMAL_Maze.Buttons.MuteButton;
@@ -25,9 +26,8 @@ import io.github.OMAL_Maze.Buttons.PauseButton;
 import io.github.OMAL_Maze.Buttons.QuitButton;
 import io.github.OMAL_Maze.Buttons.ReturnButton;
 import io.github.OMAL_Maze.Buttons.StartButton;
-import io.github.OMAL_Maze.Buttons.UnpauseButton;
-import io.github.OMAL_Maze.Buttons.AchievementButton;
 import io.github.OMAL_Maze.Buttons.TitleButton;
+import io.github.OMAL_Maze.Buttons.UnpauseButton;
 import io.github.OMAL_Maze.Dialogue.DialogueManager;
 import io.github.OMAL_Maze.Dialogue.DialogueUI;
 import io.github.OMAL_Maze.Entities.Bat;
@@ -158,7 +158,7 @@ public class Main extends ApplicationAdapter {
         instance = this;
         dialogueUI = new DialogueUI(viewport, batch);
         dialogueManager = new DialogueManager(dialogueUI);
-        dialogueManager.loadDialogue("assets/dialogue.json");
+        dialogueManager.loadDialogue("dialogue.json");
         shapeRenderer = new ShapeRenderer();
         backgroundSound = Gdx.audio.newSound(Gdx.files.internal("Sounds/Background.mp3"));
         backgroundMusic = new BackgroundMusic(backgroundSound);
